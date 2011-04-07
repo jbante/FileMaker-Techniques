@@ -1,0 +1,35 @@
+﻿/**
+ * =====================================
+ * GetSessionID
+ * http://www.briandunning.com/cf/1276
+ *
+ * PURPOSE:
+ * Returns an ID for the current session, unique to an instance of opening a
+ * FileMaker file.
+ *
+ * RETURNS:
+ * A (text-delimited) number
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES:
+ * UUIDNew: http://www.briandunning.com/cf/1220
+ *
+ * VARIABLES:
+ * $$~SESSION_ID
+ *
+ * NOTES:
+ * This version of GetSessionID uses a UUID based on creation timestamp and NIC
+ * address. If privacy is a concern, the UUIDNew function can be replaced with a more suitable function, such as UUIDRandom.
+ *
+ * HISTORY:
+ * CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * INSPIRED by Twitter user @shintan
+ * =====================================
+ */
+ 
+If ( $$~SESSION_ID;
+	$$~SESSION_ID;
+/*else*/
+	Let ( $$~SESSION_ID = UUIDNew ; $$~SESSION_ID )
+)

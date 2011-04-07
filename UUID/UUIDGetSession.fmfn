@@ -1,0 +1,46 @@
+﻿/**
+ * ======================================
+ * UUIDGetSession ( theID )
+ *
+ * PURPOSE:
+ *		Extracts the "session" from a numeric UUID created by this family of
+ *		UUID functions.
+ *
+ * RETURNS:
+ *		The last 20 digits of a UUID containing a combined "session key" of the
+ *		form ccccc-nnnnnnnnnnnnnnn.
+ *
+ * PARAMETERS:
+ *		theID: The UUID to extract a "session key" from.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-04-01 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		Key values Best Practice: http://filemakerstandards.org/display/bp/Key+values
+ *		Ray Cologon's uID functions: http://www.nightwing.com.au/FileMaker/demos9/demo910.html
+ *		UUIDGetAsRFC4122: http://www.briandunning.com/cf/1221
+ *		UUIDGetAsUUID: http://www.briandunning.com/cf/1273
+ *		UUIDGetNICAddress: http://www.briandunning.com/cf/1222
+ *		UUIDGetSeconds: http://www.briandunning.com/cf/1223
+ *		UUIDNew: http://www.briandunning.com/cf/1220
+ *		UUIDRandom: http://www.briandunning.com/cf/1246
+ * ======================================
+ */
+ 
+Let( [
+	~idAsNumber = GetAsNumber ( theID );
+	~session = Right ( ~idAsNuber ; 20 );
+	~length = Length ( ~idAsNumber );
+	~version = Left ( ~idAsNumber ; ~length - 40 )
+];
+	If ( ~version < 3; // UUID format includes a "session" key
+		left ( ~session ; 5 )
+		& "-"
+		& Right ( ~session ; 15 )
+
+		/* Else, UUID does not have a session; return Null */
+	)
+)

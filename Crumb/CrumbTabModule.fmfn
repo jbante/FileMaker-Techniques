@@ -1,0 +1,33 @@
+/**
+ * =====================================
+ * CrumbTabModule ( moduleNumber )
+ *
+ * PURPOSE:
+ *		Retrieves a module name from a global variable that can be used as the
+ *		label on a global navigation control. This function expects that global
+ *		variable to be populated before being called.
+ *
+ * RETURNS:
+ *		A module name
+ *
+ * PARAMETERS:
+ *		moduleNumber
+ *
+ * VARIABLES:
+ *		$$CRUMBMODULELIST: A return-delimited list of modules
+ *
+ * DEPENDENCIES:
+ *		#Get ( parameters ; name )
+ *		CrumbModule ( theCrumb )
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~module = Evaluate ( GetValue ( $$CRUMBMODULELIST ; moduleNumber ) );
+	~crumb = Evaluate ( GetValue ( ~module ; 1 ) )
+];
+	CrumbModule ( ~crumb )
+)

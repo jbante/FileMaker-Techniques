@@ -1,0 +1,115 @@
+/**
+ * =====================================
+ * BinaryHammingDistance ( text1 ; text2 )
+ *
+ * PURPOSE:
+ * Computes the hamming distance between the binary representations of two
+ * equal-length strings.
+ *
+ * PARAMETERS:
+ * text1, text2: text strings of equal length
+ *
+ * RETURNS:
+ * The number of bits different between text1 and text2 in their binary (UTF-16)
+ * representations.
+ *
+ * HISTORY:
+ * CREATED on 2011-01-18 by Jeremy Bante of The Support Group
+ * <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ * http://en.wikipedia.org/wiki/Hamming_distance
+ * =====================================
+ */
+Case (
+	/*Step 0, initialize loop, check for errors*/
+	not $~step;
+	Let ( [
+		$~distance = If ( Length ( text1 ) = Length ( text2 ) ; 0 ; "?" );
+		$~step = If ( $~distance = "?" ; 2 ; /*else*/ 1 )
+	];
+		BinaryHammingDistance ( text1 ; text2 )
+	);
+	
+	/*Step 1, compare bits in each character*/
+	$~step = 1;
+	Let ( [
+		//Convert leading characters to numbers
+		~code1 = Code ( Left ( text1 ; 1 ) );
+		~code2 = Code ( Left ( text2 ; 1 ) );
+		
+		//Compare all 16 bits
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		$~distance = $~distance + ( Mod ( ~code1 ; 2 ) xor Mod ( ~code2 ; 2 ) );
+		~code1 = Div ( ~code1 ; 2 );
+		~code2 = Div ( ~code2 ; 2 );
+		
+		~length1 = Length ( text1 );
+		~length2 = Length ( text2 );
+		
+		$~step = If ( ~length1 > 1 ; 1 ; /*else*/ 2 )
+	];
+		BinaryHammingDistance (
+			Right ( text1 ; ~length1 - 1 );
+			Right ( text2 ; ~length2 - 1 )
+		)
+	);
+	
+	/*Step 2, clean-up, and return result*/
+	Let ( [
+		~distance = $~distance;
+		
+		//purge variables
+		$~distance = "";
+		$~step = ""
+	];
+		~distance
+	)
+)

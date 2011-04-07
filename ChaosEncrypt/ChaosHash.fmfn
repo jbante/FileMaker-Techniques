@@ -1,0 +1,161 @@
+/**
+ * =====================================
+ * ChaosHash ( text ; hashLength )
+ *
+ * WARNING:
+ * Different versions of this function are unlikely to calculate the same
+ * results.
+ *
+ * PURPOSE:
+ * Creates a hash of the text parameter via a pseudo-chaotic process adapted to
+ * the constraints of FileMaker custom functions.
+ *
+ * PARAMETERS:
+ * text: The text string to encrypt
+ * key: The key to use to encrypt text
+ *
+ * RETURNS:
+ * An encrypted version of text.
+ *
+ * NOTES:
+ * This function has not been subjected to rigorous cryptanalysis, and the
+ * author does not warranty the security or collision resistance of results.
+ *
+ * This is a recursive custom function, and hence is limited in the maximum
+ * length of text that it can process.
+ *
+ * HISTORY:
+ * MODIFIED on 2011-01-23 by Jeremy Bante to account for composite
+ * characters
+ * MODIFIED on 2011-01-14 by Jeremy Bante to use a different map and
+ * systematically perturbed orbits.
+ * MODIFIED on 2011-01-09 by Jeremy Bante to use a different chaotic
+ * map that results in greater diffusion and faster calculation.
+ * CREATED on 2011-01-05 by Jeremy Bante of The Support Group
+ * <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ * ChaosDecrypt function: http://www.briandunning.com/cf/1259
+ * ChaosEncrypt function: http://www.briandunning.com/cf/1258
+ * ChaosHash function: http://www.briandunning.com/cf/1261
+ * =====================================
+ */
+
+Case (
+	/*First call to function, initialize variables*/
+	not $~step;
+	Let ( [
+		$~alternator = 0;
+		$~i = 1;
+		$~j = 1;
+		$~k = 1;
+		$~priorByte = 32749; //greatest prime < 2^15
+		$~textLength = Length ( text );
+		$~step = 1
+	];
+		ChaosHash ( text ; hashLength )
+	);
+
+	/*Step 1, Parse text into cipher key*/
+	$~step = 1;
+	Let ( [
+		//Convert text to numbers, accounting for composite characters
+		~textByte = 
+			If ( $~textLength ≥ $~i;
+				Code ( Middle ( text ; $~i ; 1 ) );
+				/*else*/ $~alternator //augment $~text as needed
+			);
+		~extraByte = Left ( ~textByte ; Length ( ~textByte ) - 5 );
+		~textByte = Right ( ~textByte ; 5 );
+		$~textLength =
+			If ( $~textLength ≥ $~i;
+				$~textLength;
+				/*else*/ $~textLength + 1
+			);
+		$~alternator =
+			If ( $~textLength ≥ $~i;
+				$~alternator;
+				/*else*/ not $~alternator
+			);
+		$~text = List ( $~text ; ~textByte );
+		
+		~keyByte = Mod ( ~textByte + $~priorByte ; 65535 );
+		
+		//iterate ~keyByte through the map 8x, perturb 4th orbits
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+
+		//add new key value to list
+		$~key = List ( ~keyByte ; $~key );
+		$~priorByte = ~keyByte;
+
+		//continue until whole $~text is processed
+		$~step =
+			If ( $~textLength > $~i or $~textLength < hashLength;
+				$~step;
+				/*else*/ $~step + 1
+			);
+		$~i = $~i + 1
+	];
+		ChaosHash ( Char ( ~extraByte ) & text ; hashLength )
+	);
+
+	/*Step 2, Apply $~key to $~text*/
+	$~step = 2;
+	Let ( [
+		~keyByte = Mod ( GetValue ( $~key ; 1 ) + $~priorByte ; 65535 );
+		
+		//iterate ~keyByte through the map 8x, perturb 4th orbits
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
+		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+		
+		//apply key to text
+		//additive complement under 2^16 is analogous to XOR in binary encryption
+		~textByte = MiddleValues ( $~text ; $~j ; 1 );
+		~textByte = 65535 - Mod ( ~textByte + ~keyByte ; 65535 );
+		$~hash = $~hash & Char ( ~textByte );
+		
+		//rotate the key
+		$~priorByte = ~textByte;
+		$~key = List ( RightValues ( $~key ; $~i - 2 ) ; ~keyByte );
+
+		//continue until whole text is encrypted
+		$~step = If ( hashLength > $~j ; $~step ; /*else*/ $~step + 1 );
+		$~j = $~j + 1
+	];
+		ChaosHash ( "" ; hashLength )
+	);
+
+	/*Step 3, Clean-up, and return result*/
+	$~step = 3;
+	Let ( [
+		~hash = $~hash;
+
+		//purge variables
+		$~alternator = "";
+		$~i = "";
+		$~j = "";
+		$~hash = "";
+		$~key = "";
+		$~priorByte = "";
+		$~step = "";
+		$~text = "";
+		$~textLength = ""
+	];
+		~hash
+	);
+)

@@ -1,0 +1,24 @@
+/**
+ * =====================================
+ * ICS.Attendee ( name ; email )
+ *
+ * RETURNS:
+ *		An ICS attendee string
+ *
+ * PARAMETERS:
+ *		name: The common name of the attendee
+ *		email
+ *
+ * DEPENDENCIES:
+ *		ICS.Escape
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-25 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		iCalendar Specification: http://tools.ietf.org/html/rfc5545
+ * =====================================
+ */
+
+If ( not IsEmpty ( name ) ; ";CN=" & ICS.Escape ( name ) )
+& If ( not IsEmpty ( email ) ; ":mailto:" & email )

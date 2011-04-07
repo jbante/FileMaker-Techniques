@@ -1,0 +1,118 @@
+﻿/**
+ * ======================================
+ * UUIDGetAsRFC4122 ( theID )
+ *		http://www.briandunning.com/cf/1221
+ *
+ * PURPOSE:
+ *		Converts a numeric UUID created by this family of functions to the
+ *		canonical hexadecimal (base 16) representation for the RFC 4122
+ *		standard.
+ *
+ * RETURNS:
+ *		A text string representing an RFC 4122 universally unique identifier.
+ *
+ * PARAMETERS:
+ *		theID: The numeric UUID to convert
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
+ *		relationship with the RFC 4122 format.
+ *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbantetsg> to
+ *		handle the updated output format of UUIDNew.
+ *		MODIFIED on 2010-10-04 by Jeremy Bante to handle randomly generated
+ *		substitutes for NICAddresses outside the possible range of NICAddresses.
+ *		CREATED on 2010-09-12 by Jeremy Bante <jeremy@kyologic.com>.
+ *		INSPIRED by a UUID function created by Tom Robinson.
+ *
+ * REFERENCES:
+ *		Key values Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557138
+ *		RFC 4122 UUID standard: http://tools.ietf.org/html/rfc4122
+ *		Tom Robinson's UUID function: http://www.briandunning.com/cf/969
+ *		UUIDGetAsRFC4122: http://www.briandunning.com/cf/1221
+ *		UUIDGetAsUUID: http://www.briandunning.com/cf/1273
+ *		UUIDGetNICAddress: http://www.briandunning.com/cf/1222
+ *		UUIDGetSeconds: http://www.briandunning.com/cf/1223
+ *		UUIDNew: http://www.briandunning.com/cf/1220
+ *		UUIDRandom: http://www.briandunning.com/cf/1246
+ * ======================================
+ */
+Case (
+	/*Extract and arrange UUID components*/
+	not $~step;
+		Let ( [
+			~idAsNumber = GetAsNumber ( theID );
+			~idLength = Length ( ~idAsNumber );
+
+			//extract components of FileMaker-centric format
+			~version = Left ( ~idAsNumber ; ~idLength - 40 );
+			~reserved = Middle ( ~idAsNumber ; ~idLength - 39 ; 1 );
+			~timestamp = Middle ( ~idAsNumber ; ~idLength - 38 ; 12 );
+			//move epoch from 0001-01-01T00:00:00 to 1582-10-15T00:00:00
+			~timestamp = Max ( ~timestamp - 49916304000 ; 0 );
+			~timestamp = ~timestamp & Middle ( ~idAsNumber ; ~idLength - 26 ; 7 );
+			~clockSequence = Middle ( ~idAsNumber ; ~idLength - 19 ; 5 );
+			~node = Right ( ~idAsNumber ; 15 );
+
+			//convert to RFC 4122 components
+			~time_low = Mod ( ~timestamp ; 2^32 ); //32 bits
+			~time_mid = Mod ( Div ( ~timestamp ; 2^32 ) ; 2^16 ); //next 16 bits
+			~time_hi = Mod ( Div ( ~timestamp ; 2^48 ) ; 2^12 ); //next 12 bits
+			~time_hi_and_version = ~version * (2^12) + ~time_hi;
+			~clock_seq = Mod ( ~clockSequence ; 2^15 );
+			~clock_seq_and_reserved =
+				Case (
+					~reserved < 2; //1 bit
+						~reserved * 2^15 + ~clock_seq;
+
+					~reserved < 4; //2 bits
+						~reserved * 2^14 + Mod ( ~clock_seq ; 2^14 );
+
+					/*else, ~reserved is 3 bits*/
+					Mod ( ~reserved ; 8 ) * 2^13 + Mod ( ~clock_seq ; 2^13 )
+				);
+			$~uuid =
+				~time_low * (2^96)
+				+ ~time_mid * (2^80)
+				+ ~time_hi_and_version * (2^64)
+				+ ~clock_seq_and_reserved * (2^48)
+				+ ~node;
+
+			//set-up conversion from base 10 to base 16
+			$~hex = "";
+			$~step = 1
+		];
+			UUIDGetAsRFC4122 ( "" )
+		);
+
+	/*Convert to base 16*/
+	$~step = 1;
+		Let ( [
+			~hexDigit = Mod ( $~uuid ; 16 );
+			$~hex = Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~hex;
+			$~uuid = Div ( $~uuid ; 16 );
+			$~step = If ( $~uuid ; $~step ; /*else*/ $~step + 1 )
+		];
+			UUIDGetAsRFC4122 ( "" )
+		);
+
+	/*Return result*/
+	$~step = 2;
+		Let ( [
+			~hex = $~hex;
+			~hex =
+				Left ( ~hex ; 8 ) & "-"
+				& Middle ( ~hex ; 9 ; 4 ) & "-"
+				& Middle ( ~hex ; 13 ; 4 ) & "-"
+				& Middle ( ~hex ; 17 ; 4 ) & "-"
+				& Right ( ~hex ; 12 );
+
+			//purge variables
+			$~hex = "";
+			$~step = "";
+			$~uuid = ""
+		];
+			~hex
+		)
+)

@@ -1,0 +1,44 @@
+﻿/**
+* =====================================
+* ErrorText
+*
+* PURPOSE:
+* ErrorText returns a human-readable description of the output of the Error
+* custom function. In effect, ErrorText is a dictionary of error codes used in
+* a FileMaker file. At the very least, it includes all FileMaker-defined error
+* codes; and it can be augmented with additional, developer-defined error
+* codes. Any developer-defined codes should be outside the range of FileMaker's
+* own codes (≥ 1600).
+*
+* RETURNS:
+* A human-readable text description of the last error, be it FileMaker- or
+* developer-generated.
+*
+* PARAMETERS: none
+*
+* REFERENCED VARIABLES:
+* $$~ERROR
+*
+* DEPENDENCIES:
+* Error (custom function)
+*
+* NOTES:
+* Since this and related functions treat FileMaker- and developer-defined
+* error codes in the same number space, developer-defined error codes should
+* start at 1600. The maximum FileMaker error code is 1507.
+*
+* HISTORY:
+* CREATED on 2010-12-13 by Jeremy Bante of The Support Group <http://scr.im/jbantetsg>.
+* =====================================
+*/
+ 
+Let ( [
+        ~error = Error;
+        ~error = If ( IsEmpty ( ~error ) ; 0 ; /*else*/ ~error )
+];
+        Case (
+                ~error = -1 ; "Unknown error";
+                ~error = 0 ; "No error";
+                //etc...
+        )
+)

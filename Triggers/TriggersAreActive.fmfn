@@ -1,0 +1,42 @@
+﻿/**
+ * =====================================
+ * TriggersAreActive
+ *		http://www.briandunning.com/cf/1247
+ *
+ * PURPOSE:
+ *		TriggersAreActive checks a global variable to identify whether or not
+ *		script triggers should be allowed to run. This function is best used in
+ *		concert with the TriggersDisable, TriggersEnable, and TriggersReset
+ *		functions.
+ *
+ * RETURNS:
+ *		False (0) if triggers should be suppressed; True (1) otherwise.
+ *
+ * PARAMETERS: none
+ *
+ * REFERENCED VARIABLES:
+ *		$$~TRIGGERS_DISABLE
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE (triggered script):
+ *		If [ TriggersAreActive ]
+ *			# Do something
+ *		End If
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
+ *		variables.
+ *		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
+ *		filemakerstandards.org.
+ *		CREATED on 2010-12-12 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
+ *		TriggersAreActive: http://www.briandunning.com/cf/1247
+ *		TriggersDisable: http://www.briandunning.com/cf/1248
+ *		TriggersEnable: http://www.briandunning.com/cf/1249
+ *		TriggersReset: http://www.briandunning.com/cf/1250
+ * =====================================
+ */
+not $$~TRIGGERS_DISABLE

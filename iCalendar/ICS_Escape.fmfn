@@ -1,0 +1,27 @@
+/**
+ * =====================================
+ * ICS.Escape ( text )
+ *
+ * RETURNS:
+ *		Text with any ICS delimiters escaped
+ *
+ * PARAMETERS:
+ *		text
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-25 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		iCalendar Specification: http://tools.ietf.org/html/rfc5545
+ * =====================================
+ */
+
+Substitute (
+	text;
+	[ "\\" ; "\\\\" ];
+	[ "¶" ; "\\n" ];
+	[ ";" ; "\\;" ];
+	[ "," ; "\\," ]
+)

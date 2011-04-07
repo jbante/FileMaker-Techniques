@@ -1,0 +1,47 @@
+﻿/**
+ * =====================================
+ * ArrayQuoteList ( valueList )
+ *
+ * PURPOSE:
+ * Quotes the values in a ¶-delimited value list individually.
+ *
+ * RETURNS:
+ * The quoted values from valueList, in the original order
+ *
+ * PARAMETERS:
+ * valueList: A ¶-delimited list of values to quote
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ * CREATED on 2011-01-25 by Jeremy Bante of The Support Group
+ * <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Case (
+	/*Step 1, initialize variables*/
+	not $~step;
+	Let ( [
+		$~i = $~i + 1;
+		$~value = GetValue ( valueList ; $~i );
+		$~quotedValues = List ( $~quotedValues ; Quote ( $~value ) );
+		$~step = If ( $~i = ValueCount ( valueList ) ; 1 )
+	];
+		ArrayQuoteList ( valueList )
+	);
+
+	/*Step 1, clean-up and return value*/
+	$~step = 1;
+	Let ( [
+		~quotedValues = $~quotedValues;
+
+		//purge variables
+		$~i = "";
+		$~step = "";
+		$~quotedValues = "";
+		$~value = ""
+	];
+		~quotedValues
+	)
+)

@@ -1,0 +1,30 @@
+/**
+ * GetColorAsHex ( color )
+ *
+ * PURPOSE:
+ *		Converts a FileMaker color value (values from the
+ *		RGB ( red ; green ; blue ) function) to a hexadecimal color value
+ *		suitable for use in Web pages, including the contents of webviewer
+ *		objects.
+ *
+ * RETURNS:
+ *		A text string of the form #hhhhhh, where h is a hexadecimal digit.
+ *
+ * PARAMETERS:
+ *		color: FileMaker's numeric encoding of a 96-bit color value.
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-01 by Jeremy Bante <http://scr.im/jbantetsg>.
+ */
+
+Let ( [
+	~hex = "0123456789abcdef"
+];
+	"#"
+	& Middle ( ~hex ; Mod ( Div ( color ; 1048576 ) ; 16 ) + 1 ; 1 )
+	& Middle ( ~hex ; Mod ( Div ( color ; 65536 ) ; 16 ) + 1 ; 1 )
+	& Middle ( ~hex ; Mod ( Div ( color ; 4096 ) ; 16 ) + 1 ; 1 )
+	& Middle ( ~hex ; Mod ( Div ( color ; 256 ) ; 16 ) + 1 ; 1 )
+	& Middle ( ~hex ; Mod ( Div ( color ; 16 ) ; 16 ) + 1 ; 1 )
+	& Middle ( ~hex ; Mod ( color ; 16 ) + 1 ; 1 )
+)

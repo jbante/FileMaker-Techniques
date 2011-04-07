@@ -1,0 +1,33 @@
+/**
+ * =====================================
+ * RandomUniform ( minimum ; maximum )
+ *
+ * PURPOSE:
+ *		Creates a random continuous value between "minimum" and "maximum". When
+ *		called repeatedly, RandomUniform returns values that are uniformly
+ *		distributed between minimum and maximum.
+ *
+ * RETURNS:
+ *		A number representing a random variate from a uniform distribution
+ *		between minimum and maximum.
+ *
+ * PARAMETERS:
+ *		minimum: A number specifying the lower bound for the distribution.
+ *		maximum: A number specifying the upper bound for the distribution.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2010-02-05 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Uniform_distribution_(continuous)
+ * =====================================
+ */
+Case (
+	minimum ≤ maximum; //arguments are in order
+		Random * (maximum - minimum ) + minimum;
+
+	//Else, arguments are in reverse order
+		Random * (minimum - maximum ) + maximum
+)

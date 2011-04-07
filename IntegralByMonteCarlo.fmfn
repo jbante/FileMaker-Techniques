@@ -1,0 +1,86 @@
+/**
+ * =====================================
+ * IntegralByMonteCarlo ( functionOfX ; from ; to ; sumStartAtZero ; countStartAtZero ; remainingStackDepth )
+ *
+ * PURPOSE:
+ * Estimates the definite integral of "functionOfX" from "from" to "to" using a
+ * Monte Carlo method.
+ *
+ * RETURNS:
+ * A number representing the definite integral of functionOfX within the
+ * specified interval.
+ *
+ * PARAMETERS:
+ * functionOfX: A text string that returns a numeric value when "<X>" is
+ * replaced with a number x where "from ≤ x ≤ to" is true.
+ * from: The lower bound on the definite integral.
+ * to: The upper bound on the definite integral.
+ * sumStartAtZero: Should always be set to 0 when IntegralByMonteCarlo is
+ * used. sumStartAtZero is used to pass information to recursive calls so that
+ * the function can be tail recursive.
+ * countStartAtZero: Should always be set to 0 when IntegralByMonteCarlo is
+ * used. countStartAtZero is used to pass information to recursive calls so that
+ * the function can be tail recursive.
+ * remainingStackDepth: The number of recursive calls that IntegralByMonteCarlo
+ * is free to use to calculate the definite integral.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ * IntegralByMonteCarlo is tail recursive. If IntegralByMonteCarlo is not being
+ * called from within another function, remainingStackDepth can be set as high
+ * as 49999.
+ *
+ * When from > to, the function uses one function call in the stack to reverse
+ * from and to.
+ *
+ * HISTORY:
+ * CREATED on 2010-02-05 by Jeremy Bante of Kyo Logic (jeremy@kyologic.com).
+ * =====================================
+ */
+
+Let ( [
+	~value = Random * ( to - from ) + from;
+	~fOfValue = Evaluate ( Substitute ( functionOfX ; "<X>" ; ~value ) );
+	~newSum = sumStartAtZero + ~fOfValue;
+	~newCount = countStartAtZero + 1
+];
+	Case (
+		from > to; //integral is reversed
+			IntegralByMonteCarlo (
+				"0 - (" & functionOfX & ")";
+				to;
+				from;
+				0;
+				0;
+				remainingStackDepth - 1
+			);
+
+		remainingStackDepth < 2; //at limit of available calculation stack
+			( ~newSum / ~newCount ) * ( to - from ); //return best guess
+
+		~fOfValue = "?"; //functionOfX isn't valid at ~value
+			IntegralByMonteCarlo ( //try again
+				functionOfX;
+				from;
+				to;
+				sumStartAtZero;
+				countStartAtZero;
+				remainingStackDepth - 1
+			);
+
+		( countStartAtZero = 0 ) //first iteration, or
+		or ( ( sumStartAtZero / countStartAtZero ) ≠  ( newSum / newCount ) ); //limit of precision for expectedValue is not reached
+			IntegralByMonteCarlo ( //continue iterations
+				functionOfX;
+				from;
+				to;
+				~newSum;
+				~newCount;
+				remainingStackDepth - 1
+			);
+
+		//else, limit of precision for expectedValue is reached
+		( ~newSum / ~newCount ) * ( to - from ) //return best guess
+	)
+)

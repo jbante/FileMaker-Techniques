@@ -1,0 +1,17 @@
+﻿/**
+ * ======================================
+ * WindowCenterTop
+ *
+ * RETURNS:
+ *		The vertical position of the center of the current window.
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-23 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * ======================================
+ */
+
+Round ( Get ( WindowHeight ) / 2 + Get ( WindowTop ) ; 0 )

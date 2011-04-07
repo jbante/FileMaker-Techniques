@@ -1,0 +1,18 @@
+﻿/**
+ * ======================================
+ * DeviceIsPad
+ *
+ * RETURNS:
+ *		True when the function is called in the context of an iPad, and false
+ *		otherwise.
+ *
+ * PARAMETERS : none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2010-08-21 by Jeremy Bante <jeremy@kyologic.com>.
+ * ======================================
+ */
+ 
+Left ( Get ( ApplicationVersion ) ; 7 ) = "Go_iPad"

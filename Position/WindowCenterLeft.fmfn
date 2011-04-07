@@ -1,0 +1,17 @@
+﻿/**
+ * ======================================
+ * WindowCenterLeft
+ *
+ * RETURNS:
+ *		The horizontal position of the center of the current window.
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-23 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * ======================================
+ */
+
+Round ( Get ( WindowWidth ) / 2 + Get ( WindowLeft ) ; 0 )

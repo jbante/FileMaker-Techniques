@@ -1,0 +1,197 @@
+﻿/**
+ * =====================================
+ * ChangeLog ( modificationTrigger ; primaryKey ; logData ; logFieldNames )
+ *
+ * PURPOSE:
+ *		Creates a log of any data changes made to a record.
+ *
+ * RETURNS:
+ *		A tab- and return-delimited list of all changes made to the current
+ *		record to any of the fields specified by fieldNames.
+ *
+ * PARAMETERS:
+ *		modificationTrigger: Any value that will trigger on any record
+ *			modification.
+ *		primaryKey: The primary key for the record.
+ *		logData: The existing log data for the record.
+ *		logFieldNames: A return-delimited list of the names of fields to audit
+ *			for changes.
+ *
+ * DEPENDENCIES:
+ *		UUIDTimestamp: https://github.com/filemakerstandards/fmpstandards/blob/master/Functions/UUIDTimeStamp.fmfn
+ *
+ * VARIABLES:
+ *		$~changeLogInitialize: A flag indicating that the current change is only
+ *			initializing the log as a point of comparison, and does not
+ *			represent an actual data edit.
+ *
+ * EXAMPLE: (in a field auto-enter calculation )
+ *		ChangeLog (
+ *			modificationTimestamp; // triggers calculation
+ *			Self; // logData
+ *			List ( GetFieldName ( field1 ) ; GetFieldName ( field2 ) )
+ *		)
+ *
+ * NOTES:
+ *		The tab- and return-delimited format is a compromise between machine and
+ *		human readability.
+ *
+ *		The syntax of a change log event produced by this function does not
+ *		include the prior value, since that would be redundant data. ~priorValue
+ *		could be re-introduced as a stored parameter if that value is desired
+ *		for the purpose of a human-readable text-only change log (A change log
+ *		not based on a dedicated table).
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		INSPIRED by the UltraLog solution by Ray Cologon.
+ *
+ * REFERENCES:
+ *		Ray Cologon's UltraLog: http://www.nightwing.com.au/FileMaker/demosX/demoX01.html
+ *		ISO 8601 timestamp format: http://en.wikipedia.org/wiki/ISO_8601
+ * =====================================
+ */
+
+Case (
+	/* Step 0, build commit header */
+	IsEmpty ( $~header );
+		Let ( [
+			~TAB = "	";
+
+			~type =
+				If ( $~changeLogInitialize;
+					"Initialize";
+					/*Else*/ "Commit"
+				);
+
+			~now = Get ( CurrentHostTimestamp );
+			~now = // timestamp in ISO 8601 format
+				Right ( "0000" & Year ( ~now ) ; 4 ) & "-"
+				& Right ( "00" & Month ( ~now ) ; 2 ) & "-"
+				& Right ( "00" & Day ( ~now ) ; 2 ) & " "
+				& Right ( "00" & Hour ( ~now ) ; 2 ) & ":"
+				& Right ( "00" & Minute ( ~now ) ; 2 ) & ":"
+				& Right ( "00" & Seconds ( ~now ) ; 2 );
+
+			// Get $~tableName
+			~fieldName = GetValue ( logFieldNames ; 1 );
+			~fieldName = Substitute ( ~fieldName ; "::" ; "¶" );
+			$~tableName =
+				If ( ValueCount ( ~fieldName ) > 1;
+					GetValue ( ~fieldName ; 1 );
+					/* Else */ Get ( LayoutTableName )
+				);
+
+			~commitID = UUIDTimestamp;
+
+			$~header =
+				TextStyleAdd ( ~type ; Italic ) & ~TAB
+				& ~now & ~TAB
+				& Get ( AccountName ) & ~TAB
+				& Get ( ScriptName ) & ~TAB
+				& $~tableName & ~TAB
+				& If ( Length ( primaryKey ) > 10;
+					TextSize ( primaryKey ; 9 );
+					/* Else */ primaryKey
+				) & ~TAB
+				& TextSize ( ~commitID ; 9 );
+
+			$~fieldCount = ValueCount ( logFieldNames );
+			$~step = If ( $~fieldCount ; 1 ; /*Else*/ 2 )
+		];
+			ChangeLog ( "" ; "" ; logData ; logFieldNames )
+		);
+
+	/* Step 1, audit field changes */
+	$~step = 1;
+		Let ( [
+			~TAB = "	";
+			$~i = $~i + 1;
+
+			// Get ~fieldValue
+			~fieldName = GetValue ( logFieldNames ; $~i );
+			~fieldValue = GetField ( ~fieldName );
+			~fieldValue = // escape ~TAB delimiter character
+				Substitute (
+					~fieldValue;
+					[ "\\" ; "\\\\" ];
+					[ ~TAB ; "\\t" ]
+				);
+			~fieldName = Substitute ( ~fieldName ; $~tableName & "::" ; "" );
+
+			// Get ~priorValue for comparison
+			~priorStart =
+				Position (
+					logData;
+					"¶Edit" & ~TAB & ~fieldName & ~TAB;
+					1;
+					1
+				);
+			~priorStart =
+				If ( ~priorStart; // ~fieldName was found in log
+					Position ( logData ; ~TAB ; ~priorStart + 1 ; 3 ) + 1
+				);
+			~priorEnd =
+				If ( ~priorStart; // ~fieldName was found in log
+					Position ( logData ; ~TAB ; ~priorStart + 1 ; 1 )
+				);
+			~priorValue =
+				If ( ~priorStart; // ~fieldName was found in log
+					Evaluate (
+						Middle (
+							logData;
+							~priorStart;
+							~priorEnd - ~priorStart
+						)
+					)
+				);
+
+			// Build $~editList
+			~edit =
+				If (
+					$~changeLogInitialize
+					or not Exact ( ~fieldValue ; ~priorValue );
+						TextStyleAdd ( "Edit" ; Italic ) & ~TAB
+						& ~fieldName & ~TAB
+						& TextStyleAdd ( "to:" ; Italic ) & ~TAB
+						& Quote ( ~fieldValue ) & ~TAB
+						& If ( not $~changeLogInitialize;
+							TextStyleAdd ( "from:" ; Italic ) & ~TAB
+							& Quote ( ~priorValue )
+						)
+				);
+			$~editList = List ( ~edit ; $~editList );
+
+			$~step = If ( $~i ≥ $~fieldCount ; $~step + 1 ; /*Else*/ $~step )
+		];
+			ChangeLog ( "" ; "" ; logData ; logFieldNames )
+		);
+
+	/* Step 2, format result */
+	$~step = 2;
+		Let ( [
+			~editList = $~editList;
+			~editsExist = not IsEmpty ( ~editList );
+			~header = If ( ~editsExist ; $~header );
+			~color =
+				If ( $~changeLogInitialize;
+					RGB ( 204 ; 204 ; 204 ); // 80% Gray
+					/* Else */ 0 // Black
+				);
+
+			// purge variables
+			$~editList = "";
+			$~header = "";
+			$~i = "";
+			$~step = "";
+			$~tableName = "";
+			$~type = ""
+		];
+			List (
+				TextStyleAdd ( TextColor ( ~header ; ~color ) ; Bold );
+				TextColor ( ~editList ; ~color );
+				If ( ~editsExist ; "¶" );
+				If ( not $~changeLogInitialize ; logData )
+			)
+		)
+)

@@ -1,0 +1,107 @@
+/**
+ * =====================================
+ * Crumb ( theLayoutNumber )
+ *
+ * PURPOSE:
+ *		Constructs a Crumb "object" for the layout specified by the parameter.
+ *
+ * RETURNS:
+ *		A series of name-value pairs
+ *
+ * PARAMETERS:
+ *		theLayoutNumber: The sequential number (not the ID) for the layout to
+ *		construct a Crumb object for.
+ *
+ * DEPENDENCIES:
+ *		# ( name ; value )
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~layoutName = GetValue ( LayoutNames ( Get ( FileName ) ) ; theLayoutNumber );
+	~layoutID = GetValue ( LayoutIDs ( Get ( FileName ) ) ; theLayoutNumber );
+
+	~prefix1 = Left ( ~layoutName ; 1 );
+	~prefix2 = Left ( ~layoutName ; 2 );
+	~isSeparator = ~prefix1 = "-";
+	~isHidden =
+		~isSeparator
+		or ~prefix1 = "#" // script or Python comment syntax
+		or ~prefix2 = "//"; // calculation or C++ comment syntax
+
+	~DELIMITER = ":";
+	~layoutLength = Length ( ~layoutName );
+	~delimiterPosition =
+		Position ( ~layoutName ; ~DELIMITER ; ~layoutLength ; -1 );
+	~moduleSubstitute =
+		Substitute (
+			If ( ~delimiterPosition; // delimiter was found
+				Left ( ~layoutName ; ~delimiterPosition - 1 );
+			/* Else */
+				~layoutName
+			);
+			[ " " ; "" ] ; [ "	" ; "" ]; // remove whitespace
+			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ] // remove comment syntax
+		);
+	~moduleStart =
+		Position (
+			~layoutName;
+			Left ( ~moduleSubstitute ; 1 );
+			1;
+			1
+		);
+	~moduleEnd =
+		Position (
+			~layoutName;
+			Right ( ~moduleSubstitute ; 1 );
+			~delimiterPosition;
+			-1
+		);
+	~module =
+		If ( ~delimiterPosition; // delimiter was found
+			Middle ( ~layoutName ; ~moduleStart ; ~moduleEnd - ~moduleStart + 1 );
+		/* Else */
+			Right ( ~layoutName ; ~layoutLength - ~moduleStart + 1 )
+		);
+
+	~nameSubstitute =
+		Substitute (
+			Right ( ~layoutName ; ~layoutLength - ~delimiterPosition );
+			[ " " ; "" ] ; [ "	" ; "" ]; // remove whitespace
+			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ] // remove comment syntax
+		);
+	~nameStart =
+		Position (
+			~layoutName;
+			Left ( ~nameSubstitute ; 1 );
+			~delimiterPosition + 1;
+			1
+		);
+	~nameEnd =
+		Position (
+			~layoutName;
+			Right ( ~nameSubstitute ; 1 );
+			~layoutLength;
+			-1
+		);
+	~name =
+		If ( ~delimiterPosition; // delimiter was found
+			Middle ( ~layoutName ; ~nameStart ; ~nameEnd - ~nameStart + 1 );
+		/* Else */
+			~module
+		)
+];
+	If (
+		not ~isSeparator
+		and not IsEmpty ( ~layoutName );
+			# ( "module" ; ~module )
+			& # ( "name" ; ~name )
+			& # ( "isHidden" ; ~isHidden )
+			& # ( "layoutName" ; ~layoutName )
+//			& # ( "layoutNumber" ; theLayoutNumber )
+//			& # ( "layoutID" ; ~layoutID )
+	)
+)

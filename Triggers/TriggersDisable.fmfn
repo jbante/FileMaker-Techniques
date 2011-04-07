@@ -1,0 +1,66 @@
+﻿/**
+ * =====================================
+ * TriggersDisable
+ *		http://www.briandunning.com/cf/1247
+ *
+ * PURPOSE:
+ *		TriggersDisable sets global variables to indicate that the current
+ *		script is suppressing triggers. This script must be called from the
+ *		context of a script; otherwise, it will not suppress triggers, and it
+ *		will return False. In order to be suppressed, a script called via
+ *		trigger should use the TriggersAreActive function to decide whether or
+ *		not to run.
+ *
+ * RETURNS:
+ *		True (1) if called from the context of a script, and therefore triggers
+ *		have been suppressed; False (0) otherwise.
+ *
+ * PARAMETERS: none
+ *
+ * REFERENCED VARIABLES:
+ *		$$~TRIGGERS_DISABLE
+ *		$$~TRIGGERS_SCRIPTS
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE (script):
+ *		Set Variable [ $ignoreMe ; TriggersDisable ]
+ *			# Do something
+ *		Set Variable [ $ignoreMe ; TriggersEnable ]
+ *
+ * NOTES:
+ *		This function should *always* be used in pairs with the TriggersEnable
+ *		function.
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
+ *		variables.
+ * 		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
+ *		filemakerstandards.org.
+ *		CREATED on 2010-12-12 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
+ *		TriggersAreActive: http://www.briandunning.com/cf/1247
+ *		TriggersDisable: http://www.briandunning.com/cf/1248
+ *		TriggersEnable: http://www.briandunning.com/cf/1249
+ *		TriggersReset: http://www.briandunning.com/cf/1250
+ * =====================================
+ */
+
+Let ( [
+	~scriptName = Get ( ScriptName );
+	~scriptIsRunning = not IsEmpty ( ~scriptName );
+	$$~TRIGGERS_SCRIPTS =
+		If ( ~scriptIsRunning;
+			~scriptName & "¶" & $$~TRIGGERS_SCRIPTS;
+			/*else*/ $$~TRIGGERS_SCRIPTS
+		);
+	$$~TRIGGERS_DISABLE =
+		If ( ~scriptIsRunning;
+			True;
+			/*else*/ $$~TRIGGERS_DISABLE
+		)
+];
+        ~scriptIsRunning
+)

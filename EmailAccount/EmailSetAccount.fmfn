@@ -1,0 +1,40 @@
+/**
+ * =====================================
+ * EmailSetAccount
+ *
+ * PURPOSE:
+ *		Bundles several parameters into a pseudo-struct.
+ *
+ * RETURNS:
+ *		A string of name-value pairs with the account information.
+ *
+ * PARAMETERS:
+ *		name
+ *		email
+ *		replyTo
+ *		smtpServer
+ *		port
+ *		smtpUserName
+ *		password
+ *
+ * DEPENDENCIES:
+ * # (custom function): https://github.com/petrowsky/fmpstandards/blob/master/Functions/%23.fmfn
+ *
+ * HISTORY:
+ *		CREATED on 2011-02-14 by Jeremy Bante of The Support Group
+ *		<http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let (
+	~emailAccount =
+		# ( "name" ; name )
+		& # ( "email" ; email )
+		& # ( "replyTo" ; replyTo )
+		& # ( "smtpServer" ; smtpServer )
+		& # ( "port" ; port )
+		& # ( "userName" ; smtpUserName )
+		& # ( "password" ; password );
+
+	~emailAccount
+)

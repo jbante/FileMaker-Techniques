@@ -1,0 +1,95 @@
+/**
+ * =====================================
+ * Zero ( functionOfX ; low ; functionOfLow ; high ; functionOfHigh ; remainingStackDepth )
+ *
+ * PURPOSE:
+ * This function returns a zero of functionOfX, or an (upper) approximation
+ * thereof, using a combination of the bisection, secant, and false position
+ * methods.
+ *
+ * RETURNS:
+ * A number that, when substituted for "<X>" in functionOfX, will cause
+ * functionOfX to evaluate to 0 (zero) or very close to 0.
+ *
+ * PARAMETERS:
+ * functionOfX: A text string that returns a numeric value when a number is
+ * substituted for "<X>" and the string is evaluated as a calculation.
+ * low: A lower bound for searching for a zero.
+ * functionOfLow: The numeric value of functionOfX when low is substituted for "<X>". This parameter makes calculation more efficient, but can be omitted by uncommenting the first variable definition in the Let() statement.
+ * high: An upper bound for searching for a zero.
+ * functionOfHigh: The numeric value of functionOfX when High is substituted for "<X>".
+ * remainingStackDepth: The number of recursive calls that Zero() is free to use to find a zero.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ * Zero() does not require that "low < high" be true, and does not necessarily
+ * constrain its search between these two values.
+ *
+ * functionOfLow and functionOfHigh are included as parameters to help evaluate
+ * this function more efficiently. If you choose to omit them as parameters,
+ * uncomment the first two variable declarations in the Let() function.
+ *
+ * Zero() is tail recursive. If Zero() is not being called from within another function, remainingStackDepth can be set as high as 49999.
+ *
+ * HISTORY:
+ * CREATED on 2010-02-05 by Jeremy Bante of Kyo Logic (jeremy@kyologic.com).
+ * =====================================
+ */
+Let( [
+	//uncomment these two variables to eliminate the need to pass functionOfLow and functionOfHigh as function parameters	//functionOfLow = Evaluate( Substitute( functionOfX; "[x]"; low) );
+	//functionOfHigh = Evaluate( Substitute( functionOfX; "[x]"; high) );
+
+	//Evaluate new estimate
+	estimate =
+		Case(
+			functionOfLow ≠ functionOfHigh; //if functionOfX has non-zero slope between low and high...
+			(functionOfHigh*low - functionOfLow*high) / (functionOfHigh - functionOfLow); //...use zero of secant line through low and high
+
+			//if secant line has no zero (or is constant zero)...
+			(low + high) / 2 //...bisect interval
+		); //end Case()
+	functionOfEstimate = Evaluate( Substitute( functionOfX; "<X>"; estimate) );
+
+	//Pre-calculate logical conditions
+	lowAndHighBoundZero = (functionOfLow * functionOfHigh < 0);
+	lowAndEstimateBoundZero = (functionOfLow * functionOfEstimate < 0);
+	highAndEstimateBoundZero = (functionOfEstimate * functionOfHigh < 0)
+];	//end variable definitions
+
+	Case(
+		functionOfEstimate = 0 or //if zero is found, or
+		estimate = high or //limit of precision is reached...
+		estimate = low;
+		estimate; //...use current estimate as (approximate) answer
+
+		remainingStackDepth < 2; //if the limit of available calculation stack is reached...
+		Case(
+			//If current parameters bound zero, return center of interval
+			lowAndEstimateBoundZero;
+			(low + estimate) / 2;
+
+			highAndEstimateBoundZero;
+			(high + estimate) / 2;
+
+			//If lowAndHighBoundZero, then one of the above two will be true, so there is no need for a third possible bisection.
+
+			//Current parameters don't bound zero, so return highest current parameter
+			(high > estimate) and (high > low);
+			high;
+
+			(estimate > low); //and estimate ≥ high
+			estimate;
+
+			low //low ≥ high and low ≥ estimate
+		); //end Case()
+
+		//limits of precision and stack depth have not been reached, so refine estimate
+		lowAndHighBoundZero and lowAndEstimateBoundZero; //zero is between low and estimate
+		Zero( functionOfX; low; functionOfLow; estimate; functionOfEstimate; remainingStackDepth - 1 );
+
+		//either low and high aren't known to bound a zero (then iterate secant method), or
+		//highAndEstimateBoundZero (then constrain search interval, and iterate false position method)
+		Zero( functionOfX; high; functionOfHigh; estimate; functionOfEstimate; remainingStackDepth - 1 )
+	) //end Case()
+) //end Let()

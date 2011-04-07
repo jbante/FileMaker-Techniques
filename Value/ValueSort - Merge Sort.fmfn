@@ -1,0 +1,126 @@
+/**
+ * ValueSort ( valueList )
+ *
+ * PURPOSE:
+ *		Sorts the contents of valueList.
+ *
+ * PARAMETERS:
+ *		valueList: A ¶-delimited list of values to sort
+ *
+ * RETURNS:
+ *		A ¶-delimited list of the values from valueList in increasing order.
+ *
+ * HISTORY:
+ *		CREATED on 2011-01-24 by Jeremy Bante <http://scr.im/jbantetsg>.
+ */
+
+Case (
+	/*Step 0, initialize variables*/
+	not $~step;
+	Let ( [
+		$~i = 1;
+		$~iBound = 1;
+		$~j = 2;
+		$~jBound = 2;
+		$~size = 2;
+		$~length = ValueCount ( valueList );
+		$~list = valueList;
+		$~step = 1
+	];
+		ValueSort ( "" )
+	);
+
+	/*Step 1, merge values from $~list*/
+	$~step = 1;
+	Let ( [
+		//compare values
+		~value1 = GetValue ( $~list ; $~i );
+		~value2 = GetValue ( $~list ; $~j );
+		~isLess = ~value1 ≤ ~value2 or IsEmpty ( ~value2 );
+		~advanceGroup =
+			( ~isLess and $~i = $~iBound )
+			or ( not ~isLess and $~j = $~jBound );
+		~orderedValues =
+			List (
+				valueList;
+				If ( ~isLess ; ~value1 ; /*else*/ ~value2 );
+				Case (
+					~isLess and ~advanceGroup;
+						Substitute (
+							MiddleValues (
+								$~list;
+								$~j;
+								Min ( $~jBound ; $~length ) - $~j + 1
+							) & "<<<END>>>";
+							[ "¶<<<END>>>" ; "" ];
+							[ "<<<END>>>" ; "" ]
+						);
+					~advanceGroup; //and not ~isLess
+						Substitute (
+							MiddleValues ( $~list ;  $~i ; $~iBound - $~i + 1 ) & "<<<END>>>";
+							[ "¶<<<END>>>" ; "" ];
+							[ "<<<END>>>" ; "" ]
+						)
+				)
+			);
+
+		//iterate process
+		$~step =
+			If ( ~advanceGroup and $~jBound ≥ $~length;
+				$~step + 1;
+				/*else*/ $~step
+			);
+		$~i =
+			Case (
+				~advanceGroup ; $~jBound + 1;
+				~isLess ; $~i + 1;
+				/*else*/ $~i
+			);
+		$~iBound = If ( ~advanceGroup ; $~iBound + $~size ; /*else*/ $~iBound );
+		$~j =
+			Case (
+				~advanceGroup ; $~iBound + 1;
+				~isLess ; $~j;
+				/*else*/ $~j + 1
+			);
+		$~jBound =
+			If ( ~advanceGroup;
+				Min ( $~jBound + $~size ; $~length );
+				/*else*/ $~jBound
+			)
+	];
+		ValueSort ( ~orderedValues )
+	);
+
+	/*Step 2, reset $~list*/
+	$~step = 2;
+	Let ( [
+		$~i = 1;
+		$~iBound = $~size;
+		$~j = $~iBound + 1;
+		$~jBound = Min ( $~iBound * 2 ; $~length );
+		$~size = $~size * 2;
+		$~list = valueList;
+		$~step = If ( $~j ≥ $~length ; $~step + 1 ; /*else*/ $~step - 1 )
+	];
+		ValueSort ( "" )
+	);
+
+	/*Step 3, clean-up and return result*/
+	$~step = 3;
+	Let ( [
+		~list = $~list;
+
+		//purge variables
+		$~i = "";
+		$~iBound = "";
+		$~j = "";
+		$~jBound = "";
+		$~length = "";
+		$~list = "";
+		$~size = "";
+		$~step = ""
+	];
+		~list
+	)
+)

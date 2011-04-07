@@ -1,0 +1,18 @@
+/**
+ * ======================================
+ * AppIsMobile
+ *
+ * RETURNS:
+ *		True when the function is called in the context of FileMaker Go, and
+ *		false otherwise.
+ *
+ * PARAMETERS : none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-01-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * ======================================
+ */
+ 
+Get ( SystemPlatform ) = 3

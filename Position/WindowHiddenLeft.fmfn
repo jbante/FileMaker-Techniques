@@ -1,0 +1,29 @@
+﻿/**
+ * ======================================
+ * WindowHiddenLeft
+ *
+ * PURPOSE:
+ *		This function returns a position that can be used as a WindowLeft
+ *		parameter for any window that should be hidden from users. Users with
+ *		[Full Access] accounts can see the window by holding any modifier key(s)
+ *		while the function is called.
+ *
+ * RETURNS:
+ *		-5000 when there is not a [Full Access] user holding a modifier key, or
+ *		the maximum of 0 and Get ( WindowLeft )
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES:
+ *		DeveloperModifierKeys (custom function)
+ *		Developer (custom function)
+ *
+ * HISTORY:
+ *		MODIFIED on 2010-12-02 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * ======================================
+ */
+
+If ( DeveloperModifierKeys;
+        Max ( 0 ; Get ( WindowLeft ) );
+        /*else*/ -5000
+)

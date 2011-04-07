@@ -1,0 +1,31 @@
+/**
+ * =====================================
+ * RandomBernoulli ( probability )
+ *
+ * PURPOSE:
+ *		When called repeatedly, RandomBernoulli creates values consistent with a
+ *		Bernoulli random variable with probability of "event success" (1) given
+ *		by the argument.
+ *
+ * RETURNS:
+ *		A number (0 or 1) representing a random variate from a Bernoulli
+ *		distribution with the specified probability.
+ *
+ * PARAMETERS:
+ *		probability: A number, 0 ≤ probability ≤ 1
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2010-02-05 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Bernoulli_distribution
+ * =====================================
+ */
+
+Case (
+	0 > probability or 1 < probability ; "?"; //parameter is out of range
+	Random < probability ; 1;
+	/*else*/ 0
+)

@@ -1,0 +1,36 @@
+/**
+ * =====================================
+ * CrumbTabIsCurrentModule ( moduleNumber )
+ *
+ * PURPOSE:
+ *		Constructs a Crumb "object" for the layout specified by the parameter.
+ *		This function expects that global variable to be populated before being
+ *		called.
+ *
+ * RETURNS:
+ *		True if the current layout is part of the module specified by
+ *		moduleNumber; False otherwise.
+ *
+ * PARAMETERS:
+ *		moduleNumber
+ *
+ * DEPENDENCIES:
+ *		Crumb ( theLayoutNumber )
+ *		CrumbModule ( theCrumb )
+ *
+ * VARIABLES:
+ *		$$CRUMBMODULELIST:  A return-delimited list of modules
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~currentModule = CrumbModule ( Crumb ( Get ( LayoutNumber ) ) );
+	~tabModule = Evaluate ( GetValue ( $$CRUMBMODULELIST ; moduleNumber ) );
+	~tabModule = Evaluate ( GetValue ( ~tabModule ; 1 ) );
+	~tabModule = CrumbModule ( ~tabModule )
+];
+	~currentModule = ~tabModule
+)

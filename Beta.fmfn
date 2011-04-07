@@ -1,0 +1,61 @@
+/*Beta_bySeries( a; b; sumStartAtZero; numStartAtZero; iStartAtZero; remainingStackDepth ) returns the Beta function of a and b, calculated as a series. If a and b are positive integers, consider using Beta_forPositiveIntegers() instead.
+
+Parameters:
+• a — A number.
+• b — A number.
+• sumStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A sum accumulator to facilitate tail recursion.
+• numStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A numerator accumulator to facilitate tail recursion.
+• iStartAtZero — Always set to 0 (zero) in use. An iteration index for recursive calls.
+• remainingStackDepth — The number of recursive calls that Beta_bySeries() is free to use. If Beta() is not being called from within another function, remainingStackDepth can be set as high as 49999. Beta_bySeries() is tail recursive.
+
+Example call:
+Beta_bySeries(
+	successCount + 1; //a
+	trialCount - successCount + 1; //b
+	0; //sumStartAtZero
+	0; //numStartAtZero
+	0; //iStartAtZero
+	49999; //remainingStackDepth
+) //end Beta_bySeries
+
+By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+Case(
+	iStartAtZero = 0; //first iteration
+	Beta_bySeries(
+		a; b; //parameters of Beta function
+		(1 / a) + (1 - b) / (a + 1); //first two terms of series
+		b - 1; //seed value for subsequent numerators of series term coefficients
+		iStartAtZero + 2; //jump past 2nd term in series
+		remainingStackDepth - 1
+	); //end Beta_bySeries()
+
+	//subsequent iteration
+	Let( [
+		newNum = numStartAtZero * (b - iStartAtZero); //add nomial to numerator of series term coefficients
+		newSum =
+			sumStartAtZero + //previous sum
+			( newNum / (Factorial(iStartAtZero) * (a + iStartAtZero))) //new term
+	];	//end variable definitions
+
+		Case(
+			(newSum = sumStartAtZero) or //limit of precision is reached, or
+			remainingStackDepth < 2; //limit of available calculation stack is reached
+			newSum;
+
+			//limits of calculation not met, so continue iteration
+			Beta_bySeries(
+				a; b; //parameters of Beta function
+				newSum;
+				newNum;
+				iStartAtZero + 1;
+				remainingStackDepth - 1
+			) //end Beta_bySeries()
+		) //end Case()
+	) //end Let()
+) //end Case()
+//end Beta_bySeries()
+
+
+/*Beta_forPositiveIntegers( a; b ) returns the Beta function of a and b, assuming that a and b are positive integers. By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+Factorial( a - 1 ) * Factorial( b - 1 ) / Factorial( a + b - 1 )
+//end Beta_forPositiveIntegers()

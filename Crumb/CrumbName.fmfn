@@ -1,0 +1,19 @@
+/**
+ * =====================================
+ * CrumbName ( theCrumb )
+ *
+ * RETURNS:
+ *		theCrumb's name parameter.
+ *
+ * PARAMETERS:
+ *		theCrumb
+ *
+ * DEPENDENCIES:
+ *		#Get ( parameters ; name )
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+#Get ( theCrumb ; "name" )

@@ -1,0 +1,30 @@
+/**
+ * =====================================
+ * DayNameShort ( theDate )
+ *
+ * PURPOSE:
+ * DayNameShort gives the 3-letter abbreviated day name of the specified date.
+ *
+ * RETURNS:
+ * The conventional day name abbreviation for the specified date.
+ *
+ * PARAMETERS:
+ * theDate: A date.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ * CREATED on 2011-01-11 by Jeremy Bante of The Support Group
+ * <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Choose ( DayOfWeek ( theDate ) - 1;
+	"Sun";
+	"Mon";
+	"Tue";
+	"Wed";
+	"Thu";
+	"Fri";
+	"Sat"
+)

@@ -1,0 +1,28 @@
+﻿/**
+* =====================================
+* ErrorReset
+*
+* PURPOSE:
+* ErrorReset clears the global variable referenced by the Error functions, so that
+* Error will return False (0) when used in the next script step after this
+* function.
+*
+* RETURNS: "" (Null)
+*
+* PARAMETERS: none
+*
+* REFERENCED VARIABLES:
+* $$~ERROR
+*
+* DEPENDENCIES: none
+*
+* HISTORY:
+* CREATED on 2010-12-15 by Jeremy Bante of The Support Group <http://scr.im/jbantetsg>.
+* =====================================
+*/
+ 
+Let ( [
+        $$~ERROR = "" //Null
+];
+        "" //Null
+)

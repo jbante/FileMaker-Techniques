@@ -1,0 +1,51 @@
+/*IncompleteBeta_bySeries( p; a; b; sumStartAtZero; numStartAtZero iStartAtZero; remainingStackDepth ) calculates the Incomplete Beta function of p, x and y — what would normally be written B( p; a, b ) — as a series. If x and y are positive integers, consider using Beta_forPositiveIntegers() instead.
+
+Parameters:
+• p — A number between 0 and 1, inclusive.
+• a — A number.
+• b — A number.
+• sumStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A sum accumulator to facilitate tail recursion.
+• numStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A numerator accumulator to facilitate tail recursion.
+• iStartAtZero — Always set to 0 (zero) in use. An iteration index for recursive calls.
+• remainingStackDepth — The number of recursive calls that Beta() is free to use. If IncompleteBeta_bySeries() is not being called from within another function, remainingStackDepth can be set as high as 49999. IncompleteBeta_bySeries() is tail recursive.
+
+By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+Case(
+	p = 0; //trivial case
+	0;
+
+	iStartAtZero = 0; //first iteration
+	IncompleteBeta_bySeries(
+		p; a; b; //parameters of Beta function
+		(1 / a) + p * (1 - b) / (a + 1); //first two terms of series
+		b - 1; //seed value for subsequent numerators of series term coefficients
+		iStartAtZero + 2; //jump past 2nd term in series
+		remainingStackDepth - 1
+	); //end IncompleteBeta_bySeries()
+
+	//subsequent iteration
+	Let( [
+		newNum = numStartAtZero * (b - iStartAtZero); //add nomial to numerator of series term coefficients
+		newSum =
+			sumStartAtZero + //previous sum
+			(p^iStartAtZero) * //power term
+			(newNum / (Factorial(iStartAtZero) * (a + iStartAtZero))) //term coefficient
+	];	//end variable definitions
+
+		Case(
+			(newSum = sumStartAtZero) or //limit of precision is reached, or
+			remainingStackDepth < 2; //limit of available calculation stack is reached
+			newSum * (p ^ a);
+
+			//limits of calculation not met, so continue iteration
+			IncompleteBeta_bySeries(
+				p; a; b; //parameters of Beta function
+				newSum;
+				newNum;
+				iStartAtZero + 1;
+				remainingStackDepth - 1
+			) //end IncompleteBeta_bySeries()
+		) //end Case()
+	) //end Let()
+) //end Case()
+//end IncompleteBeta_bySeries()

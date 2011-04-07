@@ -1,0 +1,113 @@
+﻿/**
+ * ======================================
+ * UUIDGetNICAddress ( theID )
+ *		http://www.briandunning.com/cf/1222
+ *
+ * PURPOSE:
+ *		Extracts the hexadecimal NIC address from a numeric (not hexadecimal)
+ *		UUID created by this family of functions.
+ *
+ * RETURNS:
+ *		A string of the form nn:nn:nn:nn:nn:nn representing the hexadecimal NIC
+ *		address of the machine that created the UUID passed as a parameter.
+ *		Returns Null ("") if the UUID does not contain a retrievable NIC
+ *		address.
+ *
+ * PARAMETERS:
+ *		theID: The UUID to extract a NIC address from
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-02-25 by Jeremy Bante to ignore MAC addresses with the
+ *		multicast bit set to 1.
+ *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
+ *		relationship with the RFC 4122 format.
+ *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbantetsg> to
+ *		extract NIC addresses from the updated output format for UUIDNew.
+ *		MODIFIED on 2010-10-04 by Jeremy Bante to return False when passed a
+ *		UUID value with a randomly-generated NICAddress.
+ *		CREATED on 2010-09-12 by Jeremy Bante <jeremy@kyologic.com>.
+ *		INSPIRED by UUID functions created by Ray Cologon.
+ *
+ * REFERENCES:
+ *		Key values Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557138
+ *		Ray Cologon's uID functions: http://www.nightwing.com.au/FileMaker/demos9/demo910.html
+ *		UUIDGetAsRFC4122: http://www.briandunning.com/cf/1221
+ *		UUIDGetAsUUID: http://www.briandunning.com/cf/1273
+ *		UUIDGetNICAddress: http://www.briandunning.com/cf/1222
+ *		UUIDGetSeconds: http://www.briandunning.com/cf/1223
+ *		UUIDTimeNIC: http://www.briandunning.com/cf/1220
+ *		UUIDRandom: http://www.briandunning.com/cf/1246
+ * ======================================
+ */
+Case (
+	/*Pull node field from UUID, and set-up conversion loop*/
+	not $~step;
+		Let ( [
+			~idAsNumber = GetAsNumber ( theID );
+			~version = Left ( ~idAsNumber ; Length ( ~idAsNumber ) - 40 );
+			$~nicAddress = Right ( ~idAsNumber ; 15 );
+			~isMulticast = Mod ( Div ( $~nicAddress ; 1099511627776 ) ; 2 );
+			$~hexNICAddress = "";
+			$~base16 = "0123456789abcdef";
+			$~step =
+				If (
+					~version < 3  //NIC is valid
+					and $~nicAddress ≤ 281474976710656
+					and not ~isMulticast;
+						1;
+					/*else*/
+						-1 //error
+				)
+		];
+			UUIDGetNICAddress ( "" )
+		);
+
+	/*Convert NIC address from base 10 to base 16*/
+	$~step = 1;
+		Let ( [
+			$~hexNICAddress =
+				Middle ( $~base16 ; Mod ( $~nicAddress ; 16 ) + 1 ; 1 ) &
+				$~hexNICAddress;
+				$~nicAddress = Div ( $~nicAddress ; 16 );
+				$~step = If ( $~nicAddress ; $~step ; /*else*/ $~step + 1 )
+		];
+			UUIDGetNICAddress ( "" )
+		);
+
+	/*Insert colons and return result*/
+	$~step = 2;
+		Let ( [
+			~nicAddress = Right ( "000000000000" & $~hexNICAddress ; 12 );
+			~nicAddress =
+				Middle ( ~nicAddress ; 1 ; 2 ) & ":"
+				& Middle ( ~nicAddress ; 3 ; 2 ) & ":"
+				& Middle ( ~nicAddress ; 5 ; 2 ) & ":"
+				& Middle ( ~nicAddress ; 7 ; 2 ) & ":"
+				& Middle ( ~nicAddress ; 9 ; 2 ) & ":"
+				& Middle ( ~nicAddress ; 11 ; 2 );
+
+			//purge variables
+			$~nicAddress = "";
+			$~hexNICAddress = "";
+			$~base16 = "";
+			$~i = "";
+			$~step = ""
+		];
+			~nicAddress
+		);
+
+	/*Return error value*/
+	$~step = -1;
+		Let ( [
+			//purge variables
+			$~nicAddress = "";
+			$~hexNICAddress = "";
+			$~base16 = "";
+			$~i = "";
+			$~step = ""
+		];
+			"" //Null
+		)
+)

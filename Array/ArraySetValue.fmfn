@@ -1,0 +1,88 @@
+﻿/**
+ * =====================================
+ * ArraySetValue ( array ; index ; data )
+ * http://www.briandunning.com/cf/1279
+ *
+ * PURPOSE:
+ * Sets a value at a specified position in an arbitrary-dimensional array. This
+ * will replace any existing contents of the passed array in that cell.
+ *
+ * RETURNS:
+ * An array containing the data value at the specified index, in addition to any
+ * other values in array.
+ *
+ * PARAMETERS:
+ * array: An quoted value return-delimited list array.
+ * index: The index for the cell from which to extract a value. To address
+ * values from multi-dimentional arrays, separate the index for each dimension
+ * with ¶, or list the indices with the List function.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTE:
+ * This function expects the passed array to be formatted as a quoted value
+ * list, where separate values are on separate lines (¶-delimited), and the
+ * values have been quoted, such as by the Quote function, so that values can be
+ * retrieved with the Evaluate function.
+ *
+ * EXAMPLE:
+ * ArraySetValue ( $array ; List ( Get ( RecordNumber ) ; 4 ) ; $data )
+ *
+ * HISTORY:
+ * CREATED on 2011-02-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ * ArrayValue: http://www.briandunning.com/cf/1278
+ * ArraySetValue: http://www.briandunning.com/cf/1279
+ * =====================================
+ */
+
+Let ( [
+	~index = GetAsNumber ( GetValue ( index ; 1 ) );
+	~indexCount = ValueCount ( index );
+	~arrayLength = ValueCount ( array );
+	
+	//Array may need to be padded with values to be big enough for ~index
+	~short = Max ( ~index - ~arrayLength - 1 ; 0 );
+	$~pad =
+		Case (
+			not ~short
+			and ~indexCount ≤ 1;
+				""; //purge variable
+			
+			~short ≤ ValueCount ( $~pad );
+				$~pad;
+
+			/*else*/
+				$~pad & $~pad & "¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶¶"
+		);
+
+	//Values to repeat from before and after ~index
+	~leftArray = LeftValues ( array ; ~index - 1 );
+	~rightArray = RightValues ( array ; ~arrayLength - ~index )
+];
+	Case (
+		~short; //array needs to be padded
+			ArraySetValue (
+				array & Left ( $~pad ; ~short );
+				index;
+				data
+			);
+
+		~indexCount ≤ 1;
+			~leftArray
+			& Quote ( data ) & "¶"
+			& ~rightArray;
+
+		~indexCount > 1;
+			~leftArray
+			& Quote (
+				ArraySetValue (
+					Evaluate ( GetValue ( array ; ~index ) );
+					RightValues ( index ; ~indexCount - 1 );
+					data
+				)
+			) & "¶"
+			& ~rightArray;
+	)
+)

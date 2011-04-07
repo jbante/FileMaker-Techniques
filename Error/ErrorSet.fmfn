@@ -1,0 +1,50 @@
+﻿/**
+* =====================================
+* ErrorSet ( errorCode )
+*
+* PURPOSE:
+* ErrorSet sets an environmental variable with a developer-defined error code
+* so that the Error function can treat FileMaker- and developer-defined errors
+* the same way. This function also adds the error to an error log global
+* variable that can later be parsed out for more details about the context of
+* the error.
+*
+* RETURNS:
+* The error code as set for the Error function
+*
+* PARAMETERS:
+* errorCode: The numeric error code to set
+*
+* REFERENCED VARIABLES:
+* $$~ERROR
+* $$~ERRORLOG
+*
+* DEPENDENCIES:
+* # ( name ; value ) (custom function)
+* ContextParameters (custom function)
+*
+* NOTES:
+* Since this and related functions treat FileMaker- and developer-defined
+* error codes in the same number space, developer-defined error codes should
+* start at 1600. (The maximum FileMaker error code is 1507.) Two exceptions to
+* this rule are error code -1, "Unknown error"; and 0, "No error".
+*
+* HISTORY:
+* CREATED on 2010-12-13 by Jeremy Bante of The Support Group <http://scr.im/jbantetsg>.
+* =====================================
+*/
+ 
+Let ( [
+        ~error = GetAsNumber ( errorCode );
+        $$~ERROR = If ( IsEmpty ( ~error ) ; 0 ; /*else*/ ~error )
+        $$~ERRORLOG =
+                If ( $$~ERROR; //there's an error to log
+                        List (
+                                Quote ( # ( "errorCode" ; $$~ERROR ) & ContextParameters );
+                                $$~ERRORLOG
+                        );
+                        /*else*/ $$~ERRORLOG //don't log a non-error
+                )
+];
+        $$~ERROR
+)

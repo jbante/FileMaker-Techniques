@@ -1,0 +1,18 @@
+﻿/**
+ * =====================================
+ * Server
+ *
+ * RETURNS:
+ *		True (1) if the calculation is called in the context of a server-side
+ *		process, False (0) otherwise.
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+PatternCount ( Get ( ApplicationVersion ) ; "Server" )

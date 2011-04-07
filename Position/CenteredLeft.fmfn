@@ -1,0 +1,20 @@
+﻿/**
+ * ======================================
+ * CenteredLeft ( centerLeft ; width )
+ *
+ * RETURNS:
+ *		The left position of a window with the given center and width.
+ *
+ * PARAMETERS:
+ *		centerLeft: The horizontal coordinate of the center of an object.
+ *		width: The width of a window
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-25 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		INSPIRED by custom functions by Daniel Wood. http://digitalfusion.co.nz/news/weetbicks/creating-tidy-popup-windows/39/
+ * ======================================
+ */
+
+Round ( centerLeft - width / 2 ; 0 )

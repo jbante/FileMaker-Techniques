@@ -1,0 +1,74 @@
+/**
+ * =====================================
+ * CarouselPriorLayout
+ *
+ * PURPOSE:
+ *		Finds the logical previous layout in carousel-style system navigation.
+ *		This navigation pattern can be particularly useful in files used as
+ *		presentation devices, such as technique demonstration files.
+ *
+ * PARAMETERS: none
+ *
+ * RETURNS:
+ *		The name of the logical previous layout.
+ *
+ * DEPENDENCIES:
+ *		This function requires developers to adhere to a layout naming
+ *		convention for correct operation. Layouts that will be omitted from the
+ *		normal sequence for a file must be prefixed with either "-" (like
+ *		separator layouts) or "//" (like C++ style comments).
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-01-25 by Jeremy Bante to not set global variables
+ *		for next and previous layouts.
+ *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, initialize processing */
+	not $~step;
+	Let ( [
+		$~layoutNames = LayoutNames ( Get ( FileName ) );
+		$~layoutCount = ValueCount ( $~layoutNames );
+		$~layoutNumber = Get ( LayoutNumber );
+		$~i = $~layoutNumber;
+		$~step = 1
+	];
+		CarouselPriorLayout
+	);
+	
+	/* Step 1, find the previous layout to navigate to */
+	$~step = 1;
+	Let ( [
+		$~i = If ( $~i = 1 ; $~layoutCount ; /*else*/ $~i - 1 );
+		$~backLayout = GetValue ( $~layoutNames ; $~i );
+		$~step =
+			If ( //skip separators and hidden layouts
+				Left ( $~backLayout ; 1 ) ≠ "-"
+				and Left ( $~backLayout ; 2 ) ≠ "//"
+				or $~i = $~layoutNumber; //search is exhausted
+					$~step + 1;
+					
+				/*else*/ $~step
+			)		
+	];
+		CarouselPriorLayout
+	);
+	
+	/* Step 2, clean-up */
+	$~step = 2;
+	Let ( [
+		~backLayout = $~backLayout;
+		
+		//purge variables
+		$~i = "";
+		$~layoutCount = "";
+		$~layoutNames = "";
+		$~layoutNumber = "";
+		$~backLayout = "";
+		$~step = ""
+	];
+		~backLayout
+	)
+)

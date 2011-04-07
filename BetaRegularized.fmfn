@@ -1,0 +1,83 @@
+/*RegularizedBeta( maxProbability; successes; trials ) returns the total probability of observing the number of successes given by "successes" from a sample of size given by "trials" from a population with a probability of success between zero and "maxProbability". See the example for clarification. This function uses RegularizedBeta_bySeries().
+
+Parameters:
+maxProbability — The maximum population probability of success to consider. 0 ≤ maxProbability and maxProbability ≤ 1
+successes — The observed number of successes. 0 ≤ successes
+trials — The observed number of trials. successes ≤ trials
+
+For example, consider a pre-election poll, where a some number of voters out of some poll group said they would vote for candidate A. The probability that candidate A will win a majority (more than 50% of the votes) is the total probability that the poll sample came from a general population where more than 50% of the voters support candidate A. This is the same as 1 minus the probability that the sample didn't come from such a population (the complement). So we can calculate candidate A's odds as:
+1 - RegularizedBeta(
+	0.5; //50% max population probability of success to consider
+	numberOfVotersSupportingA; //51
+	numberOfVotersPolled //100
+)
+…which should return 0.5788089507461280, or about a 57% chance of candidate A winning. (With a poll of 1000 voters with the same 51% support, this jumps to about 74%.) This is equivalent to RegularizedBeta( 0.5; numberOfVotersPolled - numberOfVotersSupportingA; numberOfVotersPolled ).
+
+This function calls a recursive function with that manages its function call stack depth, RegularizedBeta_bySeries(). That function, RegularizedBeta_bySeries(), is tail recursive and can support as many as 49998 recursive calls. Allowing more recursive calls will cause it to evaluate more slowly, but the result will be more accurate. By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+RegularizedBeta_bySeries(
+	maxProbability;
+	successes + 1; //translate to the standard parameters for the Regularized Incomplete Beta function
+	trials - successes + 1;
+	0; 0; 0; 0; //recursion parameters all start at zero
+	10000 //remainingStackDepth < 49999, bigger is more accurate and slower
+) //end RegularizedBeta_bySeries
+//end RegularizedBeta
+
+/*RegularizedBeta_bySeries( p; a; b; sumStartAtZero; betaStartAtZero; numStartAtZero iStartAtZero; remainingStackDepth ) calculates the Incomplete Beta function of p, x and y — what would be written in Mathematica as BetaRegularized[ p, a, b] — as a power series.
+
+Parameters:
+• p — A number between 0 and 1, inclusive.
+• a — A positive number.
+• b — A positive number.
+• sumStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A sum accumulator to facilitate tail recursion.
+• betaStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A sum accumulator to facilitate tail recursion.
+• numStartAtZero — Always set to 0 (zero) in use, though the value is ignored when iStartAtZero is 0. A numerator accumulator to facilitate tail recursion.
+• iStartAtZero — Always set to 0 (zero) in use. An iteration index for recursive calls.
+• remainingStackDepth — The number of recursive calls that Beta() is free to use. If IncompleteBeta_bySeries() is not being called from within another function, remainingStackDepth can be set as high as 49999. IncompleteBeta_bySeries() is tail recursive.
+
+If you experience unexpected behavior, check the parameters that you are passing; this function does not check for invalid values. By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+Case(
+	(p = 0) or (p = 1); //trivial case
+	p;
+
+	iStartAtZero = 0; //first iteration
+	RegularizedBeta_bySeries(
+		p; a; b; //parameters of Beta function
+		(1 / a) + p * (1 - b) / (a + 1); //first two terms of IncompleteBeta series
+		(1 / a) + (1 - b) / (a + 1); //first two terms of Beta series
+		b - 1; //seed value for subsequent numerators of series term coefficients
+		iStartAtZero + 2; //jump past 2nd term in series
+		remainingStackDepth - 1
+	); //end RegularizedBeta_bySeries()
+
+	//subsequent iteration
+	Let( [
+		newNum = numStartAtZero * (b - iStartAtZero); //add nomial to numerator of series term coefficients
+		newSum =
+			sumStartAtZero + //previous sum
+			(p^iStartAtZero) * //power term
+			(newNum / (Factorial(iStartAtZero) * (a + iStartAtZero))); //term coefficient
+		newBeta =
+			betaStartAtZero + //previous sum
+			( newNum / (Factorial(iStartAtZero) * (a + iStartAtZero))) //new term
+	];	//end variable definitions
+
+		Case(
+			(newSum = sumStartAtZero) and
+			(newBeta = betaStartAtZero) or //limit of precision is reached, or
+			remainingStackDepth < 2; //limit of available calculation stack is reached
+			newSum * (p ^ a) / newBeta;
+
+			//limits of calculation not met, so continue iteration
+			RegularizedBeta_bySeries(
+				p; a; b; //parameters of Beta function
+				newSum;
+				newBeta;
+				newNum;
+				iStartAtZero + 1;
+				remainingStackDepth - 1
+			) //end RegularizedBeta_bySeries()
+		) //end Case()
+	) //end Let()
+) //end Case()
+//end RegularizedBeta_bySeries()

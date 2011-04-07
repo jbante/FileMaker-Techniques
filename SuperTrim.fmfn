@@ -1,0 +1,32 @@
+/*
+CUSTOM FUNCTION: Supertrim ( text )
+© 2004 Debi Fuchs of Aptworks Consulting, debi@aptworks.com
+
+Speedily (and with no recursion) remove leading and trailing white space (including spacing, tabs and returns) from a text string.
+
+NOTE: Similar to TrimAll, except that it also removes tabs and returns (in addition to spaces), and it does not touch any spacing WITHIN the string.
+
+EXAMPLE:
+  Supertrim("  John  Smith¶") // --> "John  Smith¶"
+
+LAST MODIFIED: 20-AUG-2008 by Debi Fuchs of Aptworks Consulting
+*/
+
+
+Let(
+  [
+    // Determine value of original string with ALL whitespace removed.
+    t2 = Substitute( text; [ " "; "" ]; [ " "; "" ]; [ "	"; "" ]; [ "¶"; "" ] );
+
+    // Determine position of first non-ws character in original string.
+    first_char = Position( text; Left( t2; 1 ); 0; 1 );
+
+    // Determine position of last non-ww character in original string.
+    last_char = Position( text; Right( t2; 1 ); Length( text ); -1 )
+  ];
+
+  // If any non-whitespace characters exist return appropriate
+  // middle portion of original text.
+
+  Case( first_char; Middle( text; first_char; last_char - first_char + 1 ) )
+)

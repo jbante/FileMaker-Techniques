@@ -1,0 +1,50 @@
+/**
+ * =====================================
+ * RandomBeta ( alpha ; beta )
+ *
+ * PURPOSE:
+ *		When called repeatedly, RandomBeta creates values consistent with a
+ *		beta-distributed random variable with shape parameters alpha and beta.
+ *
+ * RETURNS:
+ *		A number between 0 (zero) and 1 representing a random variate from a
+ *		beta distribution with the specified parameters.
+ *
+ * PARAMETERS:
+ *		alpha: A number, alpha > 0
+ *		beta: A number, beta > 0
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Beta_distribution
+ * =====================================
+ */
+
+Let ( [
+	~guess = Random;
+
+	~mode = ( alpha - 1 ) / ( alpha + beta - 2 );
+	~densityAtMode =
+		( ~mode ^ ( alpha - 1 ) )
+		* ( ( 1 - ~mode ) ^ ( beta - 1 ) );
+
+	~rejectionThreshold = //probability density at ~guess
+		( ~guess ^ ( alpha - 1 ) )
+		* ( ( 1 - ~guess ) ^ ( beta - 1 ) )
+		* ~densityAtMode //maps function to [0,1] for max acceptance rate
+];
+	Case (
+		alpha ≤ 0 or beta ≤ 0; //parameters out of range
+			"?"; //error
+
+		Random ≤ ~rejectionThreshold;
+			~guess;
+
+		//Else, reject ~guess and sample again
+			RandomBeta ( alpha ; beta )
+	)
+)

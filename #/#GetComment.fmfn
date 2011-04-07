@@ -1,0 +1,35 @@
+﻿/**
+ * =====================================
+ * #GetComment ( fieldName ; name )
+ *
+ * PURPOSE:
+ *		Retrieves values from a name-value pair list created with the
+ *		# ( name ; value ) function in a field comment. This function does
+ *		not set any variables, making it non-destructive, in contrast with the
+ *		#AssignScriptParameters function, which can over-write variables.
+ *
+ * RETURNS:
+ *		The value from the name-value pair specified by the name parameter. If
+ *		such a value is not in the field comment, the function returns Null.
+ *
+ * PARAMETERS:
+ *		fieldName: The name of the field to parse the field comment from.
+ *		name: The name of the name-value pair from which to retrieve the value.
+ *
+ * DEPENDENCIES:
+ *		#Get
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-02-24 by Jeremy Bante to avoid duplicating code from
+ *		the #Get function.
+ *		CREATED on 2011-02-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~parameters = FieldComment ( Get ( FileName ) ; fieldName );
+	~parameters = Substitute ( ~parameters ; "#Self" ; fieldName );
+	~parameters = Evaluate ( ~parameters )
+];
+	#Get ( ~parameters ; name )
+)
