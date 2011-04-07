@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * ChangeLogTimestamp ( logData )
+ * AuditLogTimestamp ( logData )
  *
  * RETURNS:
  *		The timestamp from the first (most recent) line of logData
@@ -22,17 +22,7 @@
 Let ( [
 	~TAB = "	";
 	~log = Substitute ( logData ; ~TAB ; "¶" );
-	~isEdit = GetValue ( ~log ; 1 ) = "Edit";
-	~timestamp = GetValue ( ~log ; 2 )
+	~isEdit = GetValue ( ~log ; 1 ) = "Edit"
 ];
-	If ( not ~isEdit;
-		Timestamp (
-			Date (
-				Middle ( ~timestamp ; 6 ; 2 ); // Month
-				Middle ( ~timestamp ; 9 ; 2 ); // Day
-				Left ( ~timestamp ; 4 ) // Year
-			);
-			GetAsTime ( RightWords ( ~timestamp ; 1 ) )
-		)
-	)
+	If ( not ~isEdit; GetValue ( ~log ; 2 ) )
 )

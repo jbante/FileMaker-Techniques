@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * ChangeLogPriorValue ( logData )
+ * AuditLogPriorValue ( logData )
  *
  * RETURNS:
  *		The prior ("from") value from the first (most recent) line of logData

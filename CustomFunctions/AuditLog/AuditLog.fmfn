@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * ChangeLog ( modificationTrigger ; primaryKey ; logData ; logFieldNames )
+ * AuditLog ( modificationTrigger ; primaryKey ; logData ; logFieldNames )
  *
  * PURPOSE:
  *		Creates a log of any data changes made to a record.
@@ -18,15 +18,17 @@
  *			for changes.
  *
  * DEPENDENCIES:
- *		UUIDTimestamp: https://github.com/filemakerstandards/fmpstandards/blob/master/Functions/UUIDTimeStamp.fmfn
+ *		UUIDTimestamp (May be substituted for another timestamp-based UUID
+ *			function)
+ *		UUIDGetTimestamp
  *
  * VARIABLES:
- *		$~changeLogInitialize: A flag indicating that the current change is only
+ *		$~auditLog_initialize: A flag indicating that the current change is only
  *			initializing the log as a point of comparison, and does not
  *			represent an actual data edit.
  *
- * EXAMPLE: (in a field auto-enter calculation )
- *		ChangeLog (
+ * EXAMPLE: (in a field auto-enter calculation)
+ *		AuditLog (
  *			modificationTimestamp; // triggers calculation
  *			Self; // logData
  *			List ( GetFieldName ( field1 ) ; GetFieldName ( field2 ) )
@@ -43,63 +45,66 @@
  *		not based on a dedicated table).
  *
  * HISTORY:
+ *		MODIFIED on 2011-04-01 by Jeremy Bante to use a more-human readable
+ *		storage format.
  *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbantetsg>.
  *		INSPIRED by the UltraLog solution by Ray Cologon.
  *
  * REFERENCES:
  *		Ray Cologon's UltraLog: http://www.nightwing.com.au/FileMaker/demosX/demoX01.html
- *		ISO 8601 timestamp format: http://en.wikipedia.org/wiki/ISO_8601
  * =====================================
  */
 
 Case (
-	/* Step 0, build commit header */
+	/* Step 0, build event header */
 	IsEmpty ( $~header );
 		Let ( [
 			~TAB = "	";
 
 			~type =
-				If ( $~changeLogInitialize;
+				If ( $~auditLog_initialize;
 					"Initialize";
-					/*Else*/ "Commit"
+					/*Else*/ "Change"
 				);
-
-			~now = Get ( CurrentHostTimestamp );
-			~now = // timestamp in ISO 8601 format
-				Right ( "0000" & Year ( ~now ) ; 4 ) & "-"
-				& Right ( "00" & Month ( ~now ) ; 2 ) & "-"
-				& Right ( "00" & Day ( ~now ) ; 2 ) & " "
-				& Right ( "00" & Hour ( ~now ) ; 2 ) & ":"
-				& Right ( "00" & Minute ( ~now ) ; 2 ) & ":"
-				& Right ( "00" & Seconds ( ~now ) ; 2 );
-
-			// Get $~tableName
-			~fieldName = GetValue ( logFieldNames ; 1 );
-			~fieldName = Substitute ( ~fieldName ; "::" ; "¶" );
-			$~tableName =
-				If ( ValueCount ( ~fieldName ) > 1;
-					GetValue ( ~fieldName ; 1 );
-					/* Else */ Get ( LayoutTableName )
+				
+			~uuid = UUIDTimestamp;
+			~now = UUIDGetTimestamp ( ~uuid );
+			~session = Right ( ~uuid ; 21 );
+			
+			~field = GetValue ( logFieldNames ; 1 );
+			~field = Substitute ( ~field ; "::" ; "¶" );
+			$~table =
+				If ( ValueCount ( ~field ) > 1;
+					GetValue ( ~field ; 1 )
 				);
-
-			~commitID = UUIDTimestamp;
-
+				
+			~script = Get ( ScriptName );
+			
 			$~header =
 				TextStyleAdd ( ~type ; Italic ) & ~TAB
 				& ~now & ~TAB
-				& Get ( AccountName ) & ~TAB
-				& Get ( ScriptName ) & ~TAB
-				& $~tableName & ~TAB
+				& If ( not $~auditLog_initialize;
+					TextStyleAdd ( "by:" ; Italic ) & ~TAB
+					& Get ( AccountName ) & ~TAB;
+					/* Else */ ~TAB & ~TAB
+				)
+				& If ( not IsEmpty ( ~script ) and not $~auditLog_initialize;
+					TextStyleAdd ( "script:" ; Italic ) & ~TAB
+					& Get ( ScriptName ) & ~TAB;
+					/* Else */ ~TAB & ~TAB
+				)
+				& TextStyleAdd ( "record:" ; Italic ) & ~TAB
+				& $~table & ~TAB
 				& If ( Length ( primaryKey ) > 10;
 					TextSize ( primaryKey ; 9 );
 					/* Else */ primaryKey
 				) & ~TAB
-				& TextSize ( ~commitID ; 9 );
+				& TextSize ( ~session ; 9 );
 
 			$~fieldCount = ValueCount ( logFieldNames );
-			$~step = If ( $~fieldCount ; 1 ; /*Else*/ 2 )
+			$~step = If ( $~fieldCount ; 1 ; /* Else */ 2 )
 		];
-			ChangeLog ( "" ; "" ; logData ; logFieldNames )
+			AuditLog ( "" ; primaryKey ; logData ; logFieldNames )
 		);
 
 	/* Step 1, audit field changes */
@@ -117,7 +122,7 @@ Case (
 					[ "\\" ; "\\\\" ];
 					[ ~TAB ; "\\t" ]
 				);
-			~fieldName = Substitute ( ~fieldName ; $~tableName & "::" ; "" );
+			~fieldName = Substitute ( ~fieldName ; $~table & "::" ; "" );
 
 			// Get ~priorValue for comparison
 			~priorStart =
@@ -149,13 +154,13 @@ Case (
 			// Build $~editList
 			~edit =
 				If (
-					$~changeLogInitialize
+					$~auditLog_initialize
 					or not Exact ( ~fieldValue ; ~priorValue );
 						TextStyleAdd ( "Edit" ; Italic ) & ~TAB
 						& ~fieldName & ~TAB
 						& TextStyleAdd ( "to:" ; Italic ) & ~TAB
 						& Quote ( ~fieldValue ) & ~TAB
-						& If ( not $~changeLogInitialize;
+						& If ( not $~auditLog_initialize;
 							TextStyleAdd ( "from:" ; Italic ) & ~TAB
 							& Quote ( ~priorValue )
 						)
@@ -164,7 +169,7 @@ Case (
 
 			$~step = If ( $~i ≥ $~fieldCount ; $~step + 1 ; /*Else*/ $~step )
 		];
-			ChangeLog ( "" ; "" ; logData ; logFieldNames )
+			AuditLog ( "" ; primaryKey ; logData ; logFieldNames )
 		);
 
 	/* Step 2, format result */
@@ -174,7 +179,7 @@ Case (
 			~editsExist = not IsEmpty ( ~editList );
 			~header = If ( ~editsExist ; $~header );
 			~color =
-				If ( $~changeLogInitialize;
+				If ( $~auditLog_initialize;
 					RGB ( 204 ; 204 ; 204 ); // 80% Gray
 					/* Else */ 0 // Black
 				);
@@ -184,14 +189,14 @@ Case (
 			$~header = "";
 			$~i = "";
 			$~step = "";
-			$~tableName = "";
+			$~table = "";
 			$~type = ""
 		];
 			List (
 				TextStyleAdd ( TextColor ( ~header ; ~color ) ; Bold );
 				TextColor ( ~editList ; ~color );
 				If ( ~editsExist ; "¶" );
-				If ( not $~changeLogInitialize ; logData )
+				If ( not $~auditLog_initialize ; logData )
 			)
 		)
 )

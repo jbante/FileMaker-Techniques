@@ -1,0 +1,18 @@
+//------------------------------------------------------------------------------
+// Format:
+eventType	->	[field1]	->	[field2]	-> [field3]	->	[...]
+
+// Format, eventType = "Change", Style = Bold
+"Change"	Timestamp (eventKey)	"by:"	Account	"script:"	Script		"record:"	Table PrimaryKey	sessionKey
+
+// Format, eventType = "Initialize", Style = Bold, Color = Gray
+"Initialize"	Timestamp (eventKey)					sessionKey
+
+// Format, eventType = "Delete", Style = Bold, Color = Red
+"Delete"	Timestamp (eventKey)	"by:"	Account	"script:"	Script	sessionKey
+
+// Format, eventType = "RESTORE", Style = Bold, Color = Blue
+"Restore"	Timestamp (eventKey)	"by:"	Account	"script:"	Script	sessionKey
+
+// Format, eventType = "Edit", Style = Plain
+"Edit"	fieldName	"to:"	Quote ( value )	"from:"		Quote ( priorValue )

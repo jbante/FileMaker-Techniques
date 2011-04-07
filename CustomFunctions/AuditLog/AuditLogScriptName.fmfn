@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * ChangeLogScriptName ( logData )
+ * AuditLogScriptName ( logData )
  *
  * RETURNS:
  *		The script name from the first (most recent) line of logData
@@ -10,10 +10,6 @@
  *			function.
  *
  * DEPENDENCIES: none
- *
- * NOTES:
- *		This function must be modified if the ChangeLog function is modified to
- *		include the prior value in each "event" line.
  *
  * HISTORY:
  *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbantetsg>.
@@ -25,5 +21,5 @@ Let ( [
 	~log = Substitute ( logData ; ~TAB ; "¶" );
 	~isEdit = GetValue ( ~log ; 1 ) = "Edit"
 ];
-	If ( not ~isEdit ; GetValue ( ~log ; 4 ) )
+	If ( not ~isEdit ; GetValue ( ~log ; 6 ) )
 )

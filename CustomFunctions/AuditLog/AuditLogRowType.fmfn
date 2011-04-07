@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * ChangeLogRowType ( logData )
+ * AuditLogRowType ( logData )
  *
  * RETURNS:
  *		The row type from the first (most recent) line of logData
