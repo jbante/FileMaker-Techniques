@@ -29,10 +29,10 @@
  *		UUIDRandom: http://www.briandunning.com/cf/1246
  * ======================================
  */
- 
+
 Let( [
 	~idAsNumber = GetAsNumber ( theID );
-	~session = Right ( ~idAsNuber ; 20 );
+	~session = Right ( ~idAsNumber ; 20 );
 	~length = Length ( ~idAsNumber );
 	~version = Left ( ~idAsNumber ; ~length - 40 )
 ];
