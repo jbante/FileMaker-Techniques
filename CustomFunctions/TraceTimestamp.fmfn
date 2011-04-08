@@ -1,0 +1,52 @@
+﻿/**
+ * =====================================
+ * TraceTimestamp
+ *
+ * PURPOSE:
+ *		Creates a timestamp with an added sub-second ordinal value, so that
+ *		generated timestamps can be accurately arranged in chronological order
+ *		despite FileMaker's lack of native sub-second timestamp precision.
+ *
+ * RETURNS:
+ *		A timestamp
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * VARIABLES:
+ *		$$~TRACE_LASTTIMESTAMP
+ *
+ * HISTORY:
+ *		CREATED on 2011-04-07 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~lastTimestamp = Int ( $$~TRACE_LASTTIMESTAMP );
+	~serial = Mod ( $$~TRACE_LASTTIMESTAMP ; 1 );
+	~now = Get ( CurrentHostTimeStamp );
+	~magnitude = Max ( Left ( Substitute ( ~serial ; "." ; "" ) ; 1 ) ; 1 );
+	~lastDigit = Right ( ~serial ; 1 );
+
+	~serial =
+		Case (
+			~now ≠ ~lastTimestamp;
+				0;
+
+			~serial < .9;
+				~serial + 10 ^ ( 0 - ~magnitude );
+
+			~lastDigit < 9;
+				Left ( ~serial ; Length ( ~serial ) - 1 )
+				& ~lastDigit + 1;
+
+			/* Else */
+				~serial & "1"
+		);
+
+	// Store data for future reference
+	$$~TRACE_LASTTIMESTAMP = ~now + ~serial
+];
+	$$~TRACE_LASTTIMESTAMP
+)
