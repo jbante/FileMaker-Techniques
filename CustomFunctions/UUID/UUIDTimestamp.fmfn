@@ -90,10 +90,10 @@ Let ( [
 				~session
 		);
 	~magnitude =
-			Max (
-					Left ( Substitute ( ~serial ; "." ; "" ) ; 1 );
-					1
-				);
+		Max (
+			Left ( Substitute ( ~serial ; "." ; "" ) ; 1 );
+			1
+		);
 	~serial =
 		Case (
 			~now ≠ ~lastTimestamp or ~serial = .9999999 ; 0;
