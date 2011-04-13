@@ -27,12 +27,14 @@ Case (
 	not $~step;
 		Let ( [
 			$~runStart = 1;
+			$~runMin = GetValue ( valueList ; 1 );
+			$~runMax = GetValue ( valueList ; 1 );
 			$~valueCount = ValueCount ( valueList );
 			$~step = 1
 		];
 			ValueSort ( valueList )
 		);
-	
+
 	/* Step 1, search for runs */
 	$~step = 1;
 		Let ( [
@@ -49,7 +51,7 @@ Case (
 					];
 						ValueSort ( valueList )
 					);
-					
+
 				~value ≥ $~runMax and not ~isLastRun;
 					Let ( [ // Append ~value to current run
 						$~runList = List ( $~runList ; ~value );
@@ -63,21 +65,21 @@ Case (
 						// Save run for merge
 						$~mergeList = List ( $~mergeList ; $~runList );
 						$~mergeSizeList = List ( $~mergeSizeList ; $~runSize );
-						$~mergeSizeCount = $~mergeSizeCount + 1;
-						
+						$~mergeCount = $~mergeCount + 1;
+
 						// Reset run
 						$~runList = ~value;
 						$~runMin = ~value;
 						$~runMax = ~value;
 						$~runSize = 1;
-						
+
 						$~step = If ( ~isLastRun ; $~step + 1 ; $~step )
 					];
 						ValueSort ( valueList )
 					)
 			)
 		);
-	
+
 	/* Step 2, initialize merge passes through valueList */
 	$~step = 2;
 		Let ( [
@@ -94,14 +96,14 @@ Case (
 			$~runCount = ValueCount ( $~runSizeList );
 			$~runPair = 1;
 			$~run2End = "";
-			
+
 			$~mergeList = "";
 			$~mergeSizeList = "";
-			$~mergeSizeCount = "";
+			$~mergeCount = "";
 
 			$~step =
 				If ( // There are no more merges to do
-					$~mergeSizeCount ≤ 1 and not Mod ( $~runCount ; 2 );
+					$~runCount ≤ 1;
 						5;
 					/* Else */
 						$~step + 1
@@ -109,7 +111,7 @@ Case (
 		];
 			ValueSort ( "" )
 		);
-	
+
 	/* Step 3, initialize merges of successive pairs of runs */
 	$~step = 3;
 		Let ( [
@@ -118,22 +120,22 @@ Case (
 			$~run1End = $~run1Start + ~run1Size - 1;
 			$~run1Value = GetValue ( $~sortedList ; $~run1Start );
 			$~run1Max = GetValue ( $~sortedList ; $~run1End );
-			
+
 			$~run2Start = $~run1End + 1;
 			~run2Size = GetValue ( $~runSizeList ; $~runPair * 2 );
 			$~run2End = $~run2Start + ~run2Size - 1;
 			$~run2Value = GetValue ( $~sortedList ; $~run2Start );
 			$~run2Max = GetValue ( $~sortedList ; $~run2End );
-			
+
 			$~mergeSizeList = List ( $~mergeSizeList ; ~run1Size + ~run2Size );
-			$~mergeSizeCount = $~mergeSizeCount + 1;
+			$~mergeCount = $~mergeCount + 1;
 			$~runPair = $~runPair + 1;
-		
+
 			$~step = $~step + 1
 		];
 			ValueSort ( "" )
 		);
-	
+
 	/* Step 4, merge pair of runs */
 	$~step = 4
 	and $~run1Max < $~run2Value; // run1 is less
@@ -160,11 +162,15 @@ Case (
 				);
 			$~mergeList = List ( $~mergeList ; ~run1 ; ~run2 );
 
-			$~step = If ( $~runCount < $~runPair * 2 ; $~step - 1 ; $~step - 2 )
+			$~step =
+				If ( $~runCount > $~runPair * 2 - 1;
+					$~step - 1;
+					/* Else */ $~step - 2
+				)
 		];
 			ValueSort ( "" )
 		);
-		
+
 	$~step = 4
 	and $~run1Value ≥ $~run2Max; // run2 is less
 		Let ( [
@@ -189,11 +195,15 @@ Case (
 					[ "¶¶END" ; "" ] ; [ "¶END" ; "" ]
 				);
 			$~mergeList = List ( $~mergeList ; ~run2 ; ~run1 );
-			$~step = If ( $~runCount < $~runPair * 2 ; $~step - 1 ; $~step - 2 )
+			$~step =
+				If ( $~runCount > $~runPair * 2 - 1;
+					$~step - 1;
+					/* Else */ $~step - 2
+				)
 		];
 			ValueSort ( "" )
 		);
-		
+
 	$~step = 4
 	and $~run1Value < $~run2Value; // run1Value is less
 		Let ( [
@@ -203,7 +213,7 @@ Case (
 		];
 			ValueSort ( "" )
 		);
-		
+
 	$~step = 4; // run2Value is less
 		Let ( [
 			$~mergeList = List ( $~mergeList ; $~run2Value );
@@ -212,15 +222,15 @@ Case (
 		];
 			ValueSort ( "" )
 		);
-	
+
 	/* Step 5, clean-up and return result */
 	$~step = 5;
 		Let ( [
 			~sortedList = $~sortedList;
-			
+
 			// purge variables
 			$~mergeList = "";
-			$~mergeSizeCount = "";
+			$~mergeCount = "";
 			$~mergeSizeList = "";
 			$~run1End = "";
 			$~run1Max = "";
@@ -230,11 +240,13 @@ Case (
 			$~run2Max = "";
 			$~run2Start = "";
 			$~run2Value = "";
+			$~runCount = "";
 			$~runList = "";
 			$~runMax = "";
 			$~runMin = "";
 			$~runPair = "";
 			$~runSize = "";
+			$~runSizeList = "";
 			$~runStart = "";
 			$~sortedList = "";
 			$~step = "";
