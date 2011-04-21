@@ -1,0 +1,18 @@
+/**
+ * =====================================
+ * TriggerKeyCode
+ *
+ * RETURNS:
+ *		The numeric Unicode encoding of the trigger keystroke.
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		INSPIRED by a function created by Marx Martin of The Support Group.
+ * =====================================
+ */
+
+Code ( Get ( TriggerKeystroke ) )
