@@ -30,7 +30,7 @@
  * ======================================
  */
 
-Let( [
+Let ( [
 	~idAsNumber = GetAsNumber ( theID );
 	~session = Right ( ~idAsNumber ; 20 );
 	~length = Length ( ~idAsNumber );
