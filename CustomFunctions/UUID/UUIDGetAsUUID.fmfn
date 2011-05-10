@@ -1,7 +1,7 @@
 ﻿/**
  * ======================================
  * UUIDGetAsUUID ( rfc4122 )
- *		http://www.briandunning.com/cf/1273
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDGetAsUUID.fmfn
  *
  * PURPOSE:
  *		Converts a UUID in the canonical RFC 4122 hexadecimal format to a
@@ -30,12 +30,7 @@
  * REFERENCES:
  *		Key values Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557138
  *		RFC 4122 UUID standard specification: http://tools.ietf.org/html/rfc4122
- *		UUIDGetAsRFC4122: http://www.briandunning.com/cf/1221
- *		UUIDGetAsUUID: http://www.briandunning.com/cf/1273
- *		UUIDGetNICAddress: http://www.briandunning.com/cf/1222
- *		UUIDGetSeconds: http://www.briandunning.com/cf/1223
- *		UUIDNew: http://www.briandunning.com/cf/1220
- *		UUIDRandom: http://www.briandunning.com/cf/1246
+ *		UUID functions: https://github.com/jbante/FileMaker-Techniques/tree/master/CustomFunctions/UUID
  * ======================================
  */
 Case (

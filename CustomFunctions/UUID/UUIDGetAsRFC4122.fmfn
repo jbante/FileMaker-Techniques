@@ -30,12 +30,7 @@
  *		Key values Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557138
  *		RFC 4122 UUID standard: http://tools.ietf.org/html/rfc4122
  *		Tom Robinson's UUID function: http://www.briandunning.com/cf/969
- *		UUIDGetAsRFC4122: http://www.briandunning.com/cf/1221
- *		UUIDGetAsUUID: http://www.briandunning.com/cf/1273
- *		UUIDGetNICAddress: http://www.briandunning.com/cf/1222
- *		UUIDGetSeconds: http://www.briandunning.com/cf/1223
- *		UUIDNew: http://www.briandunning.com/cf/1220
- *		UUIDRandom: http://www.briandunning.com/cf/1246
+ *		UUID functions: https://github.com/jbante/FileMaker-Techniques/tree/master/CustomFunctions/UUID
  * ======================================
  */
 Case (
