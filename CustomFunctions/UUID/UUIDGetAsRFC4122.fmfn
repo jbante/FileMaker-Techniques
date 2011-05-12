@@ -1,7 +1,7 @@
 ﻿/**
  * ======================================
  * UUIDGetAsRFC4122 ( theID )
- *		http://www.briandunning.com/cf/1221
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDGetAsRFC4122.fmfn
  *
  * PURPOSE:
  *		Converts a numeric UUID created by this family of functions to the
