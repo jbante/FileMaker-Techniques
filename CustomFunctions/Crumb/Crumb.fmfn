@@ -16,19 +16,21 @@
  *		# ( name ; value )
  *
  * HISTORY:
+ *		MODIFIED on 2011-05-13 by Jeremy Bante to acknowledge "~" as a flag for
+ *		the isHidden attribute.
  *		CREATED on 2011-03-28 by Jeremy Bante <http://scr.im/jbantetsg>.
  * =====================================
  */
 
 Let ( [
 	~layoutName = GetValue ( LayoutNames ( Get ( FileName ) ) ; theLayoutNumber );
-	~layoutID = GetValue ( LayoutIDs ( Get ( FileName ) ) ; theLayoutNumber );
 
 	~prefix1 = Left ( ~layoutName ; 1 );
 	~prefix2 = Left ( ~layoutName ; 2 );
 	~isSeparator = ~prefix1 = "-";
 	~isHidden =
 		~isSeparator
+		or ~prefix1 = "~" // "private" entity convention
 		or ~prefix1 = "#" // script or Python comment syntax
 		or ~prefix2 = "//"; // calculation or C++ comment syntax
 
@@ -67,29 +69,29 @@ Let ( [
 			Right ( ~layoutName ; ~layoutLength - ~moduleStart + 1 )
 		);
 
-	~nameSubstitute =
+	~pageSubstitute =
 		Substitute (
 			Right ( ~layoutName ; ~layoutLength - ~delimiterPosition );
 			[ " " ; "" ] ; [ "	" ; "" ]; // remove whitespace
 			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ] // remove comment syntax
 		);
-	~nameStart =
+	~pageStart =
 		Position (
 			~layoutName;
-			Left ( ~nameSubstitute ; 1 );
+			Left ( ~pageSubstitute ; 1 );
 			~delimiterPosition + 1;
 			1
 		);
-	~nameEnd =
+	~pageEnd =
 		Position (
 			~layoutName;
-			Right ( ~nameSubstitute ; 1 );
+			Right ( ~pageSubstitute ; 1 );
 			~layoutLength;
 			-1
 		);
-	~name =
+	~page =
 		If ( ~delimiterPosition; // delimiter was found
-			Middle ( ~layoutName ; ~nameStart ; ~nameEnd - ~nameStart + 1 );
+			Middle ( ~layoutName ; ~pageStart ; ~pageEnd - ~pageStart + 1 );
 		/* Else */
 			~module
 		)
@@ -98,10 +100,8 @@ Let ( [
 		not ~isSeparator
 		and not IsEmpty ( ~layoutName );
 			# ( "module" ; ~module )
-			& # ( "name" ; ~name )
+			& # ( "page" ; ~page )
 			& # ( "isHidden" ; ~isHidden )
 			& # ( "layoutName" ; ~layoutName )
-//			& # ( "layoutNumber" ; theLayoutNumber )
-//			& # ( "layoutID" ; ~layoutID )
 	)
 )

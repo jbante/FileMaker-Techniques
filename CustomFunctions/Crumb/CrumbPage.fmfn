@@ -1,6 +1,6 @@
 /**
  * =====================================
- * CrumbName ( theCrumb )
+ * CrumbPage ( theCrumb )
  *
  * RETURNS:
  *		theCrumb's name parameter.
@@ -16,4 +16,4 @@
  * =====================================
  */
 
-#Get ( theCrumb ; "name" )
+#Get ( theCrumb ; "page" )

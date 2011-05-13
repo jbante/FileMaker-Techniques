@@ -1,0 +1,13 @@
+A "Crumb" object represents a FileMaker layout, and information about where it fits in the global navigation scheme of a FileMaker solution. The Crumb scheme assumes a hierarchical structure limited to two levels deep. There are _modules_, and there are _pages_ (layouts) within modules; there are no modules within modules.
+
+Each Crumb object contains these data:
+
+module:	The name of the module this Crumb (page) describes
+page:	The name of the page this Crumb describes
+layoutName:	The layout name of the associated layout
+isHidden:	A boolean flag indicating whether or not this Crumb should be exposed to the user via basic navigation buttons
+
+The Crumbs for a given system are stored in a data structure in a single global variable for reference by various calculations and scripts.
+
+moduleList:	A return-delimited list of the names of modules within the file
+<moduleName>:	A return-delimited list of the Crumb objects for each page in moduleName
