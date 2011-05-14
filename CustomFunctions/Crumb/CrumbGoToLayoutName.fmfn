@@ -1,14 +1,15 @@
 /**
  * =====================================
- * CrumbGoToLayoutName ( module ; page )
+ * CrumbGoToLayoutName ( moduleNumber ; subpageNumber )
  *
  * PURPOSE:
  *		Returns the layout name to navigate to when users click on a Crumb
  *		navigation button. This function would normally be used in a layout name
  *		calculation for a Go to Layout script step. Normally, only one or the
- *		other of module and page would be specified, and the other would be left
- *		empty. If module is specified and page is left empty, a page within that
- *		module will be selected based on the active modifier keys:
+ *		other of moduleNumber and subpageNumber would be specified, and the
+ *		other would be left empty. If moduleNumber is specified and
+ *		subpageNumber is left empty, a page within that module will be selected
+ *		based on the active modifier keys:
  *
  *		- No modifier keys: The first page in the module
  *		- Shift: The second page
@@ -19,11 +20,10 @@
  *		A layout name
  *
  * PARAMETERS:
- *		module: The name of the module to navigate to. If module
- *		is empty and page is specified, this will default to the module
- *		of the current layout.
- *		page: The name of the page to navigate
- *		to. If page is empty and module is specified, this will
+ *		moduleNumber: The number of the module to navigate to. If moduleNumber
+ *		is empty and subpageNumber is specified, this will default to the module
+ *		of the current layout. subpageNumber: The number of the page to navigate
+ *		to. If subpageNumber is empty and moduleNumber is specified, this will
  *		default to one of the pages within that module, depending on what
  *		modifier keys are active when the function evaluates.
  *
@@ -48,19 +48,38 @@
  */
  
 Case (
-	not IsEmpty ( module )
-	and not IsEmpty ( page );
+	moduleNumber = -1 // "App" module
+	and not IsEmpty ( subpageNumber );
 		Let ( [
-			~module = #Get ( $$CRUMB.DATA ; module );
-			~page = #Get ( ~module ; page )
+			~module = #Get ( $$CRUMB.DATA ; "App" );
+
+			~page = #Get ( ~module ; "pageList" );
+			~page = GetValue ( ~page ; subpageNumber );
+			~page = #Get ( ~module ; ~page )
 		];
 			CrumbLayoutName ( ~page )
 		);
 
-	not IsEmpty ( module )
-	and IsEmpty ( page );
+	not IsEmpty ( moduleNumber )
+	and not IsEmpty ( subpageNumber );
 		Let ( [
-			~module = #Get ( $$CRUMB.DATA ; module );
+			~module = #Get ( $$CRUMB.DATA ; "moduleList" );
+			~module = GetValue ( ~module ; moduleNumber );
+			~module = #Get ( $$CRUMB.DATA ; ~module );
+
+			~page = #Get ( ~module ; "pageList" );
+			~page = GetValue ( ~page ; subpageNumber );
+			~page = #Get ( ~module ; ~page )
+		];
+			CrumbLayoutName ( ~page )
+		);
+
+	not IsEmpty ( moduleNumber )
+	and IsEmpty ( subpageNumber );
+		Let ( [
+			~module = #Get ( $$CRUMB.DATA ; "moduleList" );
+			~module = GetValue ( ~module ; moduleNumber );
+			~module = #Get ( $$CRUMB.DATA ; ~module );
 			
 			~pageList = #Get ( ~module ; "pageList" );
 			~pageCount = ValueCount ( ~pageList );
@@ -85,12 +104,15 @@ Case (
 			CrumbLayoutName ( ~page )
 		);
 	
-	IsEmpty ( module )
-	and not IsEmpty ( page );
+	IsEmpty ( moduleNumber )
+	and not IsEmpty ( subpageNumber );
 		Let ( [
 			~module = CrumbModule ( Crumb ( Get ( LayoutNumber ) ) );
 			~module = #Get ( $$CRUMB.DATA ; ~module );
-			~page = #Get ( ~module ; page )
+
+			~page = #Get ( ~module ; "pageList" );
+			~page = GetValue ( ~page ; subpageNumber );
+			~page = #Get ( ~module ; ~page )
 		];
 			CrumbLayoutName ( ~page )
 		)
