@@ -1,0 +1,63 @@
+/**
+ * =====================================
+ * CrumbModuleTooltip ( module )
+ *
+ * RETURNS:
+ *		Tooltip text previewing the names of the pages available under the
+ *		specified module, including pages directly accessible via clicking while
+ *		holding a modifier key (based on the CrumbGoToLayoutName custom
+ *		function):
+ *
+ *		- No modifier keys: The first page in the module
+ *		- Shift: The second page
+ *		- Command or Control: The third page
+ *		- Command-Shift or Control-Shift: The fourth page
+ *
+ * PARAMETERS:
+ *		module: The name of the module to preview
+ *
+ * DEPENDENCIES:
+ *		#Get ( parameters ; name )
+ *		Crumb ( layoutNumber )
+ *		CrumbPage ( theCrumb )
+ *		CrumbModule ( theCrumb )
+ *
+ * VARIABLES:
+ *		$$CRUMB.DATA: Stores data about all layouts accessible via global
+ *		navigation in the current file. Should be set by the
+ *		"Crumb: Load Crumb Modules" script
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+ 
+Let ( [
+	~module = #Get ( $$CRUMB.DATA ; module );
+	~pageList = #Get ( ~module ; "pageList" );
+	~page1 = GetValue ( ~pageList ; 1 );
+	~page2 = GetValue ( ~pageList ; 2 );
+	~page3 = GetValue ( ~pageList ; 3 );
+	~page4 = GetValue ( ~pageList ; 4 );
+	~isMac = Abs ( Get ( SystemPlatform ) ) = 1
+];
+	List (
+		~page1;
+		If ( not IsEmpty ( ~page2 );
+			~page2 & "	<Shift>"
+		);
+		If ( not IsEmpty ( ~page3 ) and ~isMac;
+			~page3 & "	<Command>"
+		);
+		If ( not IsEmpty ( ~page3 ) and not ~isMac;
+			~page3 & "	<Control>"
+		);
+		If ( not IsEmpty ( ~page4 ) and ~isMac;
+			~page4 & "	<Command-Shift>"
+		);
+		If ( not IsEmpty ( ~page4 ) and not ~isMac;
+			~page4 & "	<Control-Shift>"
+		);
+		RightValues ( ~pageList ; ValueCount ( ~pageList ) - 4 )
+	)
+)

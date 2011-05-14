@@ -1,0 +1,97 @@
+/**
+ * =====================================
+ * CrumbGoToLayoutName ( module ; page )
+ *
+ * PURPOSE:
+ *		Returns the layout name to navigate to when users click on a Crumb
+ *		navigation button. This function would normally be used in a layout name
+ *		calculation for a Go to Layout script step. Normally, only one or the
+ *		other of module and page would be specified, and the other would be left
+ *		empty. If module is specified and page is left empty, a page within that
+ *		module will be selected based on the active modifier keys:
+ *
+ *		- No modifier keys: The first page in the module
+ *		- Shift: The second page
+ *		- Command or Control: The third page
+ *		- Shift-Command or Shift-Control: The fourth page
+ *
+ * RETURNS:
+ *		A layout name
+ *
+ * PARAMETERS:
+ *		module: The name of the module to navigate to. If module
+ *		is empty and page is specified, this will default to the module
+ *		of the current layout.
+ *		page: The name of the page to navigate
+ *		to. If page is empty and module is specified, this will
+ *		default to one of the pages within that module, depending on what
+ *		modifier keys are active when the function evaluates.
+ *
+ * EXAMPLES:
+ *		CrumbGoToLayoutName ( $crumb.module.1 ; "" ) // In a module tab button
+ *		CrumbGoToLayoutName ( "" ; $crumb.page.1 ) // In a page tab button
+ *
+ * DEPENDENCIES:
+ *		#Get ( parameters ; name )
+ *		Crumb ( layoutNumber )
+ *		CrumbLayoutName ( theCrumb )
+ *		CrumbModule ( theCrumb )
+ *
+ * VARIABLES:
+ *		$$CRUMB.DATA: Stores data about all layouts accessible via global
+ *		navigation in the current file. Should be set by the
+ *		"Crumb: Load Crumb Modules" script
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+ 
+Case (
+	not IsEmpty ( module )
+	and not IsEmpty ( page );
+		Let ( [
+			~module = #Get ( $$CRUMB.DATA ; module );
+			~page = #Get ( ~module ; page )
+		];
+			CrumbLayoutName ( ~page )
+		);
+
+	not IsEmpty ( module )
+	and IsEmpty ( page );
+		Let ( [
+			~module = #Get ( $$CRUMB.DATA ; module );
+			
+			~pageList = #Get ( ~module ; "pageList" );
+			~pageCount = ValueCount ( ~pageList );
+
+			~modifierKeys = Get ( ActiveModifierKeys );
+			~shift = Mod ( ~modifierKeys ; 2 );
+			~command = Mod ( Div ( ~modifierKeys ; 16 ) ; 2 );
+			~control = Mod ( Div ( ~modifierKeys ; 4 ) ; 2 );
+			
+			~page =
+				If ( ~shift ; 1 )
+				+ If ( ~command or ~control ; 2 )
+				+ 1;
+			~page =
+				If ( ~pageCount < ~page;
+					1;
+					/* Else */ ~page
+				);
+			~page = GetValue ( ~pageList ; ~page );
+			~page = #Get ( ~module ; ~page )
+		];
+			CrumbLayoutName ( ~page )
+		);
+	
+	IsEmpty ( module )
+	and not IsEmpty ( page );
+		Let ( [
+			~module = CrumbModule ( Crumb ( Get ( LayoutNumber ) ) );
+			~module = #Get ( $$CRUMB.DATA ; ~module );
+			~page = #Get ( ~module ; page )
+		];
+			CrumbLayoutName ( ~page )
+		)
+)

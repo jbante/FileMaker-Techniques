@@ -1,0 +1,131 @@
+/**
+ * =====================================
+ * CrumbPageSetup
+ *
+ * PURPOSE:
+ *		Populates the necessary local variables for normal functioning of the
+ *		Crumb navigation technique. This function should be used in the
+ *		conditional formatting calculation for some object underneath all other
+ *		crumb labels.
+ *
+ * RETURNS:
+ *		True
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES:
+ *		#Assign ( parameters )
+ *		#Get ( parameters ; name )
+ *		Crumb ( layoutNumber )
+ *		CrumbModule ( theCrumb )
+ *		CrumbPage ( theCrumb )
+ *
+ * VARIABLES:
+ *		$$CRUMB.DATA: Stores data about all layouts accessible via global
+ *		navigation in the current file. Should be set by the
+ *		"Crumb: Load Crumb Modules" script
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+ 
+Case (
+	/* Step 0: initialize loops and set one-off values */
+	not $~step;
+	Let ( [
+		$userName = Get ( UserName );
+		$userAccount = Get ( AccountName );
+		
+		$crumb = Crumb ( Get ( LayoutNumber ) );
+		$crumb.module = CrumbModule ( $crumb );
+		$crumb.page = CrumbPage ( $crumb );
+		
+		$~moduleList = #Get ( $$CRUMB.DATA ; "moduleList" );
+		$~moduleCount = ValueCount ( $~moduleList );
+		$~module = #Get ( $$CRUMB.DATA ; $crumb.module );
+		$~pageList = #Get ( $~module ; "pageList" );
+		$~pageCount = ValueCount ( $~crumbList );
+		$~appModule = #Get ( $$CRUMB.DATA ; "App" );
+		$~appList = #Get ( $~appModule ; "pageList" );
+		$~appCount = ValueCount ( $~appList );
+		
+		$~step = $~step + 1
+	];
+		CrumbPageSetup
+	);
+	
+	/* Step 1: assign crumb.module variables */
+	$~step = 1;
+	Let ( [
+		$~i = $~i + 1;
+		$~parameters =
+			List (
+				$~parameters;
+				# ( "crumb.module." & $~i ; GetValue ( $~moduleList ; $~i ) )
+			);
+		$~step =
+			Case (
+				$~i < $~moduleCount ; $~step;
+				$crumb.module = "App" ; $~step + 2; // Skip pages for App module
+				/* Else */ $~step + 1
+			)
+	];
+		CrumbPageSetup
+	);
+	
+	/* Step 2: assign crumb.page variables */
+	$~step = 2;
+	Let ( [
+		$~j = $~j + 1;
+		~page = GetValue ( $~pageList ; $~j );
+		$~parameters =
+			List (
+				$~parameters;
+				# ( "crumb.page." & $~j ; ~page )
+			);
+		$~step = If ( $~j < $~pageCount ; $~step ; /* Else */ $~step + 1 )
+	];
+		CrumbPageSetup
+	);
+	
+	/* Step 3: assign crumb.app (page) variables */
+	$~step = 3;
+	Let ( [
+		$~k = $~k + 1;
+		~page = GetValue ( $~appList ; $~k );
+		~page = CrumbPage ( #Get ( $~appModule ; ~page ) );
+		$~parameters =
+			List (
+				$~parameters;
+				# ( "crumb.app." & $~k ; ~page )
+			);
+		$~step = If ( $~k < $~appCount ; $~step ; /* Else */ $~step + 1 )
+	];
+		CrumbPageSetup
+	);
+	
+	
+	/* Step 4: Assign variables */
+	$~step = 4;
+	Let ( [
+		~parameters = $~parameters;
+		
+		// Purge variables
+		$~appCount = "";
+		$~appList = "";
+		$~appModule = "";
+		$~i = "";
+		$~j = "";
+		$~k = "";
+		$~module = "";
+		$~moduleCount = "";
+		$~moduleList = "";
+		$~pageCount = "";
+		$~pageList = "";
+		$~parameters = "";
+		$~step = ""
+	];
+		#Assign ( ~parameters )
+	)
+)
