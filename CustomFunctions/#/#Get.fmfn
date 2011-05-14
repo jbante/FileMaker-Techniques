@@ -25,6 +25,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2011-05-13 by Jeremy Bante to strip spaces and "=" from
+ *		names.
  *		MODIFIED on 2011-02-13 by Jeremy Bante to retrieve the last occurrence
  *		of a named value, making behavior more consistent with the #Assign
  *		functions.
@@ -36,6 +38,13 @@
  */
 
 Let ( [
+	~name =
+		Substitute (
+			name;
+			[ "$" ; "" ];
+			[ "=" ; "" ];
+			[ " " ; "" ]
+		);
 	~name = "¶$" & name & " = ";
 	~namePosition =
 		Position (

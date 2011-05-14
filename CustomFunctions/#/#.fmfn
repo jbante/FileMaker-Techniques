@@ -27,6 +27,8 @@
  *		passed to it.
  *
  * HISTORY:
+ *		MODIFIED on 2011-05-13 by Jeremy Bante to strip spaces and "=" from
+ *		names.
  *		MODIFIED on 2010-11-23 by Jeremy Bante <http://scr.im/jbantetsg> to
  *		strip "$" characters from the name parameter.
  *		MODIFIED on 2010-10-04 by jeremy@kyologic.com to fit syntax inspired by
@@ -39,4 +41,13 @@
  *		Script Parameter Interface Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557462
  * =====================================
  */
-"$" & Substitute ( name ; "$" ; "" ) & " = " & Quote ( value ) & ";¶"
+"$"
+& Substitute (
+	name;
+	[ "$" ; "" ];
+	[ "=" ; "" ];
+	[ " " ; "" ]
+)
+& " = "
+& Quote ( value )
+& ";	"
