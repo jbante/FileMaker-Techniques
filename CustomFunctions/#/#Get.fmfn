@@ -45,7 +45,7 @@ Let ( [
 			[ "=" ; "" ];
 			[ " " ; "" ]
 		);
-	~name = "¶$" & name & " = ";
+	~name = "¶$" & ~name & " = ";
 	~namePosition =
 		Position (
 			"¶" & parameters;

@@ -43,11 +43,11 @@ Case (
 		
 		$~moduleList = #Get ( $$CRUMB.DATA ; "moduleList" );
 		$~moduleCount = ValueCount ( $~moduleList );
-		$~module = #Get ( $$CRUMB.DATA ; $crumb.module );
-		$~pageList = #Get ( $~module ; "pageList" );
-		$~pageCount = ValueCount ( $~crumbList );
-		$~appModule = #Get ( $$CRUMB.DATA ; "App" );
-		$~appList = #Get ( $~appModule ; "pageList" );
+		~module = #Get ( $$CRUMB.DATA ; $crumb.module );
+		$~pageList = #Get ( ~module ; "pageList" );
+		$~pageCount = ValueCount ( $~pageList );
+		~appModule = #Get ( $$CRUMB.DATA ; "App" );
+		$~appList = #Get ( ~appModule ; "pageList" );
 		$~appCount = ValueCount ( $~appList );
 		
 		$~step = $~step + 1
@@ -64,9 +64,24 @@ Case (
 				$~parameters;
 				# ( "crumb.module." & $~i ; GetValue ( $~moduleList ; $~i ) )
 			);
+		$~step = If ( $~i < $~moduleCount ; $~step ; /* Else */ $~step + 1 )
+	];
+		CrumbPageSetup
+	);
+	
+	/* Step 2: purge existing crumb.page variables */
+	$~step = 2;
+	Let ( [
+		$~j = $~j + 1;
+		~page = Evaluate ( "$crumb.page." & $~j );
+		$~parameters =
+			List (
+				$~parameters;
+				# ( "crumb.page." & $~j ; "" )
+			);
 		$~step =
 			Case (
-				$~i < $~moduleCount ; $~step;
+				not IsEmpty ( ~page ) ; $~step;
 				$crumb.module = "App" ; $~step + 2; // Skip pages for App module
 				/* Else */ $~step + 1
 			)
@@ -74,51 +89,49 @@ Case (
 		CrumbPageSetup
 	);
 	
-	/* Step 2: assign crumb.page variables */
-	$~step = 2;
-	Let ( [
-		$~j = $~j + 1;
-		~page = GetValue ( $~pageList ; $~j );
-		$~parameters =
-			List (
-				$~parameters;
-				# ( "crumb.page." & $~j ; ~page )
-			);
-		$~step = If ( $~j < $~pageCount ; $~step ; /* Else */ $~step + 1 )
-	];
-		CrumbPageSetup
-	);
-	
-	/* Step 3: assign crumb.app (page) variables */
+	/* Step 3: assign crumb.page variables */
 	$~step = 3;
 	Let ( [
 		$~k = $~k + 1;
-		~page = GetValue ( $~appList ; $~k );
-		~page = CrumbPage ( #Get ( $~appModule ; ~page ) );
+		~page = GetValue ( $~pageList ; $~k );
 		$~parameters =
 			List (
 				$~parameters;
-				# ( "crumb.app." & $~k ; ~page )
+				# ( "crumb.page." & $~k ; ~page )
 			);
-		$~step = If ( $~k < $~appCount ; $~step ; /* Else */ $~step + 1 )
+		$~step = If ( $~k < $~pageCount ; $~step ; /* Else */ $~step + 1 )
+	];
+		CrumbPageSetup
+	);
+	
+	/* Step 4: assign crumb.app (page) variables */
+	$~step = 4;
+	Let ( [
+		$~l = $~l + 1;
+		~page = GetValue ( $~appList ; $~l );
+		$~parameters =
+			List (
+				$~parameters;
+				# ( "crumb.app." & $~l ; ~page )
+			);
+		$~step = If ( $~l < $~appCount ; $~step ; /* Else */ $~step + 1 )
 	];
 		CrumbPageSetup
 	);
 	
 	
-	/* Step 4: Assign variables */
-	$~step = 4;
+	/* Step 5: Assign variables */
+	$~step = 5;
 	Let ( [
 		~parameters = $~parameters;
 		
 		// Purge variables
 		$~appCount = "";
 		$~appList = "";
-		$~appModule = "";
 		$~i = "";
 		$~j = "";
 		$~k = "";
-		$~module = "";
+		$~l = "";
 		$~moduleCount = "";
 		$~moduleList = "";
 		$~pageCount = "";
