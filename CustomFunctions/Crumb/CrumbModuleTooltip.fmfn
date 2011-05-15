@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CrumbModuleTooltip ( module )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/CrumbModuleTooltip.fmfn
  *
  * RETURNS:
  *		Tooltip text previewing the names of the pages available under the

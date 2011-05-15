@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CrumbGoToLayoutName ( moduleNumber ; subpageNumber )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/CrumbGoToLayoutName.fmfn
  *
  * PURPOSE:
  *		Returns the layout name to navigate to when users click on a Crumb

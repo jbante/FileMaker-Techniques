@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CrumbModule ( theCrumb )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/CrumbModule.fmfn
  *
  * RETURNS:
  *		theCrumb's module parameter.

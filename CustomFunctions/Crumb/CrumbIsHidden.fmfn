@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CrumbIsHidden ( theCrumb )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/CrumbIsHidden.fmfn
  *
  * RETURNS:
  *		True if theCrumb's isHidden parameter evaluates as True; False
@@ -20,5 +21,5 @@
 If ( not IsEmpty ( theCrumb );
 	GetAsBoolean ( #Get ( theCrumb ; "isHidden" ) );
 /* Else */
-	True // treat empty Crumb as hidden
+	True	// treat empty Crumb as hidden
 )

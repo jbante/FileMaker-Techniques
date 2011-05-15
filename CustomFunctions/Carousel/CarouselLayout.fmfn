@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CarouselLayout ( index )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Carousel/CarouselLayout.fmfn
  *
  * PURPOSE:
  *		Finds the layout that would have the given layout number if hidden
@@ -35,12 +36,12 @@ Case (
 		$~layoutNames = LayoutNames ( Get ( FileName ) );
 		$~layoutCount = ValueCount ( $~layoutNames );
 		$~step =
-			If ( //index is out of bounds
+			If (	//index is out of bounds
 				index < 1
 				or index > $~layoutCount;
-					3; //skip to returning empty (error)
+					3;	//skip to returning empty (error)
 					
-				/*else*/ 1
+				/* Else */ 1
 			)
 	];
 		CarouselLayout ( Int ( index ) )
@@ -53,18 +54,18 @@ Case (
 		$~layout = GetValue ( $~layoutNames ; $~i );
 		$~index =
 			If (
-				//layout is not hidden
+				// layout is not hidden
 				Left ( $~layout ; 1 ) ≠ "-" and Left ( $~layout ; 2 ) ≠ "//";
 					$~index + 1;
 					
-				/*else*/
+				/* Else */
 					$~index
 			);
 		$~step =
 			Case (
-				$~index = index ; 3; //return result
-				$~i = $~layoutCount ; 2; //error, layout not found
-				/*else*/ $~step
+				$~index = index ; 3;	// return result
+				$~i = $~layoutCount ; 2;	// error, layout not found
+				/* Else */ $~step
 			)		
 	];
 		CarouselLayout ( index )
@@ -84,7 +85,7 @@ Case (
 	Let ( [
 		~layout = $~layout;
 		
-		//purge variables
+		// purge variables
 		$~i = "";
 		$~index = "";
 		$~layoutCount = "";

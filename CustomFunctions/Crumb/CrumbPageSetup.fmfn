@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CrumbPageSetup
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/CrumbPageSetup.fmfn
  *
  * PURPOSE:
  *		Populates the necessary local variables for normal functioning of the
@@ -81,7 +82,7 @@ Case (
 		$~step =
 			Case (
 				not IsEmpty ( ~page ) ; $~step;
-				$crumb.module = "App" ; $~step + 2; // Skip pages for App module
+				$crumb.module = "App" ; $~step + 2;	// Skip pages for App module
 				/* Else */ $~step + 1
 			)
 	];

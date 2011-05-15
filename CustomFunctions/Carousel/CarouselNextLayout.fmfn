@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CarouselNextLayout
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Carousel/CarouselNextLayout.fmfn
  *
  * PURPOSE:
  *		Finds the logical next layout in carousel-style system navigation. This
@@ -41,7 +42,7 @@ Case (
 	/* Step 1, find the next layout to navigate to */
 	$~step = 1;
 	Let ( [
-		$~i = If ( $~i = $~layoutCount ; 1 ; /*else*/ $~i + 1 );
+		$~i = If ( $~i = $~layoutCount ; 1 ; /* Else */ $~i + 1 );
 		$~nextLayout = GetValue ( $~layoutNames ; $~i );
 		~prefix1 = Left ( $~nextLayout ; 1 );
 		~prefix2 = Left ( $~nextLayout ; 2 );

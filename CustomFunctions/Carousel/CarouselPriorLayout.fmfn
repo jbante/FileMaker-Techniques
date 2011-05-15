@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CarouselPriorLayout
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Carousel/CarouselPriorLayout.fmfn
  *
  * PURPOSE:
  *		Finds the logical previous layout in carousel-style system navigation.
@@ -41,7 +42,7 @@ Case (
 	/* Step 1, find the previous layout to navigate to */
 	$~step = 1;
 	Let ( [
-		$~i = If ( $~i = 1 ; $~layoutCount ; /*else*/ $~i - 1 );
+		$~i = If ( $~i = 1 ; $~layoutCount ; /* Else */ $~i - 1 );
 		$~backLayout = GetValue ( $~layoutNames ; $~i );
 		~prefix1 = Left ( $~backLayout ; 1 );
 		~prefix2 = Left ( $~backLayout ; 2 );
@@ -56,7 +57,7 @@ Case (
 				or $~i = $~layoutNumber;	// search is exhausted
 					$~step + 1;
 					
-				/*else*/ $~step
+				/* Else */ $~step
 			)		
 	];
 		CarouselPriorLayout

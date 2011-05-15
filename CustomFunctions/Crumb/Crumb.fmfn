@@ -1,6 +1,7 @@
 /**
  * =====================================
  * Crumb ( theLayoutNumber )
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Crumb/Crumb.fmfn
  *
  * PURPOSE:
  *		Constructs a Crumb "object" for the layout specified by the parameter.
@@ -30,9 +31,9 @@ Let ( [
 	~isSeparator = ~prefix1 = "-";
 	~isHidden =
 		~isSeparator
-		or ~prefix1 = "~" // "private" entity convention
-		or ~prefix1 = "#" // script or Python comment syntax
-		or ~prefix2 = "//"; // calculation or C++ comment syntax
+		or ~prefix1 = "~"	// "private" entity convention
+		or ~prefix1 = "#"	// script or Python comment syntax
+		or ~prefix2 = "//";	// calculation or C++ comment syntax
 
 	~DELIMITER = ":";
 	~layoutLength = Length ( ~layoutName );
@@ -40,13 +41,13 @@ Let ( [
 		Position ( ~layoutName ; ~DELIMITER ; ~layoutLength ; -1 );
 	~moduleSubstitute =
 		Substitute (
-			If ( ~delimiterPosition; // delimiter was found
+			If ( ~delimiterPosition;	// delimiter was found
 				Left ( ~layoutName ; ~delimiterPosition - 1 );
 			/* Else */
 				~layoutName
 			);
-			[ " " ; "" ] ; [ "	" ; "" ]; // remove whitespace
-			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ] // remove comment syntax
+			[ " " ; "" ] ; [ "	" ; "" ];	// remove whitespace
+			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ]	// remove comment syntax
 		);
 	~moduleStart =
 		Position (
@@ -63,7 +64,7 @@ Let ( [
 			-1
 		);
 	~module =
-		If ( ~delimiterPosition; // delimiter was found
+		If ( ~delimiterPosition;	// delimiter was found
 			Middle ( ~layoutName ; ~moduleStart ; ~moduleEnd - ~moduleStart + 1 );
 		/* Else */
 			Right ( ~layoutName ; ~layoutLength - ~moduleStart + 1 )
@@ -72,8 +73,8 @@ Let ( [
 	~pageSubstitute =
 		Substitute (
 			Right ( ~layoutName ; ~layoutLength - ~delimiterPosition );
-			[ " " ; "" ] ; [ "	" ; "" ]; // remove whitespace
-			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ] // remove comment syntax
+			[ " " ; "" ] ; [ "	" ; "" ];	// remove whitespace
+			[ "-" ; "" ] ; [ "#" ; "" ] ; [ "//" ; "" ]	// remove comment syntax
 		);
 	~pageStart =
 		Position (
@@ -90,7 +91,7 @@ Let ( [
 			-1
 		);
 	~page =
-		If ( ~delimiterPosition; // delimiter was found
+		If ( ~delimiterPosition;	// delimiter was found
 			Middle ( ~layoutName ; ~pageStart ; ~pageEnd - ~pageStart + 1 );
 		/* Else */
 			~module

@@ -1,6 +1,7 @@
 /**
  * =====================================
  * CarouselPageSetup
+ *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Carousel/CarouselPageSetup.fmfn
  *
  * PURPOSE:
  *		Populates the necessary local variables for normal functioning of the
