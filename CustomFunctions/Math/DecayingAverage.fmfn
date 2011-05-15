@@ -1,0 +1,35 @@
+/**
+ * =====================================
+ * DecayingAverage ( oldMean ; newValue ; newValueWeight )
+ *
+ * PURPOSE:
+ *		Builds a "decaying" average (mean) where older values in a stream of
+ *		data have steadily (exponentially) less influence on the average as
+ *		newer values are added. This can be useful in situations where the data
+ *		distribution is expected to change over time, especially where the
+ *		change is more "smooth" and a sliding window model for the estimated
+ *		mean would be inappropriate.
+ *
+ * RETURNS: A number
+ *
+ * PARAMETERS:
+ *		oldMean: The existing average to be updated. Leave empty when creating the first estimated.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-15 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Case (
+	newValueWeight < 0 or newValueWeight > 1 ;	// weight is out of bounds
+		"?";
+	
+	IsEmpty ( oldMean ); // No original average to update
+		newValue;
+
+	/* Else, regular decaying average */
+		( 1 - newValueWeight ) * oldMean
+		+ newValueWeight * newValue
+)

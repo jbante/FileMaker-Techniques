@@ -1,0 +1,81 @@
+/**
+ * =====================================
+ * RandomPoisson ( mean )
+ *
+ * PURPOSE:
+ *		When called repeatedly with the same input, RandomPoisson returns values
+ *		that are Poisson distributed with mean given by the function argument.
+ *		This function uses the inverse transform method to generate values.
+ *
+ * RETURNS:
+ *		A number (integer)
+ *
+ * PARAMETERS:
+ *		mean: The average (mean) of the distribution to generate values from.
+ *		mean must be > 0
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-15 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Poisson_distribution
+ * =====================================
+ */
+
+Case (
+	/* Step 0: initialize process */
+	not $~step;
+	Let ( [
+		$~random = Random;
+		
+		$~i = 0;
+		$~probability = exp ( 0 - mean );
+		$~cumulativeProbability = $~probability;
+		
+		$~step =
+			Case (
+				mean ≤ 0 ; 2;	// value is out of bounds, skip to end
+				$~random < $~cumulativeProbability ; 2;	// result is found
+				/* Else */ $~step + 1
+			)
+	];
+		RandomPoisson ( mean )
+	);
+	
+	/* Step 1: find cumulative probability to match random value */
+	$~step = 1;
+	Let ( [
+		$~i = $~i + 1;
+		$~probability = mean * $~probability / $~i;	// recursive Poisson density
+		$~cumulativeProbability = $~cumulativeProbability + $~probability;
+		
+		$~step =
+			If ( $~random < $~cumulativeProbability;	// result is found
+				$~step + 1;
+				/* Else */ $~step
+			)
+	];
+		RandomPoisson ( mean )
+	);
+	
+	
+	/* Step 2: clean-up and return result */
+	$~step = 2;
+	Let ( [
+		~value = $~i;
+		
+		// purge variables
+		$~cumulativeProbability = "";
+		$~i = "";
+		$~probability = "";
+		$~random = "";
+		$~step = ""
+	];
+		If ( mean > 0;	// value is within bounds
+			~value;
+			/* Else */ "?"
+		)
+	)
+)
