@@ -8,8 +8,7 @@
  *		conditional formatting calculation for some object underneath all other
  *		crumb labels.
  *
- * RETURNS:
- *		True
+ * RETURNS: True
  *
  * PARAMETERS: none
  *

@@ -43,11 +43,17 @@ Case (
 	Let ( [
 		$~i = If ( $~i = 1 ; $~layoutCount ; /*else*/ $~i - 1 );
 		$~backLayout = GetValue ( $~layoutNames ; $~i );
+		~prefix1 = Left ( $~backLayout ; 1 );
+		~prefix2 = Left ( $~backLayout ; 2 );
+		~isHidden =
+			~prefix1 = "-"	// separator layout
+			or ~prefix1 = "~"	// "private" entity convention
+			or ~prefix1 = "#"	// script or Python comment syntax
+			or ~prefix2 = "//";	// calculation or C++ comment syntax
 		$~step =
-			If ( //skip separators and hidden layouts
-				Left ( $~backLayout ; 1 ) ≠ "-"
-				and Left ( $~backLayout ; 2 ) ≠ "//"
-				or $~i = $~layoutNumber; //search is exhausted
+			If (
+				not ~isHidden	// skip separators and hidden layouts
+				or $~i = $~layoutNumber;	// search is exhausted
 					$~step + 1;
 					
 				/*else*/ $~step

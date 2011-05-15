@@ -1,0 +1,31 @@
+/**
+ * =====================================
+ * CarouselPageSetup
+ *
+ * PURPOSE:
+ *		Populates the necessary local variables for normal functioning of the
+ *		Carousel navigation technique. This function should be used in the
+ *		conditional formatting calculation for some object underneath all other
+ *		crumb labels.
+ *
+ * PARAMETERS: none
+ *
+ * RETURNS: True
+ *
+ * DEPENDENCIES:
+ *		CarouselNextLayout
+ *		CarouselPriorLayout
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-05-14 by Jeremy Bante to set local instead of global
+ *		variables.
+ *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	$carousel.priorLayout = CarouselPriorLayout;
+	$carousel.nextLayout = CarouselNextLayout
+];
+	True
+)
