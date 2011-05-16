@@ -1,0 +1,54 @@
+/**
+ * =====================================
+ * Quantile ( numberList ; theQuantile )
+ *
+ * RETURNS:
+ *		The value in numberList such that ValueCount ( numberList ) * theQuantile
+ *		elements of numberList are less than that value. If an exact theQuantile is
+ *		not in the list, linear interpolation is used between the neighboring
+ *		values.
+ *
+ * PARAMETERS:
+ *		numberList: A return-delimited list of numbers
+ *		theQuantile: The theQuantile value to retrieve from numberlist.
+ *		0 < theQuantile < 1
+ *
+ * DEPENDENCIES:
+ *		NumberSort ( valueList )
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-16 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~valueCount = ValueCount ( numberList );
+	~location = ~valueCount * theQuantile
+];
+	Case (
+		theQuantile < 0 or theQuantile > 1;	// value is out of bounds
+			"?";
+
+		( 1 / ~valueCount ) > theQuantile	// theQuantile is too extreme for given data
+		or ( 1 / ~valueCount ) > ( 1 - theQuantile );
+			"?";
+
+		~location = Int ( ~location );	// exact theQuantile exists
+			GetValue ( NumberSort ( numberList ) ; ~location );
+
+		// Exact theQuantile does not exist; use linear interpolation
+			Let ( [
+				~sortedList = NumberSort ( numberList );
+				~floor = Floor ( ~valueCount * theQuantile );
+				~floorValue = GetValue ( ~sortedList ; ~floor );
+				~ceiling = Ceiling ( ~valueCount * theQuantile );
+				~ceilingValue = GetValue ( ~sortedList ; ~ceiling )
+			];
+				// Interpolation from linear two-point form
+				( ~location - ~floorValue )
+				* ( ~ceilingValue - ~floorValue )
+				/ ( ~ceilingValue - ~floorValue )
+				+ ~floorValue
+			)
+	)
+)
