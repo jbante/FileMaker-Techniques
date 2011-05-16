@@ -1,6 +1,6 @@
 /**
  * =====================================
- * DecayingAverage ( oldMean ; newValue ; newValueWeight )
+ * DecayingQuantile ( oldEstimate ; newValue ; quantile ; newValueWeight )
  *
  * PURPOSE:
  *		Builds a "decaying" average (mean) where older values in a stream of
@@ -13,26 +13,29 @@
  * RETURNS: A number
  *
  * PARAMETERS:
- *		oldMean: The existing average to be updated. Leave empty when creating the first estimated.
- *		newValue: The new data value to use to update the estimated average.
+ *		oldEstimate: The existing quantile value to be updated. Leave empty when
+ *		establishing an initial estimate.
+ *		newValue: The new data value to use to update the quantile estimate.
+ *		quantile: The quantile value to estimate. 0 < quantile < 1.
  *		newValueWeight: The relative weight to apply to the estimate adjustment
  *		based on newValue. 0 ≤ newValueWeight ≤ 1.
  *
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2011-05-15 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-05-16 by Jeremy Bante <http://scr.im/jbantetsg>.
  * =====================================
  */
 
 Case (
-	newValueWeight < 0 or newValueWeight > 1 ;	// weight is out of bounds
+	newValueWeight < 0 or newValueWeight > 1	// weight is out of bounds
+	or quantile < 0 or quantile > 1;	// quantile is out of bounds
 		"?";
 	
-	IsEmpty ( oldMean ); // No original average to update
+	IsEmpty ( oldEstimate ); // No original average to update
 		newValue;
 
-	/* Else, regular decaying average */
-		( 1 - newValueWeight ) * oldMean
-		+ newValueWeight * newValue
+	/* Else, regular decaying quantile */
+		oldEstimate
+		+ newValueWeight * ( quantile - If ( newValue ≤ oldEstimate ; 1 ; 0 ) )
 )
