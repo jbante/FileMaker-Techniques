@@ -1,0 +1,37 @@
+/**
+ * =====================================
+ * GetTimestampAsISO ( theTimestamp )
+ *
+ * RETURNS:
+ *		theTimestamp formatted according to ISO 8601, which is:
+ *		YYYY-MM-DD hh:mm:ss (24-hour time)
+ *
+ * PARAMETERS:
+ *		theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-17 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/ISO_8601
+ * =====================================
+ */
+ 
+ Let ( [
+	~seconds = Seconds ( theTimestamp )
+];
+	Right ( "0000" & Year ( theTimestamp ) ; 4 )
+	& "-"
+	& Right ( "00" & Month ( theTimestamp ) ; 2 )
+	& "-"
+	& Right ( "00" & Day ( theTimestamp ) ; 2 )
+	& " "
+	& Right ( "00" & Hour ( theTimestamp ) ; 2 )
+	& ":"
+	& Right ( "00" & Minute ( theTimestamp ) ; 2 )
+	& ":"
+	& If ( ~seconds < 10 ; "0" )	// timestamp may contain fractional seconds
+	& ~seconds
+)
