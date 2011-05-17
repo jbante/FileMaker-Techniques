@@ -3,7 +3,7 @@
  * GetTimestampAsISO ( theTimestamp )
  *
  * RETURNS:
- *		theTimestamp formatted according to ISO 8601, which is:
+ *		theTimestamp rendered in ISO 8601 format, which is:
  *		YYYY-MM-DD hh:mm:ss (24-hour time)
  *
  * PARAMETERS:
@@ -19,7 +19,7 @@
  * =====================================
  */
  
- Let ( [
+Let ( [
 	~seconds = Seconds ( theTimestamp )
 ];
 	Right ( "0000" & Year ( theTimestamp ) ; 4 )
