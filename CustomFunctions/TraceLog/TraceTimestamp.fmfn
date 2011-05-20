@@ -26,7 +26,14 @@ Let ( [
 	~lastTimestamp = Int ( $$~TRACE_LASTTIMESTAMP );
 	~serial = Mod ( $$~TRACE_LASTTIMESTAMP ; 1 );
 	~now = Get ( CurrentHostTimeStamp );
-	~magnitude = Max ( Left ( Substitute ( ~serial ; "." ; "" ) ; 1 ) ; 1 );
+	~magnitude =
+		Max (
+			Left (
+				Substitute ( ~serial ; "." ; "" );
+				1
+			);
+			1
+		);
 	~lastDigit = Right ( ~serial ; 1 );
 
 	~serial =
