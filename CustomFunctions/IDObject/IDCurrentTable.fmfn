@@ -1,6 +1,6 @@
 /**
  * =====================================
- * CurrentTableID
+ * IDCurrentTable
  *
  * RETURNS:
  *		FileMaker's internal ID for the current layout table occurrence.
@@ -14,7 +14,7 @@
  *		INSPIRED by custom functions by Fabrice Nordman.
  * =====================================
  */
- 
+
  Let ( [
  	~fileName = Get ( FileName );
 	~nameList = "¶" & TableNames ( ~fileName ) & "¶";

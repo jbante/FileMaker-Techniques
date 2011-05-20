@@ -1,0 +1,24 @@
+/**
+ * =====================================
+ * IDCurrentLayout
+ *
+ * RETURNS:
+ *		FileMaker's internal ID for the current layout.
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-19 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		INSPIRED by custom functions by Fabrice Nordman.
+ * =====================================
+ */
+
+ Let ( [
+ 	~value = Get ( LayoutNumber );
+ 	~idList = LayoutIDs ( Get ( FileName ) );
+	~id = GetValue ( ~idList ; ~value )
+];
+	~id
+)
