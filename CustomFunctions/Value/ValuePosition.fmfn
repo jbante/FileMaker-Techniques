@@ -1,0 +1,40 @@
+/**
+ * @ToDo:	Check that function can find second occurrence of neighboring values
+ * @ToDo:	Get function to do -occurrence (backwards) searches.
+ *
+ * ValuePosition ( valueList ; searchValue ; start ; occurrence )
+ *
+ * RETURNS:
+ *		The value number of searchValue in valueList
+ *
+ * PARAMETERS:
+ *		valueList: A ¶-delimited list of values to search in
+ *		searchValue: A value to search for
+ *		start: The value within valueList to begin searching at
+ *		occurrence: The occurrence of the value to find
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-22 by Jeremy Bante <http://scr.im/jbantetsg>.
+ */
+
+Let ( [
+	~valueCount = ValueCount ( valueList );
+	~valueList = "¶" & valueList & "¶";
+	~startList = LeftValues ( ~valueList ; start + 1 );
+	~startPosition = PatternCount ( ~startList ; "¶" );
+	~startPosition = Min ( ~startPosition ; ~valueCount ) - 1;
+	
+	
+	~searchValue = "¶" & searchValue & "¶";
+	~position =
+		Position (
+			~valueList;
+			~searchValue;
+			~startPosition;
+			occurrence
+		);
+	~valueList = Left ( ~valueList ; ~position );
+	~value = PatternCount ( ~valueList ; "¶" )
+];
+	~value
+)
