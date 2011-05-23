@@ -15,7 +15,7 @@
  * =====================================
  */
 
- Let ( [
+Let ( [
  	~value = Get ( LayoutNumber );
  	~idList = LayoutIDs ( Get ( FileName ) );
 	~id = GetValue ( ~idList ; ~value )
