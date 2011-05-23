@@ -1,0 +1,33 @@
+/**
+ * =====================================
+ * #GetField ( field )
+ *
+ * PURPOSE:
+ *		Returns the $localVariable with name matching the field passed as a
+ *		parameter. For example, #GetField ( fieldName ) would return the
+ *		contents of $fieldName. This may be useful for field auto-enter
+ *		calculations.
+ *
+ * RETURNS:
+ *		The contents of the $localVariable with the same name as the passed
+ *		field.
+ *
+ * PARAMETERS:
+ *		field: The field (not the field name) to get a variable value for
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-22 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		INSPIRED by a function by Matt Petrowsky.
+ * =====================================
+ */
+
+Let ( [
+	~name = GetFieldName ( field );
+	~name = Substitute ( ~name ; "::" ; "¶" );
+	~name = GetValue ( ~name ; ValueCount ( ~name ) );
+	~name = Substitute ( ~name ; " " ; "" )
+];
+	Evaluate ( "$" & ~name )
+)
