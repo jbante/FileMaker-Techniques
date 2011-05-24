@@ -1,0 +1,18 @@
+﻿/**
+ * ======================================
+ * DeviceIsMac
+ *
+ * RETURNS:
+ *		True when the function is called in the context of a Mac, and false
+ *		otherwise.
+ *
+ * PARAMETERS : none
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-23 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * ======================================
+ */
+ 
+Abs ( Get ( ApplicationVersion ) ) = 1
