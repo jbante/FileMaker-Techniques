@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * Server
+ * DeviceIsServer
  *
  * RETURNS:
  *		True (1) if the calculation is called in the context of a server-side
