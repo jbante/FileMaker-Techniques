@@ -1,0 +1,25 @@
+/**
+ * =====================================
+ * GetFieldNameOnly ( theField )
+ *
+ * RETURNS:
+ *		The field name of the field passed as a parameter, not including the
+ *		table occurrence name.
+ *
+ * PARAMETERS:
+ *		theField: A reference to a field (not the field name)
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-26 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~name = GetFieldName ( theField );
+	~name = Substitute ( ~name ; "::" ; "¶" );
+	~name = GetValue ( ~name ; ValueCount ( ~name ) )
+];
+	~name
+)

@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * AuditLogID ( logData )
+ * AuditGetCommitID ( logData )
  *
  * RETURNS:
  *		The event ID (UUID) from the first (most recent) line of
@@ -20,14 +20,14 @@
 Let ( [
 	~TAB = "	";
 	~log = Substitute ( logData ; ~TAB ; "¶" );
-	~isEdit = GetValue ( ~log ; 1 ) = "Edit";
-	~timestamp = GetValue ( ~log ; 2 );
+	~isField = GetValue ( ~log ; 1 ) = "field:";
+	~timestamp = GetAsTimestamp ( GetValue ( ~log ; 2 ) );
 	~session = GetValue ( ~log ; 10 )
 ];
-	If ( not ~isEdit;
+	If ( not ~isField;
 		"1-2-" // version and reserved variant code
 		& Right ( "000000000000" & Int ( ~timestamp ) ; 12 )
-		& "."
+		& "-"
 		& Left (
 			Substitute (
 				Mod ( ~timestamp ; 1 );

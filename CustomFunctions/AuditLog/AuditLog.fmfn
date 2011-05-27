@@ -64,22 +64,22 @@ Case (
 			~type =
 				If ( $~auditLog_initialize;
 					"Initialize";
-					/*Else*/ "Change"
+					/*Else*/ "Edit"
 				);
-				
+
 			~uuid = UUIDTimestamp;
 			~now = UUIDGetTimestamp ( ~uuid );
 			~session = Right ( ~uuid ; 21 );
-			
+
 			~field = GetValue ( logFieldNames ; 1 );
 			~field = Substitute ( ~field ; "::" ; "¶" );
 			$~table =
 				If ( ValueCount ( ~field ) > 1;
 					GetValue ( ~field ; 1 )
 				);
-				
+
 			~script = Get ( ScriptName );
-			
+
 			$~header =
 				TextStyleAdd ( ~type ; Italic ) & ~TAB
 				& ~now & ~TAB
@@ -128,7 +128,7 @@ Case (
 			~priorStart =
 				Position (
 					logData;
-					"¶Edit" & ~TAB & ~fieldName & ~TAB;
+					"¶field:" & ~TAB & ~fieldName & ~TAB;
 					1;
 					1
 				);
@@ -156,9 +156,12 @@ Case (
 				If (
 					$~auditLog_initialize
 					or not Exact ( ~fieldValue ; ~priorValue );
-						TextStyleAdd ( "Edit" ; Italic ) & ~TAB
+						TextStyleAdd ( "field:" ; Italic ) & ~TAB
 						& ~fieldName & ~TAB
-						& TextStyleAdd ( "to:" ; Italic ) & ~TAB
+						& If ( not $~auditLog_initialize;
+							TextStyleAdd ( "to:" ; Italic )
+						)
+						& ~TAB
 						& Quote ( ~fieldValue ) & ~TAB
 						& If ( not $~auditLog_initialize;
 							TextStyleAdd ( "from:" ; Italic ) & ~TAB
@@ -195,7 +198,7 @@ Case (
 			List (
 				TextStyleAdd ( TextColor ( ~header ; ~color ) ; Bold );
 				TextColor ( ~editList ; ~color );
-				If ( ~editsExist ; "¶" );
+				If ( ~editsExist ; "	" );
 				If ( not $~auditLog_initialize ; logData )
 			)
 		)
