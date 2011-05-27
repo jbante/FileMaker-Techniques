@@ -23,9 +23,11 @@
  *		UUIDGetTimestamp
  *
  * VARIABLES:
- *		$~auditLog_initialize: A flag indicating that the current change is only
+ *		$~auditLog.initialize: A flag indicating that the current change is only
  *			initializing the log as a point of comparison, and does not
  *			represent an actual data edit.
+ *		$~auditLog.pause: A flag indicating that the current change is part of a
+ *			scripted process, and shouldn't be logged until the script is done.
  *
  * EXAMPLE: (in a field auto-enter calculation)
  *		AuditLog (
@@ -56,13 +58,17 @@
  */
 
 Case (
+	/* Logging is paused; do nothing */
+	$~auditLog.pause;
+		logData;
+
 	/* Step 0, build event header */
 	IsEmpty ( $~header );
 		Let ( [
 			~TAB = "	";
 
 			~type =
-				If ( $~auditLog_initialize;
+				If ( $~auditLog.initialize;
 					"Initialize";
 					/*Else*/ "Edit"
 				);
@@ -83,12 +89,12 @@ Case (
 			$~header =
 				TextStyleAdd ( ~type ; Italic ) & ~TAB
 				& ~now & ~TAB
-				& If ( not $~auditLog_initialize;
+				& If ( not $~auditLog.initialize;
 					TextStyleAdd ( "by:" ; Italic ) & ~TAB
 					& Get ( AccountName ) & ~TAB;
 					/* Else */ ~TAB & ~TAB
 				)
-				& If ( not IsEmpty ( ~script ) and not $~auditLog_initialize;
+				& If ( not IsEmpty ( ~script ) and not $~auditLog.initialize;
 					TextStyleAdd ( "script:" ; Italic ) & ~TAB
 					& Get ( ScriptName ) & ~TAB;
 					/* Else */ ~TAB & ~TAB
@@ -154,16 +160,16 @@ Case (
 			// Build $~editList
 			~edit =
 				If (
-					$~auditLog_initialize
+					$~auditLog.initialize
 					or not Exact ( ~fieldValue ; ~priorValue );
 						TextStyleAdd ( "field:" ; Italic ) & ~TAB
 						& ~fieldName & ~TAB
-						& If ( not $~auditLog_initialize;
+						& If ( not $~auditLog.initialize;
 							TextStyleAdd ( "to:" ; Italic )
 						)
 						& ~TAB
 						& Quote ( ~fieldValue ) & ~TAB
-						& If ( not $~auditLog_initialize;
+						& If ( not $~auditLog.initialize;
 							TextStyleAdd ( "from:" ; Italic ) & ~TAB
 							& Quote ( ~priorValue )
 						)
@@ -182,7 +188,7 @@ Case (
 			~editsExist = not IsEmpty ( ~editList );
 			~header = If ( ~editsExist ; $~header );
 			~color =
-				If ( $~auditLog_initialize;
+				If ( $~auditLog.initialize;
 					RGB ( 204 ; 204 ; 204 ); // 80% Gray
 					/* Else */ 0 // Black
 				);
@@ -199,7 +205,7 @@ Case (
 				TextStyleAdd ( TextColor ( ~header ; ~color ) ; Bold );
 				TextColor ( ~editList ; ~color );
 				If ( ~editsExist ; "	" );
-				If ( not $~auditLog_initialize ; logData )
+				If ( not $~auditLog.initialize ; logData )
 			)
 		)
 )

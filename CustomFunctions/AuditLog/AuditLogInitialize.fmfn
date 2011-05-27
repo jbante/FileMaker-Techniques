@@ -16,7 +16,7 @@
  * DEPENDENCIES: none
  *
  * VARIABLES:
- *		$~auditLog_initialize
+ *		$~auditLog.initialize
  *
  * HISTORY:
  *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbantetsg>.
@@ -24,7 +24,7 @@
  */
 
 Let ( [
-	$~auditLog_initialize = True
+	$~auditLog.initialize = True
 ];
 	""
 )

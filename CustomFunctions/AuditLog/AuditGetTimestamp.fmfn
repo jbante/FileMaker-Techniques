@@ -20,7 +20,6 @@
  */
 
 Let ( [
-	logData = LeftValues ( Contact::auditLog ; 2 );
 	~TAB = "	";
 	~log = Substitute ( logData ; ~TAB ; "¶" );
 	~isField = GetValue ( ~log ; 1 ) = "field:"
