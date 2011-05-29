@@ -103,7 +103,7 @@ Case (
 			& "-"
 			& Right ( "0000000" & ~serialNumber ; 7 ) & "-"
 			& Right ( "00000" & ~clock_seq ; 5 )
-			& If ( ~version ≤ 2 ; "@" ; /*else*/ "-" )
+			& "-"
 			& Right ( "000000000000000" & ~node ; 15 )
 		)
 )
