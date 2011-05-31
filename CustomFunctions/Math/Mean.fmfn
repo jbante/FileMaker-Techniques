@@ -1,0 +1,55 @@
+/**
+ * =====================================
+ * Mean ( numberList )
+ *
+ * RETURNS:
+ *		The unweighted arithmetic mean of the values in numberList
+ *
+ * PARAMETERS:
+ *		numberList: A return-delimited list of numbers
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-29 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0: initialize loop */
+	not $~step;
+	Let ( [
+		$~valueCount = ValueCount ( numberList );
+		$~step = $~step + 1
+	];
+		Mean ( numberList )
+	);
+
+	/* Step 1: Incrementally calculate mean */
+	$~step = 1;
+	Let ( [
+		$~i = $~i + 1;
+		$~mean = $~mean + GetAsNumber ( GetValue ( numberList ; $~i ) ) / $~i;
+
+		$~step = If ( $~i ≥ $~valueCount ; $~step + 1 ; /* Else */ $~step )
+	];
+		Mean ( numberList )
+	);
+
+	/* Step 2: Return result and clean-up */
+	$~step = 2;
+	Let ( [
+		~mean = $~mean;
+		~i = $~i;
+		~step = $~step;
+		~valueCount = $~valueCount;
+
+		// purge variables
+		$~i = "";
+		$~mean = "";
+		$~step = "";
+		$~valueCount = ""
+	];
+		~mean
+	)
+)
