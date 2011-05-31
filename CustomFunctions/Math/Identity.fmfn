@@ -1,0 +1,26 @@
+/**
+ * =====================================
+ * Identity ( booleanStatement )
+ *
+ * PURPOSE:
+ *		Implements the Identity function in much of mathematics, which is
+ *		typically used to test whether or not an element belongs to a particular
+ *		set.
+ *
+ * RETURNS:
+ *		1 if booleanStatement is True, 0 otherwise.
+ *
+ * PARAMETERS:
+ *		booleanStatement: A value to be interpreted as True or False.
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE:
+ *		Identity ( $n < 0 )	// True if $n is a negative number
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-30 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+If ( GetAsBoolean ( booleanStatement ) ; 1 ; /* Else */ 0 )
