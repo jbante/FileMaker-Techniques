@@ -1,6 +1,6 @@
 /**
  * =====================================
- * DecayingQuantile ( oldEstimate ; newValue ; quantile ; newValueWeight )
+ * MovingQuantile ( oldEstimate ; newValue ; quantile ; newValueWeight )
  *
  * PURPOSE:
  *		Builds a "decaying" average (mean) where older values in a stream of
@@ -31,7 +31,7 @@ Case (
 	newValueWeight < 0 or newValueWeight > 1	// weight is out of bounds
 	or quantile < 0 or quantile > 1;	// quantile is out of bounds
 		"?";
-	
+
 	IsEmpty ( oldEstimate ); // No original average to update
 		newValue;
 
