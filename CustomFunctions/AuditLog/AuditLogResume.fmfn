@@ -16,12 +16,14 @@
  *		$~auditLog.pause
  *
  * HISTORY:
+ *		MODIFIED on 2011-06-02 by Jeremy Bante to also de-active initialization.
  *		CREATED on 2011-05-27 by Jeremy Bante <http://scr.im/jbantetsg>.
  * =====================================
  */
 
 Let ( [
-	$~auditLog.pause = ""
+	$~auditLog.pause = "";
+	$~auditLog.initialize = ""
 ];
 	""
 )
