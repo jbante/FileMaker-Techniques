@@ -1,0 +1,49 @@
+/**
+ * =====================================
+ * GetAsApproximateTime ( theTime )
+ *
+ * RETURNS:
+ *		theTime expressed as an interval length in only its most significant
+ *		order of magnitude (hours, minutes, or seconds)
+ *
+ * PARAMETERS:
+ *		theTime
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-06-05 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Let ( [
+	~seconds = Round ( GetAsNumber ( GetAsTime ( theTime ) ) ; 0 );
+	~minutes = ~seconds / 60
+];
+	Case (
+		~minutes > 120;	// Hours timescale
+			"~"
+			& Round ( ~minutes / 60 ; 0 )
+			& " hours";
+
+		~minutes > 60;	// Hours timescale
+			"~"
+			& Round ( ~minutes / 60 ; 1 )
+			& " hours";
+
+		~seconds > 120;	// Minutes timescale
+			"~"
+			& Round ( ~seconds / 60 ; 0 )
+			& " minutes";
+
+		~seconds > 60;	// Minutes timescale
+			"~"
+			& Round ( ~seconds / 60 ; 1 )
+			& " minutes";
+
+		/* Else, Seconds timescale */
+			"~"
+			& ~seconds
+			& " seconds"
+	)
+)

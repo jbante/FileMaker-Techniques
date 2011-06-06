@@ -1,9 +1,9 @@
 /**
  * =====================================
- * MovingAverage ( oldMean ; newValue ; newValueWeight )
+ * DecayingAverage ( oldMean ; newValue ; newValueWeight )
  *
  * PURPOSE:
- *		Builds a "moving" average (mean) where older values in a stream of
+ *		Builds a "decaying" average (mean) where older values in a stream of
  *		data have steadily (exponentially) less influence on the average as
  *		newer values are added. This can be useful in situations where the data
  *		distribution is expected to change over time, especially where the
@@ -28,7 +28,7 @@
 Case (
 	newValueWeight < 0 or newValueWeight > 1 ;	// weight is out of bounds
 		"?";
-
+	
 	IsEmpty ( oldMean ); // No original average to update
 		newValue;
 

@@ -1,0 +1,41 @@
+/**
+ * =====================================
+ * DecayingQuantile ( oldEstimate ; newValue ; quantile ; newValueWeight )
+ *
+ * PURPOSE:
+ *		Builds a "decaying" average (mean) where older values in a stream of
+ *		data have steadily (exponentially) less influence on the average as
+ *		newer values are added. This can be useful in situations where the data
+ *		distribution is expected to change over time, especially where the
+ *		change is more "smooth" and a sliding window model for the estimated
+ *		mean would be inappropriate.
+ *
+ * RETURNS: A number
+ *
+ * PARAMETERS:
+ *		oldEstimate: The existing quantile value to be updated. Leave empty when
+ *		establishing an initial estimate.
+ *		newValue: The new data value to use to update the quantile estimate.
+ *		quantile: The quantile value to estimate. 0 < quantile < 1.
+ *		newValueWeight: The relative weight to apply to the estimate adjustment
+ *		based on newValue. 0 ≤ newValueWeight ≤ 1.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-05-16 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * =====================================
+ */
+
+Case (
+	newValueWeight < 0 or newValueWeight > 1	// weight is out of bounds
+	or quantile < 0 or quantile > 1;	// quantile is out of bounds
+		"?";
+	
+	IsEmpty ( oldEstimate ); // No original average to update
+		newValue;
+
+	/* Else, regular decaying quantile */
+		oldEstimate
+		+ newValueWeight * ( quantile - If ( newValue ≤ oldEstimate ; 1 ; 0 ) )
+)
