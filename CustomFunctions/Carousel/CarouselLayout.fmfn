@@ -25,7 +25,7 @@
  *
  * HISTORY:
  *		MODIFIED on 2011-01-25 by Jeremy Bante to improve error handling.
- *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -40,13 +40,13 @@ Case (
 				index < 1
 				or index > $~layoutCount;
 					3;	//skip to returning empty (error)
-					
+
 				/* Else */ 1
 			)
 	];
 		CarouselLayout ( Int ( index ) )
 	);
-	
+
 	/* Step 1, find layout name by index */
 	$~step = 1;
 	Let ( [
@@ -57,7 +57,7 @@ Case (
 				// layout is not hidden
 				Left ( $~layout ; 1 ) ≠ "-" and Left ( $~layout ; 2 ) ≠ "//";
 					$~index + 1;
-					
+
 				/* Else */
 					$~index
 			);
@@ -66,11 +66,11 @@ Case (
 				$~index = index ; 3;	// return result
 				$~i = $~layoutCount ; 2;	// error, layout not found
 				/* Else */ $~step
-			)		
+			)
 	];
 		CarouselLayout ( index )
 	);
-	
+
 	/* Step 2, clear $~layout in event that correct layout can't be found */
 	$~step = 2;
 	Let ( [
@@ -79,12 +79,12 @@ Case (
 	];
 		CarouselLayout ( index )
 	);
-	
+
 	/* Step 3, clean-up */
 	$~step = 3;
 	Let ( [
 		~layout = $~layout;
-		
+
 		// purge variables
 		$~i = "";
 		$~index = "";

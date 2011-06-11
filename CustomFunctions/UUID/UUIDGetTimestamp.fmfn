@@ -22,9 +22,9 @@
  * HISTORY:
  *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
  *		relationship with the RFC 4122 format.
- *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbantetsg> to
- *		extract timestamps from the updated output format for UUIDNew.
- *		CREATED on 2010-09-12 by Jeremy Bante <jeremy@kyologic.com>.
+ *		MODIFIED on 2010-11-22 by Jeremy Bante to extract timestamps from the
+ *		updated output format for UUIDNew.
+ *		CREATED on 2010-09-12 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by UUID functions created by Ray Cologon.
  *
  * REFERENCES:

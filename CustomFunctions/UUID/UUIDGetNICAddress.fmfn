@@ -23,7 +23,7 @@
  *		multicast bit set to 1.
  *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
  *		relationship with the RFC 4122 format.
- *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbantetsg> to
+ *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbante> to
  *		extract NIC addresses from the updated output format for UUIDNew.
  *		MODIFIED on 2010-10-04 by Jeremy Bante to return False when passed a
  *		UUID value with a randomly-generated NICAddress.

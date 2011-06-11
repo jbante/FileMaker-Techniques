@@ -26,7 +26,7 @@
  *		Parent::sort + SortAsymptote ( Child::sort ) //= Child::sortCalc
  *
  * HISTORY:
- * CREATED on 2011-02-15 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * CREATED on 2011-02-15 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 

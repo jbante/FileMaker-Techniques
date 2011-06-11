@@ -11,8 +11,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2010-08-21 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2010-08-21 by Jeremy Bante <http://scr.im/jbante>.
  * ======================================
  */
- 
+
 Left ( Get ( ApplicationVersion ) ; 7 ) = "Go_iPad"

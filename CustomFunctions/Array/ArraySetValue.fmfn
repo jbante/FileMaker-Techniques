@@ -29,7 +29,7 @@
  * ArraySetValue ( $array ; List ( Get ( RecordNumber ) ; 4 ) ; $data )
  *
  * HISTORY:
- * CREATED on 2011-02-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * CREATED on 2011-02-11 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  * ArrayValue: http://www.briandunning.com/cf/1278
@@ -41,7 +41,7 @@ Let ( [
 	~index = GetAsNumber ( GetValue ( index ; 1 ) );
 	~indexCount = ValueCount ( index );
 	~arrayLength = ValueCount ( array );
-	
+
 	//Array may need to be padded with values to be big enough for ~index
 	~short = Max ( ~index - ~arrayLength - 1 ; 0 );
 	$~pad =
@@ -49,7 +49,7 @@ Let ( [
 			not ~short
 			and ~indexCount ≤ 1;
 				""; //purge variable
-			
+
 			~short ≤ ValueCount ( $~pad );
 				$~pad;
 

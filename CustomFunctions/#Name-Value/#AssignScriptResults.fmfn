@@ -20,11 +20,11 @@
  * HISTORY:
  *		MODIFIED on 2011-02-24 by Jeremy Bante to avoid redundant code with the
  *		#Assign function.
- *		MODIFIED on 2010-10-04 by Jeremy Bante <http://scr.im/jbantetsg> to
- *		return explicit True or False values indicating successful evaluation of
- *		the script result, and to follow syntax inspired by a comment on
- *		FileMakerStandards.org by Richard Dyce.
- *		CREATED on 2010-08-25 by Jeremy Bante <jeremy@kyologic.com>.
+ *		MODIFIED on 2010-10-04 by Jeremy Bante to return explicit True or False
+ *		values indicating successful evaluation of the script result, and to
+ *		follow syntax inspired by a comment on FileMakerStandards.org by
+ *		Richard Dyce.
+ *		CREATED on 2010-08-25 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by an example in the FileMaker help documentation.
  *
  * REFERENCES:

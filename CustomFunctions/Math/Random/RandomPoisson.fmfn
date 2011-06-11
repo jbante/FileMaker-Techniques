@@ -17,7 +17,7 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2011-05-15 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-05-15 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  *		http://en.wikipedia.org/wiki/Poisson_distribution
@@ -29,11 +29,11 @@ Case (
 	not $~step;
 	Let ( [
 		$~random = Random;
-		
+
 		$~i = 0;
 		$~probability = exp ( 0 - mean );
 		$~cumulativeProbability = $~probability;
-		
+
 		$~step =
 			Case (
 				mean ≤ 0 ; 2;	// value is out of bounds, skip to end
@@ -43,14 +43,14 @@ Case (
 	];
 		RandomPoisson ( mean )
 	);
-	
+
 	/* Step 1: find cumulative probability to match random value */
 	$~step = 1;
 	Let ( [
 		$~i = $~i + 1;
 		$~probability = mean * $~probability / $~i;	// recursive Poisson density
 		$~cumulativeProbability = $~cumulativeProbability + $~probability;
-		
+
 		$~step =
 			If ( $~random < $~cumulativeProbability;	// result is found
 				$~step + 1;
@@ -59,13 +59,13 @@ Case (
 	];
 		RandomPoisson ( mean )
 	);
-	
-	
+
+
 	/* Step 2: clean-up and return result */
 	$~step = 2;
 	Let ( [
 		~value = $~i;
-		
+
 		// purge variables
 		$~cumulativeProbability = "";
 		$~i = "";

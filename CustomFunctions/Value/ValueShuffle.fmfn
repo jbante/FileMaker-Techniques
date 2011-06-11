@@ -8,7 +8,7 @@
  *		valueList: A ¶-delimited list of values to shuffle
  *
  * HISTORY:
- *		CREATED on 2011-03-31 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-03-31 by Jeremy Bante <http://scr.im/jbante>.
  */
 
 Let ( [
@@ -28,7 +28,7 @@ Let ( [
 ];
 	If ( ~valueCount > 1;
 		ValueShuffle ( ~leftList & ~rightList );
-		
+
 	/* Else */
 		Let ( [
 			~shuffledList = $~shuffledList;

@@ -33,14 +33,14 @@
  *		values indicating successful evaluation of the script result, and to
  *		follow syntax inspired by a comment on standards.filemakermagazine.com
  *		by Richard Dyce.
- *		CREATED on 2010-03-13 by Jeremy Bante <jeremy@kyologic.com>.
+ *		CREATED on 2010-03-13 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by an example in the FileMaker help documentation.
  *
  * REFERENCES:
  *		Script Parameter Interface Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557462
  * =====================================
  */
- 
+
 Let (
         ~evaluateString =
                 "Let( [¶"
@@ -48,13 +48,13 @@ Let (
                 & "$void = $void"  //terminating variable to keep semicolon-delimited sytax in variableString consistent
                 & "¶];¶"
                 & "True¶)";
- 
+
         //end variable definitions
- 
+
         Case (
                 IsValidExpression ( ~evaluateString );
                         Evaluate ( ~evaluateString );
- 
+
                 //else, ~evaluateString is not a valid expression...
                         False
         )

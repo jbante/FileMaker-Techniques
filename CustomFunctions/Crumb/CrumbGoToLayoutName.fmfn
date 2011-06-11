@@ -44,10 +44,10 @@
  *		"Crumb: Load Crumb Modules" script
  *
  * HISTORY:
- *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
- 
+
 Case (
 	moduleNumber = -1 // "App" module
 	and not IsEmpty ( subpageNumber );
@@ -81,7 +81,7 @@ Case (
 			~module = #Get ( $$CRUMB.DATA ; "moduleList" );
 			~module = GetValue ( ~module ; moduleNumber );
 			~module = #Get ( $$CRUMB.DATA ; ~module );
-			
+
 			~pageList = #Get ( ~module ; "pageList" );
 			~pageCount = ValueCount ( ~pageList );
 
@@ -89,7 +89,7 @@ Case (
 			~shift = Mod ( ~modifierKeys ; 2 );
 			~command = Mod ( Div ( ~modifierKeys ; 16 ) ; 2 );
 			~control = Mod ( Div ( ~modifierKeys ; 4 ) ; 2 );
-			
+
 			~page =
 				If ( ~shift ; 1 )
 				+ If ( ~command or ~control ; 2 )
@@ -104,7 +104,7 @@ Case (
 		];
 			CrumbLayoutName ( ~page )
 		);
-	
+
 	IsEmpty ( moduleNumber )
 	and not IsEmpty ( subpageNumber );
 		Let ( [

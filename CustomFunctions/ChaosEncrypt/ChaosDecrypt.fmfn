@@ -35,8 +35,7 @@
  * map that results in greater diffusion and faster calculation.
  * MODIFIED on 2011-01-05 by Jeremy Bante to use a different chaotic
  * map when transforming the key.
- * CREATED on 2011-01-04 by Jeremy Bante of The Support Group
- * <http://scr.im/jbantetsg>.
+ * CREATED on 2011-01-04 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  * ChaosDecrypt function: http://www.briandunning.com/cf/1259
@@ -44,7 +43,7 @@
  * ChaosHash function: http://www.briandunning.com/cf/1261
  * =====================================
  */
- 
+
 Case (
 	/*First call to function; initialize variables*/
 	not $~step;
@@ -63,22 +62,22 @@ Case (
 		~keyByte = Code ( Left ( key ; 1 ) );
 		~extraByte = Left ( ~keyByte ; Length ( ~keyByte ) - 5 );
 		~keyByte = Mod ( Right ( ~keyByte ; 5 ) + $~priorByte ; 65535 );
-		
+
 		//iterate ~keyByte through the map 8x, perturb 4th orbits
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
-		
+
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
-		
+
 		//add new value to list
 		$~key = List ( ~keyByte ; $~key );
 		$~priorByte = ~keyByte;
-		
+
 		//continue until whole key is processed
 		~keyLength = Length ( key );
 		$~step = If ( ~keyLength > 1 ; $~step ; /*else*/ $~step + 1 )
@@ -88,33 +87,33 @@ Case (
 			Char ( ~extraByte ) & Right ( key ; ~keyLength - 1 )
 		)
 	);
-	
+
 	/*Step 2, apply key to text*/
 	$~step = 2;
 	Let ( [
 		~keyByte = Mod ( GetValue ( $~key ; 1 ) + $~priorByte ; 65535 );
-		
+
 		//iterate ~keyByte through the map 8x, perturb 4th orbits
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
-		
+
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
-		
+
 		//extract next byte from cipherText, accounting for composite characters
 		~cipherByte = Code ( Left ( cipherText ; 1 ) );
 		~extraByte = Left ( ~cipherByte ; Length ( ~cipherByte ) - 5 );
 		~cipherByte = Right ( ~cipherByte ; 5 );
-		
+
 		//apply key to text
 		//additive complement under 2^16 is analogous to XOR in binary encryption
 		~plainByte = 65535 - Mod ( ~cipherByte + ~keyByte ; 65535 );
 		$~plainText = $~plainText & Char ( ~plainByte );
-		
+
 		//rotate the key
 		$~priorByte = ~cipherByte;
 		$~key =
@@ -133,12 +132,12 @@ Case (
 			""
 		)
 	);
-	
+
 	/*Step 3, clean-up and return result*/
 	$~step = 3;
 	Let ( [
 		~plainText = $~plainText;
-		
+
 		//purge variables
 		$~key = "";
 		$~keyLength = "";

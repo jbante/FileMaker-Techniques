@@ -21,7 +21,7 @@
  * HISTORY:
  *		MODIFIED on 2011-02-22 by Jeremy Bante to store the Marsaglia polar
  *		method's extra value for later use.
- *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  *		http://en.wikipedia.org/wiki/Normal_distribution

@@ -57,12 +57,11 @@
  *		relationship with the RFC 4122 format.
  *		MODIFIED on 2010-12-06 by Jeremy Bante to store the base 10-encoded node
  *		between calls to the function, making successive calls much faster.
- *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbantetsg> to
- *		create IDs in a format more consistent with the RFC 4122 and RFC 5322
- *		standards.
+ *		MODIFIED on 2010-11-22 by Jeremy Bante to create IDs in a format more
+ *		consistent with the RFC 4122 and RFC 5322 standards.
  *		MODIFIED on 2010-10-04 by Jeremy Bante to prevent random NIC (MAC)
  *		addresses from colliding with actual NIC addresses.
- *		CREATED on 2010-09-06 by Jeremy Bante <jeremy@kyologic.com>.
+ *		CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by UUID functions created by Tom Robinson and Ray Cologon.
  *
  * REFERENCES:

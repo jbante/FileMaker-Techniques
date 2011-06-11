@@ -22,7 +22,7 @@
  * HISTORY:
  *		MODIFIED on 2011-01-25 by Jeremy Bante to not set global variables for
  *		next and previous layouts.
- *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -38,7 +38,7 @@ Case (
 	];
 		CarouselNextLayout
 	);
-	
+
 	/* Step 1, find the next layout to navigate to */
 	$~step = 1;
 	Let ( [
@@ -56,18 +56,18 @@ Case (
 				not ~isHidden	// skip separators and hidden layouts
 				or $~i = $~layoutNumber;	// search is exhausted
 					$~step + 1;
-					
+
 				/*else*/ $~step
-			)		
+			)
 	];
 		CarouselNextLayout
 	);
-	
+
 	/* Step 2, clean-up */
 	$~step = 2;
 	Let ( [
 		~nextLayout = $~nextLayout;
-		
+
 		//purge variables
 		$~i = "";
 		$~layoutCount = "";

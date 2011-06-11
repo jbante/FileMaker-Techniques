@@ -19,13 +19,13 @@
  *
  * HISTORY:
  * CREATED on 2011-01-26 by Jeremy Bante of The Support Group
- * <http://scr.im/jbantetsg>.
+ * <http://scr.im/jbante>.
  *
  * REFERENCES:
  * http://en.wikipedia.org/wiki/B%C3%A9zier_curve
  * =====================================
  */
- 
+
 Case (
 	/*Step 0, initialize with linear Bézier curve*/
 	not $~step;
@@ -42,7 +42,7 @@ Case (
 	];
 		Bezier ( t ; controlPoints )
 	);
-	
+
 	/*Step 1, add-up sum for arbitrary-degree Bézier curve*/
 	$~step = 1;
 	Let ( [
@@ -57,7 +57,7 @@ Case (
 	];
 		Bezier ( t ; controlPoints )
 	);
-	
+
 	/*Step 2, handle errors*/
 	$~step = 2;
 	Let ( [
@@ -66,12 +66,12 @@ Case (
 	];
 		Bezier ( "" ; "" )
 	);
-	
+
 	/*Step 3, clean-up and return result*/
 	$~step = 3;
 	Let ( [
 		~sum = $~sum;
-		
+
 		//purge variables
 		$~i = "";
 		$~n = "";

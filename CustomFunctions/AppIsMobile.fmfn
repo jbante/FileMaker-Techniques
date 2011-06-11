@@ -11,8 +11,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2011-01-28 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-01-28 by Jeremy Bante <http://scr.im/jbante>.
  * ======================================
  */
- 
+
 Get ( SystemPlatform ) = 3

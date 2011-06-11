@@ -31,8 +31,7 @@
  * systematically perturbed orbits.
  * MODIFIED on 2011-01-09 by Jeremy Bante to use a different chaotic
  * map that results in greater diffusion and faster calculation.
- * CREATED on 2011-01-05 by Jeremy Bante of The Support Group
- * <http://scr.im/jbantetsg>.
+ * CREATED on 2011-01-05 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  * ChaosDecrypt function: http://www.briandunning.com/cf/1259
@@ -60,7 +59,7 @@ Case (
 	$~step = 1;
 	Let ( [
 		//Convert text to numbers, accounting for composite characters
-		~textByte = 
+		~textByte =
 			If ( $~textLength ≥ $~i;
 				Code ( Middle ( text ; $~i ; 1 ) );
 				/*else*/ $~alternator //augment $~text as needed
@@ -78,15 +77,15 @@ Case (
 				/*else*/ not $~alternator
 			);
 		$~text = List ( $~text ; ~textByte );
-		
+
 		~keyByte = Mod ( ~textByte + $~priorByte ; 65535 );
-		
+
 		//iterate ~keyByte through the map 8x, perturb 4th orbits
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
-		
+
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
@@ -111,24 +110,24 @@ Case (
 	$~step = 2;
 	Let ( [
 		~keyByte = Mod ( GetValue ( $~key ; 1 ) + $~priorByte ; 65535 );
-		
+
 		//iterate ~keyByte through the map 8x, perturb 4th orbits
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
-		
+
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
 		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
-		
+
 		//apply key to text
 		//additive complement under 2^16 is analogous to XOR in binary encryption
 		~textByte = MiddleValues ( $~text ; $~j ; 1 );
 		~textByte = 65535 - Mod ( ~textByte + ~keyByte ; 65535 );
 		$~hash = $~hash & Char ( ~textByte );
-		
+
 		//rotate the key
 		$~priorByte = ~textByte;
 		$~key = List ( RightValues ( $~key ; $~i - 2 ) ; ~keyByte );

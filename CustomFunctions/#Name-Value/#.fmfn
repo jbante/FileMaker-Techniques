@@ -29,12 +29,12 @@
  * HISTORY:
  *		MODIFIED on 2011-05-13 by Jeremy Bante to strip spaces and "=" from
  *		names.
- *		MODIFIED on 2010-11-23 by Jeremy Bante <http://scr.im/jbantetsg> to
- *		strip "$" characters from the name parameter.
- *		MODIFIED on 2010-10-04 by jeremy@kyologic.com to fit syntax inspired by
+ *		MODIFIED on 2010-11-23 by Jeremy Bante to strip "$" characters from the
+ *		named parameter.
+ *		MODIFIED on 2010-10-04 by Jeremy Bante to fit syntax inspired by
  *		a comment on standards.filemakermagazine.com by Richard Dyce, which was
  *		originally used by Jesse Antunes of six.fried.rice.
- *		CREATED on 2010-02-08 by Jeremy Bante <jeremy@kyologic.com>.
+ *		CREATED on 2010-02-08 by Jeremy Bante <http://scr.im/jbante>.
  *		Inspired by an example in the FileMaker help documentation.
  *
  * REFERENCES:

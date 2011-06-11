@@ -21,7 +21,7 @@
  *		Set Variable [$ignoreMe, Value:SyncEnd]
  *
  * HISTORY:
- *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -54,7 +54,7 @@ Let ( [
  *		Set Variable [$ignoreMe, Value:SyncEnd]
  *
  * HISTORY:
- *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -88,7 +88,7 @@ Let ( [
  *		)
  *
  * HISTORY:
- *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -126,7 +126,7 @@ $~isSyncRunning
  *		Set Variable [$ignoreMe, Value:SyncEnd]
  *
  * HISTORY:
- *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 

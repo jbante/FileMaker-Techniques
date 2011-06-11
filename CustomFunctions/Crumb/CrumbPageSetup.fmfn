@@ -26,21 +26,21 @@
  *		"Crumb: Load Crumb Modules" script
  *
  * HISTORY:
- *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-05-13 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
- 
+
 Case (
 	/* Step 0: initialize loops and set one-off values */
 	not $~step;
 	Let ( [
 		$userName = Get ( UserName );
 		$userAccount = Get ( AccountName );
-		
+
 		$crumb = Crumb ( Get ( LayoutNumber ) );
 		$crumb.module = CrumbModule ( $crumb );
 		$crumb.page = CrumbPage ( $crumb );
-		
+
 		$~moduleList = #Get ( $$CRUMB.DATA ; "moduleList" );
 		$~moduleCount = ValueCount ( $~moduleList );
 		~module = #Get ( $$CRUMB.DATA ; $crumb.module );
@@ -49,12 +49,12 @@ Case (
 		~appModule = #Get ( $$CRUMB.DATA ; "App" );
 		$~appList = #Get ( ~appModule ; "pageList" );
 		$~appCount = ValueCount ( $~appList );
-		
+
 		$~step = $~step + 1
 	];
 		CrumbPageSetup
 	);
-	
+
 	/* Step 1: assign crumb.module variables */
 	$~step = 1;
 	Let ( [
@@ -68,7 +68,7 @@ Case (
 	];
 		CrumbPageSetup
 	);
-	
+
 	/* Step 2: purge existing crumb.page variables */
 	$~step = 2;
 	Let ( [
@@ -88,7 +88,7 @@ Case (
 	];
 		CrumbPageSetup
 	);
-	
+
 	/* Step 3: assign crumb.page variables */
 	$~step = 3;
 	Let ( [
@@ -103,7 +103,7 @@ Case (
 	];
 		CrumbPageSetup
 	);
-	
+
 	/* Step 4: assign crumb.app (page) variables */
 	$~step = 4;
 	Let ( [
@@ -118,13 +118,13 @@ Case (
 	];
 		CrumbPageSetup
 	);
-	
-	
+
+
 	/* Step 5: Assign variables */
 	$~step = 5;
 	Let ( [
 		~parameters = $~parameters;
-		
+
 		// Purge variables
 		$~appCount = "";
 		$~appList = "";

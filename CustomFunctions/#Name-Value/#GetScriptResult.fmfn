@@ -26,7 +26,7 @@
  *		MODIFIED on 2011-02-13 by Jeremy Bante to retrieve the last occurrence
  *		of a named value, making behavior more consistent with the #Assign
  *		functions.
- *		CREATED on 2011-01-14 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-01-14 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
  *		Script Parameter Interface Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557462

@@ -23,11 +23,11 @@
  * address. If privacy is a concern, the UUIDNew function can be replaced with a more suitable function, such as UUIDRandom.
  *
  * HISTORY:
- * CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/jbantetsg>.
+ * CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/jbante>.
  * INSPIRED by Twitter user @shintan
  * =====================================
  */
- 
+
 If ( $$~SESSION_ID;
 	$$~SESSION_ID;
 /*else*/

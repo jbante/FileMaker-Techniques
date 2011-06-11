@@ -23,7 +23,7 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2011-05-16 by Jeremy Bante <http://scr.im/jbantetsg>.
+ *		CREATED on 2011-05-16 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
@@ -31,7 +31,7 @@ Case (
 	newValueWeight < 0 or newValueWeight > 1	// weight is out of bounds
 	or quantile < 0 or quantile > 1;	// quantile is out of bounds
 		"?";
-	
+
 	IsEmpty ( oldEstimate ); // No original average to update
 		newValue;
 
