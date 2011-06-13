@@ -28,7 +28,7 @@
  * DEPENDENCIES: none
  *
  * VARIABLES:
- *		$$~UUID_DATA
+ *		$$~UUID.DATA
  *
  * NOTES:
  *		For most practical purposes, FileMaker will ignore the text delimiters
@@ -75,16 +75,16 @@
 
 Case (
 	/*First call to UUIDTimeNIC, check for pre-processed node data*/
-	not $~step;
+	not $~uuid.step;
 		Let ( [
-				$~node = GetValue ( $$~UUID_DATA ; 4 );
-				$~step = If ( $~node ; 3 ; /*else*/ 1 )
+				$~node = GetValue ( $$~UUID.DATA ; 4 );
+				$~uuid.step = If ( $~node ; 3 ; /*else*/ 1 )
 		];
 			UUIDTimeNIC
 		);
 
 	/*Get NIC address, if possible*/
-	$~step = 1;
+	$~uuid.step = 1;
 		Let ( [
 			$~nicAddress =
 				Substitute (
@@ -93,30 +93,30 @@ Case (
 					""
 				);
 			$~i = 0;
-			$~step = If ( $~nicAddress ; $~step + 1 ; /*else*/ 3 )
+			$~uuid.step = If ( $~nicAddress ; $~uuid.step + 1 ; /*else*/ 3 )
 		];
 			UUIDTimeNIC
 		);
 
 	/*Parse NIC address from hexadecimal to a (base 10) number*/
-	$~step = 2;
+	$~uuid.step = 2;
 		Let ( [
 			$~nicDigit = Middle ( $~nicAddress ; 12 - $~i ; 1 );
 			$~nicDigit = Position ( "0123456789abcdef" ; $~nicDigit ; 1 ; 1 ) - 1; //convert digit to number
 			$~node = $~nicDigit * ( 16 ^ $~i ) + $~node; //add digit to node
-			$~step = If ( $~i < 11 ; $~step ; /*else*/ $~step + 1  );
+			$~uuid.step = If ( $~i < 11 ; $~uuid.step ; /*else*/ $~uuid.step + 1  );
 			$~i = $~i + 1
 		];
 			UUIDTimeNIC
 		);
 
 	/*Concatenate information*/
-	$~step = 3;
+	$~uuid.step = 3;
 		Let ( [
 			//Set-up timestamp, serial number, and session key
-			~session = GetValue ( $$~UUID_DATA ; 1 );
-			~lastTimestamp = GetValue ( $$~UUID_DATA ; 2 );
-			~serial = GetAsNumber ( GetValue ( $$~UUID_DATA ; 3 ) );
+			~session = GetValue ( $$~UUID.DATA ; 1 );
+			~lastTimestamp = GetValue ( $$~UUID.DATA ; 2 );
+			~serial = GetAsNumber ( GetValue ( $$~UUID.DATA ; 3 ) );
 
 			~now =
 				Mod (
@@ -158,14 +158,14 @@ Case (
 				);
 
 			//Store data for future reference
-			$$~UUID_DATA = List ( ~session ; ~now ; ~serial ; ~node );
+			$$~UUID.DATA = List ( ~session ; ~now ; ~serial ; ~node );
 
 			//purge variables
 			$~i = "";
 			$~nicAddress = "";
 			$~nicDigit = "";
 			$~node = "";
-			$~step = ""
+			$~uuid.step = ""
 		];
 			//v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
 			"1-2-" //version and reserved variant code

@@ -35,7 +35,7 @@
  */
 Case (
 	/*Extract and arrange UUID components*/
-	not $~step;
+	not $~uuid.step;
 		Let ( [
 			~idAsNumber = GetAsNumber ( theID );
 			~idLength = Length ( ~idAsNumber );
@@ -76,24 +76,24 @@ Case (
 
 			//set-up conversion from base 10 to base 16
 			$~hex = "";
-			$~step = 1
+			$~uuid.step = 1
 		];
 			UUIDGetAsRFC4122 ( "" )
 		);
 
 	/*Convert to base 16*/
-	$~step = 1;
+	$~uuid.step = 1;
 		Let ( [
 			~hexDigit = Mod ( $~uuid ; 16 );
 			$~hex = Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~hex;
 			$~uuid = Div ( $~uuid ; 16 );
-			$~step = If ( $~uuid ; $~step ; /*else*/ $~step + 1 )
+			$~uuid.step = If ( $~uuid ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
 		];
 			UUIDGetAsRFC4122 ( "" )
 		);
 
 	/*Return result*/
-	$~step = 2;
+	$~uuid.step = 2;
 		Let ( [
 			~hex = $~hex;
 			~hex =
@@ -105,7 +105,7 @@ Case (
 
 			//purge variables
 			$~hex = "";
-			$~step = "";
+			$~uuid.step = "";
 			$~uuid = ""
 		];
 			~hex

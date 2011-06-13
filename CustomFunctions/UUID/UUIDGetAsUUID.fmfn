@@ -35,9 +35,9 @@
  */
 Case (
 	/*Set-up conversion from base 16 to base 10*/
-	not $~step;
+	not $~uuid.step;
 		Let ( [
-			$~step = 1
+			$~uuid.step = 1
 		];
 			UUIDGetAsUUID (
 				Right ( Filter ( Lower ( rfc4122 ) ; "0123456789abcdef" ) ; 32 )
@@ -45,20 +45,20 @@ Case (
 		);
 
 	/*Convert to base 10*/
-	$~step = 1;
+	$~uuid.step = 1;
 		Let ( [
 			$~i = $~i + 1;
 			~hexDigit = Middle ( rfc4122 ; $~i ; 1 );
 			$~decimal =
 				$~decimal * 16
 				+ ( Position ( "0123456789abcdef" ; ~hexDigit ; 1 ; 1 ) - 1 );
-			$~step = If ( $~i < 32 ; $~step ; /*else*/ $~step + 1 )
+			$~uuid.step = If ( $~i < 32 ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
 		];
 			UUIDGetAsUUID ( rfc4122 )
 		);
 
 	/*Format and return result*/
-	$~step = 2;
+	$~uuid.step = 2;
 		Let ( [
 			//extract RFC 4122 components
 			~node = Mod ( $~decimal ; 2^48 );
@@ -94,7 +94,7 @@ Case (
 			//purge variables
 			$~decimal = "";
 			$~i = "";
-			$~step = ""
+			$~uuid.step = ""
 		];
 			//format result
 			~version & "-"
