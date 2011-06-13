@@ -12,14 +12,15 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2011-06-12 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
 Let ( [
 	~TAB = "	";
-	~log = Substitute ( logData ; ~TAB ; "¶" );
-	~isField = GetValue ( ~log ; 1 ) = "field:"
+	~log = GetValue ( logData ; 1 );
+	~log = Substitute ( ~log ; ~TAB ; "¶" );
+	~isRecord = GetValue ( ~log ; 2 ) = "record"
 ];
-	If ( not ~isField ; GetValue ( ~log ; 9 ) )
+	If ( ~isRecord ; GetValue ( ~log ; 6 ) )
 )

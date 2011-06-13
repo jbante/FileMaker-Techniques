@@ -55,7 +55,43 @@
  * REFERENCES:
  *		Ray Cologon's UltraLog: http://www.nightwing.com.au/FileMaker/demosX/demoX01.html
  * =====================================
- */
+ *///------------------------------------------------------------------------------
+// Format:
+eventType	->	[field1]	->	[field2]	-> [field3]	->	[...]
+
+// Format, eventType = "Change", Style = Bold
+"Edit"	[Timestamp (eventKey)]	"by:"	[Account]	"script:"	[Script]		"record:"	[Table] [PrimaryKey]	[sessionKey]
+
+// Format, eventType = "Initialize", Style = Bold, Color = Gray
+"Initialize"	[Timestamp (eventKey)]					[sessionKey]
+
+// Format, eventType = "Delete", Style = Bold, Color = Red
+"Delete"	[Timestamp (eventKey)]	"by:"	[Account]	"script:"	[Script]	[sessionKey]
+
+// Format, eventType = "RESTORE", Style = Bold, Color = Blue
+"Restore"	[Timestamp (eventKey)]	"by:"	[Account]	"script:"	[Script]	[sessionKey]
+
+// Format, eventType = "Edit", Style = Plain
+"field:"	[fieldName]	"to:"	Quote ( value )	"from:"		Quote ( priorValue )
+
+//------------------------------------------------------------------------------
+// New Format:
+timestamp	->	rowType	->	[label1]:	->	[field1]	->	[label2]:	->	[field2]	->	etc.
+
+2011-06-12 19:27:07	session	account:	Admin	script:	"New Record"	session: [session key]
+2011-06-12 19:27:07	edit	field:	email	to:	"jeremy@bante.us"	from:	"jbante@supportgroup.com"
+2011-06-12 19:27:07	record	table:	Contact	id:	0123456789
+
+
+//------------------------------------------------------------------------------
+// Function family
+AuditCommitID ( timestamp ; sessionKey ) @done
+AuditGetSessionKey
+
+AuditLog
+AuditLogInitialize
+AuditLogPause
+AuditLogResume
 
 Case (
 	/* Logging is paused; do nothing */
