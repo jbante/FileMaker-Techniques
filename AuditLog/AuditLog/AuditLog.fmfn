@@ -1,0 +1,211 @@
+﻿/**
+ * =====================================
+ * AuditLog ( modificationTrigger ; primaryKey ; logData ; logFieldNames )
+ *
+ * PURPOSE:
+ *		Creates a log of any data changes made to a record.
+ *
+ * RETURNS:
+ *		A tab- and return-delimited list of all changes made to the current
+ *		record to any of the fields specified by fieldNames.
+ *
+ * PARAMETERS:
+ *		modificationTrigger: Any value that will trigger on any record
+ *			modification.
+ *		primaryKey: The primary key for the record.
+ *		logData: The existing log data for the record.
+ *		logFieldNames: A return-delimited list of the names of fields to audit
+ *			for changes.
+ *
+ * DEPENDENCIES:
+ *		UUIDTimestamp (May be substituted for another timestamp-based UUID
+ *			function)
+ *		UUIDGetTimestamp
+ *
+ * VARIABLES:
+ *		$~auditLog.initialize: A flag indicating that the current change is only
+ *			initializing the log as a point of comparison, and does not
+ *			represent an actual data edit.
+ *		$~auditLog.pause: A flag indicating that the current change is part of a
+ *			scripted process, and shouldn't be logged until the script is done.
+ *
+ * EXAMPLE: (in a field auto-enter calculation)
+ *		AuditLog (
+ *			modificationTimestamp; // triggers calculation
+ *			Self; // logData
+ *			List ( GetFieldName ( field1 ) ; GetFieldName ( field2 ) )
+ *		)
+ *
+ * NOTES:
+ *		The tab- and return-delimited format is a compromise between machine and
+ *		human readability.
+ *
+ *		The syntax of a change log event produced by this function does not
+ *		include the prior value, since that would be redundant data. ~priorValue
+ *		could be re-introduced as a stored parameter if that value is desired
+ *		for the purpose of a human-readable text-only change log (A change log
+ *		not based on a dedicated table).
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-04-01 by Jeremy Bante to use a more-human readable
+ *		storage format.
+ *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbante>.
+ *		INSPIRED by the UltraLog solution by Ray Cologon.
+ *
+ * REFERENCES:
+ *		Ray Cologon's UltraLog: http://www.nightwing.com.au/FileMaker/demosX/demoX01.html
+ * =====================================
+ */
+
+Case (
+	/* Logging is paused; do nothing */
+	$~auditLog.pause;
+		logData;
+
+	/* Step 0, build event header */
+	IsEmpty ( $~header );
+		Let ( [
+			~TAB = "	";
+
+			~type =
+				If ( $~auditLog.initialize;
+					"Initialize";
+					/*Else*/ "Edit"
+				);
+
+			~uuid = UUIDTimestamp;
+			~now = UUIDGetTimestamp ( ~uuid );
+			~session = Right ( ~uuid ; 21 );
+
+			~field = GetValue ( logFieldNames ; 1 );
+			~field = Substitute ( ~field ; "::" ; "¶" );
+			$~table =
+				If ( ValueCount ( ~field ) > 1;
+					GetValue ( ~field ; 1 )
+				);
+
+			~script = Get ( ScriptName );
+
+			$~header =
+				TextStyleAdd ( ~type ; Italic ) & ~TAB
+				& ~now & ~TAB
+				& If ( not $~auditLog.initialize;
+					TextStyleAdd ( "by:" ; Italic ) & ~TAB
+					& Get ( AccountName ) & ~TAB;
+					/* Else */ ~TAB & ~TAB
+				)
+				& If ( not IsEmpty ( ~script ) and not $~auditLog.initialize;
+					TextStyleAdd ( "script:" ; Italic ) & ~TAB
+					& Get ( ScriptName ) & ~TAB;
+					/* Else */ ~TAB & ~TAB
+				)
+				& TextStyleAdd ( "record:" ; Italic ) & ~TAB
+				& $~table & ~TAB
+				& If ( Length ( primaryKey ) > 10;
+					TextSize ( primaryKey ; 9 );
+					/* Else */ primaryKey
+				) & ~TAB
+				& TextSize ( ~session ; 9 );
+
+			$~fieldCount = ValueCount ( logFieldNames );
+			$~step = If ( $~fieldCount ; 1 ; /* Else */ 2 )
+		];
+			AuditLog ( "" ; primaryKey ; logData ; logFieldNames )
+		);
+
+	/* Step 1, audit field changes */
+	$~step = 1;
+		Let ( [
+			~TAB = "	";
+			$~i = $~i + 1;
+
+			// Get ~fieldValue
+			~fieldName = GetValue ( logFieldNames ; $~i );
+			~fieldValue = GetField ( ~fieldName );
+			~fieldValue = // escape ~TAB delimiter character
+				Substitute (
+					~fieldValue;
+					[ "\\" ; "\\\\" ];
+					[ ~TAB ; "\\t" ]
+				);
+			~fieldName = Substitute ( ~fieldName ; $~table & "::" ; "" );
+
+			// Get ~priorValue for comparison
+			~priorStart =
+				Position (
+					logData;
+					"¶field:" & ~TAB & ~fieldName & ~TAB;
+					1;
+					1
+				);
+			~priorStart =
+				If ( ~priorStart; // ~fieldName was found in log
+					Position ( logData ; ~TAB ; ~priorStart + 1 ; 3 ) + 1
+				);
+			~priorEnd =
+				If ( ~priorStart; // ~fieldName was found in log
+					Position ( logData ; ~TAB ; ~priorStart + 1 ; 1 )
+				);
+			~priorValue =
+				If ( ~priorStart; // ~fieldName was found in log
+					Evaluate (
+						Middle (
+							logData;
+							~priorStart;
+							~priorEnd - ~priorStart
+						)
+					)
+				);
+
+			// Build $~editList
+			~edit =
+				If (
+					$~auditLog.initialize
+					or not Exact ( ~fieldValue ; ~priorValue );
+						TextStyleAdd ( "field:" ; Italic ) & ~TAB
+						& ~fieldName & ~TAB
+						& If ( not $~auditLog.initialize;
+							TextStyleAdd ( "to:" ; Italic )
+						)
+						& ~TAB
+						& Quote ( ~fieldValue ) & ~TAB
+						& If ( not $~auditLog.initialize;
+							TextStyleAdd ( "from:" ; Italic ) & ~TAB
+							& Quote ( ~priorValue )
+						)
+				);
+			$~editList = List ( ~edit ; $~editList );
+
+			$~step = If ( $~i ≥ $~fieldCount ; $~step + 1 ; /*Else*/ $~step )
+		];
+			AuditLog ( "" ; primaryKey ; logData ; logFieldNames )
+		);
+
+	/* Step 2, format result */
+	$~step = 2;
+		Let ( [
+			~editList = $~editList;
+			~editsExist = not IsEmpty ( ~editList );
+			~header = If ( ~editsExist ; $~header );
+			~color =
+				If ( $~auditLog.initialize;
+					RGB ( 204 ; 204 ; 204 ); // 80% Gray
+					/* Else */ 0 // Black
+				);
+
+			// purge variables
+			$~editList = "";
+			$~header = "";
+			$~i = "";
+			$~step = "";
+			$~table = "";
+			$~type = ""
+		];
+			List (
+				TextStyleAdd ( TextColor ( ~header ; ~color ) ; Bold );
+				TextColor ( ~editList ; ~color );
+				If ( ~editsExist ; "	" );
+				If ( not $~auditLog.initialize ; logData )
+			)
+		)
+)

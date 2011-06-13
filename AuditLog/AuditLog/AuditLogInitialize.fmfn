@@ -1,0 +1,30 @@
+﻿/**
+ * =====================================
+ * AuditLogInitialize
+ *
+ * PURPOSE:
+ *		Sets a locally-scoped $script variable that will signal the AuditLog
+ *		function to not log the account name responsible for the next edit to
+ *		the record. This should only be used in a function that resets a
+ *		record's AuditLog. Regular logging will resume after the close of the
+ *		current script.
+ *
+ * RETURNS: "" (Null)
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * VARIABLES:
+ *		$~auditLog.initialize
+ *
+ * HISTORY:
+ *		CREATED on 2011-03-30 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	$~auditLog.initialize = True
+];
+	""
+)
