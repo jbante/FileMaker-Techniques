@@ -21,5 +21,17 @@ eventType	->	[field1]	->	[field2]	-> [field3]	->	[...]
 // New Format:
 timestamp	->	rowType	->	[label1]:	->	[field1]	->	[label2]:	->	[field2]	->	etc.
 
-2011-06-12 19:27:07	session	user:	Admin	script:	"New Record"	session: [session key]
-2011-06-12 19:27:07	edit	field: email	to: "jeremy@bante.us"	from:	"jbante@supportgroup.com"
+2011-06-12 19:27:07	edit	field:	email	to:	"jeremy@bante.us"	from:	"jbante@supportgroup.com"
+2011-06-12 19:27:07	session	account:	Admin	script:	"New Record"	session: [session key]
+2011-06-12 19:27:07	record	table:	Contact	id:	0123456789
+
+
+//------------------------------------------------------------------------------
+// Function family
+AuditCommitID ( timestamp ; sessionKey ) @done
+AuditGetSessionKey
+
+AuditLog
+AuditLogInitialize
+AuditLogPause
+AuditLogResume
