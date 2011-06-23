@@ -92,7 +92,7 @@ Case (
 					":";
 					""
 				);
-			$~i = 0;
+			$~uuid.i = 0;
 			$~uuid.step = If ( $~nicAddress ; $~uuid.step + 1 ; /*else*/ 3 )
 		];
 			UUIDTimeNIC
@@ -101,11 +101,12 @@ Case (
 	/*Parse NIC address from hexadecimal to a (base 10) number*/
 	$~uuid.step = 2;
 		Let ( [
-			$~nicDigit = Middle ( $~nicAddress ; 12 - $~i ; 1 );
+			$~nicDigit = Middle ( $~nicAddress ; 12 - $~uuid.i ; 1 );
 			$~nicDigit = Position ( "0123456789abcdef" ; $~nicDigit ; 1 ; 1 ) - 1; //convert digit to number
-			$~node = $~nicDigit * ( 16 ^ $~i ) + $~node; //add digit to node
-			$~uuid.step = If ( $~i < 11 ; $~uuid.step ; /*else*/ $~uuid.step + 1  );
-			$~i = $~i + 1
+			$~node = $~nicDigit * ( 16 ^ $~uuid.i ) + $~node; //add digit to node
+			$~uuid.step =
+				If ( $~uuid.i < 11 ; $~uuid.step ; /*else*/ $~uuid.step + 1  );
+			$~uuid.i = $~uuid.i + 1
 		];
 			UUIDTimeNIC
 		);
@@ -161,7 +162,7 @@ Case (
 			$$~UUID.DATA = List ( ~session ; ~now ; ~serial ; ~node );
 
 			//purge variables
-			$~i = "";
+			$~uuid.i = "";
 			$~nicAddress = "";
 			$~nicDigit = "";
 			$~node = "";

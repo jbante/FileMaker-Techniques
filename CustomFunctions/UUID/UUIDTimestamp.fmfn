@@ -29,7 +29,7 @@
  * DEPENDENCIES: none
  *
  * VARIABLES:
- *		$$~UUID_DATA[2]
+ *		$$~UUID.DATA[2]
  *
  * NOTES:
  *		For most practical purposes, FileMaker will ignore the text delimiters
@@ -62,10 +62,10 @@
 
 Let ( [
 	//Set-up timestamp, serial number, and session key
-	~session = GetValue ( $$~UUID_DATA[2] ; 1 );
-	~lastTimestamp = GetValue ( $$~UUID_DATA[2] ; 2 );
-	~serial = GetAsNumber ( GetValue ( $$~UUID_DATA[2] ; 3 ) );
-	~node = GetValue ( $$~UUID_DATA[2] ; 4 );
+	~session = GetValue ( $$~UUID.DATA[2] ; 1 );
+	~lastTimestamp = GetValue ( $$~UUID.DATA[2] ; 2 );
+	~serial = GetAsNumber ( GetValue ( $$~UUID.DATA[2] ; 3 ) );
+	~node = GetValue ( $$~UUID.DATA[2] ; 4 );
 
 	~now =
 		Mod (
@@ -109,7 +109,7 @@ Let ( [
 		);
 
 	//Store data for future reference
-	$$~UUID_DATA[2] = List ( ~session ; ~now ; ~serial ; ~node )
+	$$~UUID.DATA[2] = List ( ~session ; ~now ; ~serial ; ~node )
 ];
 	//v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
 	"1-2-" //version and reserved variant code
