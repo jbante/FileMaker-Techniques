@@ -15,7 +15,7 @@
  * DEPENDENCIES: none
  *
  * VARIABLES:
- *		$$~TRACE_LASTTIMESTAMP
+ *		$$~TRACE.LASTTIMESTAMP
  *
  * HISTORY:
  *		CREATED on 2011-04-07 by Jeremy Bante <http://scr.im/jbante>.
@@ -23,8 +23,8 @@
  */
 
 Let ( [
-	~lastTimestamp = Int ( $$~TRACE_LASTTIMESTAMP );
-	~serial = Mod ( $$~TRACE_LASTTIMESTAMP ; 1 );
+	~lastTimestamp = Int ( $$~TRACE.LASTTIMESTAMP );
+	~serial = Mod ( $$~TRACE.LASTTIMESTAMP ; 1 );
 	~now = Get ( CurrentHostTimeStamp );
 	~magnitude =
 		Max (
@@ -53,7 +53,7 @@ Let ( [
 		);
 
 	// Store data for future reference
-	$$~TRACE_LASTTIMESTAMP = ~now + ~serial
+	$$~TRACE.LASTTIMESTAMP = ~now + ~serial
 ];
-	$$~TRACE_LASTTIMESTAMP
+	$$~TRACE.LASTTIMESTAMP
 )

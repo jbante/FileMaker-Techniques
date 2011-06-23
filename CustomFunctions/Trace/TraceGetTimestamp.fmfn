@@ -1,0 +1,29 @@
+﻿/**
+ * =====================================
+ * TraceGetTimestamp ( valueNumber )
+ *
+ * RETURNS:
+ *		The timestamp from the specified line of the trace log
+ *
+ * PARAMETERS:
+ *		valueNumber: The row number from the trace log to retrieve a timestamp
+ *			from
+ *
+ * DEPENDENCIES: none
+ *
+ * VARIABLES:
+ *		$$~TRACE.LOG
+ *
+ * HISTORY:
+ *		CREATED on 2011-06-22 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	~value = GetValue ( $$~TRACE.LOG ; valueNumber );
+	~start = Position ( ~value ; "/*" ; 1 ; 1 ) + 3;
+	~end = Position ( ~value ; "*/" ; ~start ; 1 );
+	~middle = Middle ( ~value ; ~start ; ~end - ~start )
+];
+	GetAsTimestamp ( ~middle )
+)

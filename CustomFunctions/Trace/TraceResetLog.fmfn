@@ -1,20 +1,27 @@
 ﻿/**
  * =====================================
- * TraceLog
+ * TraceResetLog
+ *
+ * PURPOSE:
+ *		Purges the contents of the global variable storing the trace log.
  *
  * RETURNS:
- *		The contents of the trace log.
+ *		"" // Null
  *
  * PARAMETERS: none
  *
  * DEPENDENCIES: none
  *
  * VARIABLES:
- *		$$~TRACE_LOG
+ *		$$~TRACE.LOG
  *
  * HISTORY:
  *		CREATED on 2011-05-20 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-$$~TRACE_LOG
+Let ( [
+	$$~TRACE.LOG = ""	// Null
+];
+	""	// Null
+)
