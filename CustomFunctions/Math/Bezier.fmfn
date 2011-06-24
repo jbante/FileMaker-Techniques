@@ -28,15 +28,15 @@
 
 Case (
 	/*Step 0, initialize with linear Bézier curve*/
-	not $~step;
+	not $~bezier.step;
 	Let ( [
-		$~n = ValueCount ( controlPoints ) - 1;
-		$~i = 0;
-		$~sum = ( 1 - t ) * GetValue ( controlPoints ; $~i + 1 );
-		$~step =
+		$~bezier.n = ValueCount ( controlPoints ) - 1;
+		$~bezier.i = 0;
+		$~bezier.sum = ( 1 - t ) * GetValue ( controlPoints ; $~bezier.i + 1 );
+		$~bezier.step =
 			Case (
 				t < 0 or t > 1 ; 2; //error, out of range
-				$~i ≥ $~n; 3; //trivial case, skip to return result
+				$~bezier.i ≥ $~bezier.n; 3; //trivial case, skip to return result
 				/*else*/ 1
 			)
 	];
@@ -44,39 +44,40 @@ Case (
 	);
 
 	/*Step 1, add-up sum for arbitrary-degree Bézier curve*/
-	$~step = 1;
+	$~bezier.step = 1;
 	Let ( [
-		$~i = $~i + 1;
-		$~sum =
-			$~sum
-			+ Combination ( $~n ; $~i )
-			* ( 1 - t ) ^ ( $~n - $~i )
-			* t ^ ( $~i )
-			* GetValue ( controlPoints ; $~i + 1 );
-		$~step = If ( $~i ≥ $~n ; 3 ; /*else*/ $~step )
+		$~bezier.i = $~bezier.i + 1;
+		$~bezier.sum =
+			$~bezier.sum
+			+ Combination ( $~bezier.n ; $~bezier.i )
+			* ( 1 - t ) ^ ( $~bezier.n - $~bezier.i )
+			* t ^ ( $~bezier.i )
+			* GetValue ( controlPoints ; $~bezier.i + 1 );
+		$~bezier.step =
+			If ( $~bezier.i ≥ $~bezier.n ; 3 ; /*else*/ $~bezier.step )
 	];
 		Bezier ( t ; controlPoints )
 	);
 
 	/*Step 2, handle errors*/
-	$~step = 2;
+	$~bezier.step = 2;
 	Let ( [
-		$~sum = "?";
-		$~step = $~step + 1
+		$~bezier.sum = "?";
+		$~bezier.step = $~bezier.step + 1
 	];
 		Bezier ( "" ; "" )
 	);
 
 	/*Step 3, clean-up and return result*/
-	$~step = 3;
+	$~bezier.step = 3;
 	Let ( [
-		~sum = $~sum;
+		~sum = $~bezier.sum;
 
 		//purge variables
-		$~i = "";
-		$~n = "";
-		$~step = "";
-		$~sum = ""
+		$~bezier.i = "";
+		$~bezier.n = "";
+		$~bezier.step = "";
+		$~bezier.sum = ""
 	];
 		~sum
 	)
