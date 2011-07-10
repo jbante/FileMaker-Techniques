@@ -15,4 +15,4 @@
  * ======================================
  */
 
-Abs ( Get ( ApplicationVersion ) ) = 1
+Abs ( Get ( SystemPlatform ) ) = 1
