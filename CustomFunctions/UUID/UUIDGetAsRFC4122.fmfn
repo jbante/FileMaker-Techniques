@@ -40,17 +40,17 @@ Case (
 			~idAsNumber = GetAsNumber ( theID );
 			~idLength = Length ( ~idAsNumber );
 
-			//extract components of FileMaker-centric format
+			// extract components of FileMaker-centric format
 			~version = Left ( ~idAsNumber ; ~idLength - 40 );
 			~reserved = Middle ( ~idAsNumber ; ~idLength - 39 ; 1 );
 			~timestamp = Middle ( ~idAsNumber ; ~idLength - 38 ; 12 );
-			//move epoch from 0001-01-01T00:00:00 to 1582-10-15T00:00:00
+			// move epoch from 0001-01-01T00:00:00 to 1582-10-15T00:00:00
 			~timestamp = Max ( ~timestamp - 49916304000 ; 0 );
 			~timestamp = ~timestamp & Middle ( ~idAsNumber ; ~idLength - 26 ; 7 );
 			~clockSequence = Middle ( ~idAsNumber ; ~idLength - 19 ; 5 );
 			~node = Right ( ~idAsNumber ; 15 );
 
-			//convert to RFC 4122 components
+			// convert to RFC 4122 components
 			~time_low = Mod ( ~timestamp ; 2^32 ); //32 bits
 			~time_mid = Mod ( Div ( ~timestamp ; 2^32 ) ; 2^16 ); //next 16 bits
 			~time_hi = Mod ( Div ( ~timestamp ; 2^48 ) ; 2^12 ); //next 12 bits

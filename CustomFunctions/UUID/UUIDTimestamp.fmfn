@@ -61,7 +61,7 @@
  */
 
 Let ( [
-	//Set-up timestamp, serial number, and session key
+	// Set-up timestamp, serial number, and session key
 	~session = GetValue ( $$~UUID.DATA[2] ; 1 );
 	~lastTimestamp = GetValue ( $$~UUID.DATA[2] ; 2 );
 	~serial = GetAsNumber ( GetValue ( $$~UUID.DATA[2] ; 3 ) );
@@ -84,7 +84,7 @@ Let ( [
 			or ~now < ~lastTimestamp; //clock change
 				Mod ( ~session + 1 ; 16384 );
 
-			/*else*/
+			/* Else */
 				~session
 		);
 	~magnitude =
@@ -102,16 +102,16 @@ Let ( [
 	~node =
 		If ( ~node;
 			~node;
-		/*Else, new random node*/
+		/* Else, new random node */
 			//set multicast bit to avoid colliding with NIC addresses
 			( Floor ( Random * 128 ) *2 + 1 ) * 1099511627776
 			+ Floor ( Random * 1099511627776 )
 		);
 
-	//Store data for future reference
+	// Store data for future reference
 	$$~UUID.DATA[2] = List ( ~session ; ~now ; ~serial ; ~node )
 ];
-	//v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
+	// v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
 	"1-2-" //version and reserved variant code
 	& Right ( "000000000000" & ~now ; 12 )
 	& "-"

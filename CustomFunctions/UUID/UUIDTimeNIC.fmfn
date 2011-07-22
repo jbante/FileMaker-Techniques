@@ -74,7 +74,7 @@
  */
 
 Case (
-	/*First call to UUIDTimeNIC, check for pre-processed node data*/
+	/* First call to UUIDTimeNIC, check for pre-processed node data */
 	not $~uuid.step;
 		Let ( [
 				$~node = GetValue ( $$~UUID.DATA ; 4 );
@@ -83,7 +83,7 @@ Case (
 			UUIDTimeNIC
 		);
 
-	/*Get NIC address, if possible*/
+	/* Get NIC address, if possible */
 	$~uuid.step = 1;
 		Let ( [
 			$~nicAddress =
@@ -98,12 +98,12 @@ Case (
 			UUIDTimeNIC
 		);
 
-	/*Parse NIC address from hexadecimal to a (base 10) number*/
+	/* Parse NIC address from hexadecimal to a (base 10) number */
 	$~uuid.step = 2;
 		Let ( [
 			$~nicDigit = Middle ( $~nicAddress ; 12 - $~uuid.i ; 1 );
-			$~nicDigit = Position ( "0123456789abcdef" ; $~nicDigit ; 1 ; 1 ) - 1; //convert digit to number
-			$~node = $~nicDigit * ( 16 ^ $~uuid.i ) + $~node; //add digit to node
+			$~nicDigit = Position ( "0123456789abcdef" ; $~nicDigit ; 1 ; 1 ) - 1;	// convert digit to number
+			$~node = $~nicDigit * ( 16 ^ $~uuid.i ) + $~node;	// add digit to node
 			$~uuid.step =
 				If ( $~uuid.i < 11 ; $~uuid.step ; /*else*/ $~uuid.step + 1  );
 			$~uuid.i = $~uuid.i + 1
@@ -111,10 +111,10 @@ Case (
 			UUIDTimeNIC
 		);
 
-	/*Concatenate information*/
+	/* Concatenate information */
 	$~uuid.step = 3;
 		Let ( [
-			//Set-up timestamp, serial number, and session key
+			// Set-up timestamp, serial number, and session key
 			~session = GetValue ( $$~UUID.DATA ; 1 );
 			~lastTimestamp = GetValue ( $$~UUID.DATA ; 2 );
 			~serial = GetAsNumber ( GetValue ( $$~UUID.DATA ; 3 ) );
@@ -126,15 +126,15 @@ Case (
 				);
 			~session =
 				Case (
-					IsEmpty ( ~session ); //new session
+					IsEmpty ( ~session );	// new session
 						Floor ( Random * 16384 );
 
-					~serial ≥ .9999999 //serial number overflow
+					~serial ≥ .9999999	// serial number overflow
 					and ~now = ~lastTimestamp
-					or ~now < ~lastTimestamp; //clock change
+					or ~now < ~lastTimestamp;	// clock change
 						Mod ( ~session + 1 ; 16384 );
 
-					/*else*/
+					/* Else */
 						~session
 				);
 			~magnitude =
@@ -152,8 +152,8 @@ Case (
 			~node =
 				If ( $~node;
 					$~node;
-				/*Else, new random node*/
-					//set multicast bit to avoid colliding with NIC addresses
+				/* Else, new random node */
+					// set multicast bit to avoid colliding with NIC addresses
 					( Floor ( Random * 128 ) *2 + 1 ) * 1099511627776
 					+ Floor ( Random * 1099511627776 )
 				);
@@ -168,7 +168,7 @@ Case (
 			$~node = "";
 			$~uuid.step = ""
 		];
-			//v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
+			// v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
 			"1-2-" //version and reserved variant code
 			& Right ( "000000000000" & ~now ; 12 )
 			& "-"
