@@ -1,0 +1,69 @@
+/**
+ * =====================================
+ * WeightedAverage ( values ; weights )
+ *
+ * PURPOSE:
+ *		Calculates a weighted average from corresponding lists of values and
+ *		their weights.
+ *
+ * RETURNS: A number
+ *
+ * PARAMETERS:
+ *		values: A return-delimited list of the values to average.
+ *		weights: A return-delimited list of the weights to apply to each value.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-08-09 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, initialize calculation */
+	not $~avg.step;
+	Let ( [
+		$~avg.valueCount =
+			Max ( ValueCount ( values ) ; ValueCount ( weights ) );
+		$~avg.numerator = 0;
+		$~avg.denominator = 0;
+		$~avg.step = 1
+	];
+		WeightedAverage ( values ; weights )
+	);
+
+	/* Step 1, calculate sums for numerator and denominator */
+	$~avg.step = 1;
+	Let ( [
+		$~avg.i = $~avg.i + 1;
+
+		~value = GetValue ( values ; $~avg.i );
+		~weight = GetValue ( weights ; $~avg.i );
+
+		$~avg.numerator = ~weight * ~value + $~avg.numerator;
+		$~avg.denominator = ~weight + $~avg.denominator;
+
+		$~avg.step =
+			If ( $~avg.i ≥ $~avg.valueCount;
+				$~avg.step + 1;
+				/* Else */ $~avg.step
+			)
+	];
+		WeightedAverage ( values ; weights )
+	);
+
+	/* Step 2, return result */
+	$~avg.step = 2;
+	Let ( [
+		~mean = $~avg.numerator / $~avg.denominator;
+
+		// purge variables
+		$~avg.denominator = "";	// Null
+		$~avg.i = "";
+		$~avg.numerator = "";
+		$~avg.step = "";
+		$~avg.valueCount = ""
+	];
+		~mean
+	)
+)
