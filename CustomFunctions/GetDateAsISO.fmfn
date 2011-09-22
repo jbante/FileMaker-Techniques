@@ -19,8 +19,8 @@
  * =====================================
  */
 
-Right ( "0000" & Year ( theTimestamp ) ; 4 )
+Right ( "0000" & Year ( theDate ) ; 4 )
 & "-"
-& Right ( "00" & Month ( theTimestamp ) ; 2 )
+& Right ( "00" & Month ( theDate ) ; 2 )
 & "-"
-& Right ( "00" & Day ( theTimestamp ) ; 2 )
+& Right ( "00" & Day ( theDate ) ; 2 )
