@@ -25,7 +25,7 @@
  */
 
 Case (
-	0 > probability or 1 < probability ; "?"; //parameter is out of range
+	0 > probability or 1 < probability ; "?";	// parameter is out of range
 	Random < probability ; 1;
 	/*else*/ 0
 )
