@@ -1,0 +1,24 @@
+/**
+ * =====================================
+ * RandomLogNormal ( location ; scale )
+ *
+ * RETURNS:
+ *		A number representing a random variate from a log-normal distribution
+ *		with the specified parameters.
+ *
+ * PARAMETERS:
+ *		location: The mean of the distribution's logarithm
+ *		scale: The standard deviation of the distribution's logarithm
+ *
+ * DEPENDENCIES:
+ *		RandomStandardNormal
+ *
+ * HISTORY:
+ *		CREATED on 2011-10-04 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Log-normal_distribution
+ * =====================================
+ */
+
+Exp ( location + scale * RandomStandardNormal )

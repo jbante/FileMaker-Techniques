@@ -1,0 +1,25 @@
+/**
+ * =====================================
+ * RandomExponential ( rate )
+ *
+ * RETURNS:
+ *		A number representing a random variate from an exponential distribution
+ *		with the specified parameter.
+ *
+ * PARAMETERS:
+ *		rate: rate > 0
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-10-04 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Exponential_distribution
+ * =====================================
+ */
+
+Case (
+	rate ≤ 0 ; "?";	// parameter is out of range
+	/* Else */ ( 0 - Ln ( Random ) ) / rate
+)
