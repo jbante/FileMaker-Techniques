@@ -24,7 +24,7 @@
  * =====================================
  */
 
-If ( 0 ≥ scale or 0 ≥ shape; //parameter is out of range
+If ( 0 ≥ scale or 0 ≥ shape;	// parameter is out of range
 	"?";
-	/*else*/ scale / ( Random ^ ( 1 / shape ) )
+	/* Else */ scale / ( Random ^ ( 1 / shape ) )
 )

@@ -30,29 +30,29 @@
  */
 
 If ( not IsEmpty ( $$~STANDARDNORMAL );
-	//Use duplicate value from previous use of function
+	// Use extra value from previous call to this function
 	$$~STANDARDNORMAL
 	& Let ( $$~STANDARDNORMAL = "" ; "" );
 
-	//Else, find new value with Marsaglia polar sampling method
+	// Else, find new value with Marsaglia polar sampling method
 	Let( [
-		~x = Random * 2 - 1; //begin with random points
+		~x = Random * 2 - 1;	// begin with random points
 		~y = Random * 2 - 1;
 		~radiusSquared = ~x ^ 2 + ~y ^ 2
 	];
 
 		Case (
-			~radiusSquared < 1; //(~x, ~y) is inside the unit circle
-				~x //return value
+			~radiusSquared < 1;	// (~x, ~y) is inside the unit circle
+				~x
 				* sqrt ( -2 * ln ( ~radiusSquared ) / ~radiusSquared )
 				& Let (
-					$$~STANDARDNORMAL = //save extra value
+					$$~STANDARDNORMAL =	// save extra value
 						~y
 						* sqrt ( -2 * ln ( ~radiusSquared ) / ~radiusSquared );
 					""
 				);
 
-			//Else, reject guess and sample again
+			// Else, reject guess and sample again
 				RandomStandardNormal
 		)
 	)

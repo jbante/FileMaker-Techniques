@@ -27,13 +27,13 @@
 
 Let ( [
 	~trials = Abs ( Int ( trials ) );
-	~guess = Round ( Random * ~trials; 0 );
+	~guess = Round ( Random * ~trials ; 0 );
 
-	//mode of Binomial distribution
+	// mode of Binomial distribution
 	~mode1 = Ceiling ( ~trials * probability );
 	~mode2 = Floor ( ~trials * probability );
 
-	//max probability of Binomial distribution
+	// max probability of Binomial distribution
 	~mode1Mass =
 		( probability ^ ~mode1 )
 		* ( ( 1 - probability ) ^ ( ~trials - ~mode1 ) );
@@ -41,24 +41,20 @@ Let ( [
 		( probability ^ ~mode2 )
 		* ( ( 1 - probability ) ^ ( ~trials - ~mode2 ) );
 
-	~scaleFactor =
-		If ( ~mode1Mass ≥ ~mode2Mass;
-			1 / ~mode1Mass;
-			/*else*/ 1 / ~mode2Mass
-		);
-	~rejectionThreshold = //probability mass at ~guess
+	~scaleFactor = 1 / Max ( ~mode1Mass ; ~mode2Mass );
+	~rejectionThreshold =	// probability mass at ~guess
 		( probability ^ ~guess )
 		* ( ( 1 - probability ) ^ ( ~trials - ~guess ) )
-		* ~scaleFactor //maps function to [0,1] for max acceptance rate
+		* ~scaleFactor	// maps function to [0,1] for max acceptance rate
 ];
 	Case (
-		0 > probability or 1 < probability; //parameter out of bounds
-			"?"; //error
+		0 > probability or 1 < probability;	// parameter out of bounds
+			"?";
 
 		Random ≤ ~rejectionThreshold;
 			~guess;
 
-		//Else, reject ~guess and sample again
+		// Else, reject ~guess and sample again
 			RandomBinomial ( probability ; ~trials )
 	)
 )

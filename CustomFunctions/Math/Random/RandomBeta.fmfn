@@ -32,19 +32,19 @@ Let ( [
 		( ~mode ^ ( alpha - 1 ) )
 		* ( ( 1 - ~mode ) ^ ( beta - 1 ) );
 
-	~rejectionThreshold = //probability density at ~guess
+	~rejectionThreshold =	// probability density at ~guess
 		( ~guess ^ ( alpha - 1 ) )
 		* ( ( 1 - ~guess ) ^ ( beta - 1 ) )
 		* ~densityAtMode //maps function to [0,1] for max acceptance rate
 ];
 	Case (
-		alpha ≤ 0 or beta ≤ 0; //parameters out of range
-			"?"; //error
+		alpha ≤ 0 or beta ≤ 0;	// parameters out of range
+			"?";
 
 		Random ≤ ~rejectionThreshold;
 			~guess;
 
-		//Else, reject ~guess and sample again
+		// Else, reject ~guess and sample again
 			RandomBeta ( alpha ; beta )
 	)
 )

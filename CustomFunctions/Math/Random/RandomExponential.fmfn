@@ -1,13 +1,13 @@
 /**
  * =====================================
- * RandomExponential ( rate )
+ * RandomExponential ( mean )
  *
  * RETURNS:
  *		A number representing a random variate from an exponential distribution
  *		with the specified parameter.
  *
  * PARAMETERS:
- *		rate: rate > 0
+ *		mean: mean > 0
  *
  * DEPENDENCIES: none
  *
@@ -23,8 +23,7 @@ Let ( [
 	~random = Random
 ];
 	Case (
-		rate ≤ 0 ; "?";	// parameter is out of range
-		~random = 0 ; RandomExponential ( rate );	// out of range value, try again
-		/* Else */ ( 0 - Ln ( Random ) ) / rate
+		mean ≤ 0 ; "?";	// parameter is out of range
+		/* Else */ ( 0 - mean ) * Ln ( 1 - Random )
 	)
 )
