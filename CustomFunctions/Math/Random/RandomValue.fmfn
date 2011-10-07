@@ -1,0 +1,18 @@
+/**
+ * =====================================
+ * RandomValue ( valueList )
+ *
+ * RETURNS:
+ *		A randomly selected (equiprobable) value from valueList
+ *
+ * PARAMETERS:
+ *		valueList: A ¶-delimited list of values
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-10-07 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+GetValue ( valueList ; Ceiling ( ( 1 - Random ) * ValueCount ( valueList ) ) )
