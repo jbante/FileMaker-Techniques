@@ -3,8 +3,8 @@
  * BusinessDays ( startDate ; endDate )
  *
  * RETURNS:
- *		The number of business days falling between startDate and endDate,
- *		inclusive, omitting any days in holidayList that fall on weekdays.
+ *		The number of business days (non-holiday weekdays) falling between
+ *		startDate and endDate, inclusive.
  *
  * PARAMETERS:
  *		startDate: A date
