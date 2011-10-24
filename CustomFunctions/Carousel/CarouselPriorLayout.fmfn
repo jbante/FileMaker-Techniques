@@ -16,10 +16,15 @@
  * DEPENDENCIES:
  *		This function requires developers to adhere to a layout naming
  *		convention for correct operation. Layouts that will be omitted from the
- *		normal sequence for a file must be prefixed with either "-" (like
- *		separator layouts) or "//" (like C++ style comments).
+ *		normal sequence for a file must be prefixed with a comment syntax:
+ *		-	- (separator layouts)
+ *		-	// (C++ style comments)
+ *		-	# (FileMaker script style comments)
+ *		-	~ (private objects according to FileMakerStandards.org)
  *
  * HISTORY:
+ *		MODIFIED on 2011-10-24 by Jeremy Bante to accept the tilde "~" as a
+ *		comment prefix.
  *		MODIFIED on 2011-01-25 by Jeremy Bante to not set global variables
  *		for next and previous layouts.
  *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbante>.

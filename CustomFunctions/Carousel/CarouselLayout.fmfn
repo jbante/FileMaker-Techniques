@@ -20,10 +20,15 @@
  * DEPENDENCIES:
  *		This function requires developers to adhere to a layout naming
  *		convention for correct operation. Layouts that will be omitted from the
- *		normal sequence for a file must be prefixed with either "-" (like
- *		separator layouts) or "//" (like C++ style comments).
+ *		normal sequence for a file must be prefixed with a comment syntax:
+ *		-	- (separator layouts)
+ *		-	// (C++ style comments)
+ *		-	# (FileMaker script style comments)
+ *		-	~ (private objects according to FileMakerStandards.org)
  *
  * HISTORY:
+ *		MODIFIED on 2011-10-24 by Jeremy Bante to accept the tilde "~" as a
+ *		comment prefix.
  *		MODIFIED on 2011-01-25 by Jeremy Bante to improve error handling.
  *		CREATED on 2011-01-20 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
@@ -52,15 +57,14 @@ Case (
 	Let ( [
 		$~i = $~i + 1;
 		$~layout = GetValue ( $~layoutNames ; $~i );
-		$~index =
-			If (
-				// layout is not hidden
-				Left ( $~layout ; 1 ) ≠ "-" and Left ( $~layout ; 2 ) ≠ "//";
-					$~index + 1;
-
-				/* Else */
-					$~index
-			);
+		~prefix1 = Left ( $~layout ; 1 );
+		~prefix2 = Left ( $~layout ; 2 );
+		~isHidden =
+			~prefix1 = "-"	// separator layout
+			or ~prefix1 = "~"	// "private" entity convention
+			or ~prefix1 = "#"	// script or Python comment syntax
+			or ~prefix2 = "//";	// calculation or C++ comment syntax
+		$~index = If ( ~isHidden ; $~index ; /* Else */ $~index + 1 );
 		$~step =
 			Case (
 				$~index = index ; 3;	// return result
