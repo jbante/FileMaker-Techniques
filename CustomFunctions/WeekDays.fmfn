@@ -1,0 +1,34 @@
+/**
+ * =====================================
+ * WeekDays ( startDate ; endDate )
+ *
+ * RETURNS:
+ *		The number of week days (Monday - Friday) falling between startDate and
+ *		endDate, inclusive.
+ *
+ * PARAMETERS:
+ *		startDate: A date
+ *		endDate: A date, endDate ≥ startDate
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-10-19 by Jeremy Bante http://scr.im/jbante.
+ * =====================================
+ */
+
+Let ( [
+	~startDay = DayOfWeek ( startDate );
+	~endDay = DayOfWeek ( endDate );
+
+	~startSaturday = startDate - ~startDay + 7;
+	~endSaturday = endDate - ~endDay;
+	~fullWeeks = Div ( ~endSaturday - ~startSaturday + 1 ; 7 );
+
+	~leadingWeekDays =
+		Choose ( ~startDay - 1 ; 5 ; 5 ; 4 ; 3 ; 2 ; 1 ; 0 );
+	~trailingWeekDays =
+		Choose ( ~endDay - 1 ; 0 ; 1 ; 2 ; 3 ; 4 ; 5 ; 5 )
+];
+	5 * ~fullWeeks + ~leadingWeekDays + ~trailingWeekDays
+)
