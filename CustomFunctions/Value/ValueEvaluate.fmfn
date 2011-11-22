@@ -1,0 +1,38 @@
+/**
+ * =====================================
+ * ValueEvaluate ( valueList ; expression )
+ *
+ * PURPOSE:
+ *		For each value in valueList, evaluates expression, substituting the
+ *		value for each tilde "~" in expression. This function assumes that
+ *		valueList does not contain any double quote " characters.
+ *
+ * RETURNS:
+ *		A ¶-delimited list of the results of evaluating expression on valueList.
+ *
+ * EXAMPLE:
+ *		ValueEvaluate( List ( "1One" ; "2Two" ; "3Three"  ); "Left ( ~ ; 1 )") =
+ *		1
+ *		2
+ *		3
+ *
+ * PARAMETERS:
+ *		valueList: A ¶-delimited list of inputs to expression
+ *		expression: A calculation to evaluate
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2011-11-11 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	~start = "Let ( ~ = \"";
+	~middle = "\" ; " & expression & " ) & \"\¶\" & Let ( ~ = \"";
+	~end = "\" ; " & expression & " )"
+];
+	Evaluate (
+		~start & Substitute ( valueList ; ¶ ; ~middle ) & ~end
+	)
+)
