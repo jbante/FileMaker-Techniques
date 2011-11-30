@@ -39,7 +39,7 @@ Case (
 				);
 
 			$~radix.step =
-				If ( IsEmpty ( ~number ) or 2 > ~base or 36 < ~base;
+				If ( ~base < 2 or ~base > 36;
 					-1;	// error, skip to end
 					/* Else */ 1
 				)
