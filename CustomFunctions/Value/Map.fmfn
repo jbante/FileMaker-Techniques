@@ -1,0 +1,46 @@
+/**
+ * =====================================
+ * Map ( valueList ; expression )
+ *
+ * PURPOSE:
+ *		Map repeatedly applies a calculation to each value in a ¶-delimited
+ *		list. For each value in valueList, evaluates expression, substituting
+ *		the value for each tilde "~" in expression. Expressions may also
+ *		reference the value index (line number) being evaluated with "$~n". This
+ *		function assumes that valueList does not contain any double quote "
+ *		characters.
+ *
+ * RETURNS:
+ *		A ¶-delimited list of the results of evaluating expression on valueList.
+ *
+ * EXAMPLE:
+ *		Map (
+ *			List ( "1 One" ; "2 Two" ; "3 Three"  );
+ *			"Left ( ~ ; 1 ) + $~n"
+ *		)	// = "2¶4¶6"
+ *
+ * PARAMETERS:
+ *		valueList: A ¶-delimited list of inputs to expression
+ *		expression: A calculation to evaluate
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		MODIFIED on 2011-12-23 by Jeremy Bante to include a value number in
+ *		calculations.
+ *		CREATED on 2011-11-11 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	~start = "Let ( [ $~n = $~n + 1 ; ~ = \"";
+	~middle =
+		"\" ] ; " & expression & " ) & \¶ & Let ( [ $~n = $~n + 1 ; ~ = \"";
+	~end = "\" ] ; " & expression & " ) & Let ( $~n = \"\" ; \"\" )"
+];
+	Evaluate (
+		~start
+		& Substitute ( valueList ; ¶ ; ~middle )
+		& ~end
+	)
+)
