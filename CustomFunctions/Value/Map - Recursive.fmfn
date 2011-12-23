@@ -5,9 +5,9 @@
  * PURPOSE:
  *		Map repeatedly applies a calculation to each value in a ¶-delimited
  *		list. For each value in valueList, evaluates expression, substituting
- *		the value for each tilde "~" in expression. Expressions may also
- *		reference the value index (line number) being evaluated with "$~n". This
- *		is analogous to Map functionality in functional programming languages.
+ *		the value for each "~n" in expression. Expressions may also reference
+ *		the value index (line number) being evaluated with "$~i". This is
+ *		analogous to Map functionality in functional programming languages.
  *
  * NOTE:
  *		This is the recursive version of this function. It is slower, but
@@ -19,7 +19,7 @@
  * EXAMPLE:
  *		Map (
  *			List ( "1 One" ; "2 Two" ; "3 Three"  );
- *			"Left ( ~ ; 1 ) + $~n"
+ *			"Left ( ~n ; 1 ) + $~i"
  *		)	// = "2¶4¶6"
  *
  * PARAMETERS:
@@ -51,18 +51,18 @@ Case (
 	/* Step 1, evaluate expression */
 	$~map.step = 1;
 		Let ( [
-			$~n = $~n + 1;
+			$~i = $~i + 1;
 			~value =
 				Evaluate (
-					"Let ( ~ = "
-					& Quote ( GetValue ( valueList ; $~n ) )
+					"Let ( ~n = "
+					& Quote ( GetValue ( valueList ; $~i ) )
 					& " ; "
 					& expression
 					& " )"
 				);
 			$~map.resultList = List ( $~map.resultList ; ~value );
 			$~map.step =
-				If ( $~n < $~map.valueCount;
+				If ( $~i < $~map.valueCount;
 					$~map.step;
 					/* Else */ $~map.step + 1
 				)
@@ -76,7 +76,7 @@ Case (
 			~resultList = $~map.resultList;
 
 			// Purge variables
-			$~n = "";
+			$~i = "";
 			$~map.resultList = "";
 			$~map.step = "";
 			$~map.valueCount = ""
