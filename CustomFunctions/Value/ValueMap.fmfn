@@ -1,6 +1,6 @@
 /**
  * =====================================
- * Map ( valueList ; expression )
+ * ValueMap ( valueList ; expression )
  *
  * PURPOSE:
  *		Map repeatedly applies a calculation to each value in a ¶-delimited
@@ -21,7 +21,7 @@
  *		A ¶-delimited list of the results of evaluating expression on valueList.
  *
  * EXAMPLE:
- *		Map (
+ *		ValueMap (
  *			List ( "1 One" ; "2 Two" ; "3 Three"  );
  *			"Left ( ~n ; 1 ) + $~i"
  *		)	// = "2¶4¶6"
