@@ -33,7 +33,7 @@ Case (
 
 			~value = GetValue ( parameters ; $#.i );
 			~delimiterPosition = Position ( ~value ; " = " ; 1 ; 1 );
-			~name = Middle ( ~value ; 2 ; ~delimiterPosition - 1 );
+			~name = Middle ( ~value ; 2 ; ~delimiterPosition - 2 );
 
 			$#.nameList = List ( $#.nameList ; ~name );
 			$#.step =
