@@ -1,0 +1,50 @@
+/**
+ * =====================================
+ * NavLogCurrentLayout
+ *
+ * PURPOSE:
+ *		Logs the current layout in stacks of previous layouts to support Web
+ *		browser-style "back" and "forward" navigation between FileMaker layouts.
+ *		This custom function is designed to be used in a conditional formatting
+ *		calculation on a layout.
+ *
+ * RETURNS:
+ *		"" (Null)
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES: none
+ *
+ * VARIABLES:
+ *		$$~NAV.BACKLAYOUTS:	A list of layouts for navigating "backwards", with
+ *			the current layout on top.
+ *		$$~NAV.FORWARDLAYOUTS:	A list of layouts for navigating "forwards",
+ *			with the current layout on top.
+ *
+ * NOTES:
+ *		This function is designed to work in a single-window solution. It will
+ *		need to be modified to work appropriately in a multi-window application.
+ *
+ * HISTORY:
+ *		CREATED on 2011-12-30 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	~here = Get ( LayoutName );
+	~previous = GetValue ( $$~NAV.BACKLAYOUTS ; 1 );
+	~next = GetValue ( $$~NAV.FORWARDLAYOUTS ; 1 );
+
+	$$~NAV.BACKLAYOUTS =
+		If ( ~previous = ~here;	// layout didn't change (window refresh)
+			$$~NAV.BACKLAYOUTS;
+			/* Else */ List ( ~here ; $$~NAV.BACKLAYOUTS )
+		);
+	$$~NAV.FORWARDLAYOUTS =
+		If ( ~next = ~here;	// layout changed to current layout
+			$$~NAV.FORWARDLAYOUTS;
+			/* Else, layout diverges from existing forward list */	~here
+		)
+];
+	""	// Null
+)
