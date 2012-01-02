@@ -1,14 +1,14 @@
 /**
  * =====================================
- * NavBackLayoutName
+ * NavForwardLayoutName
  *
  * PURPOSE:
  *		Logs the current layout in stacks of previous layouts to support Web
  *		browser-style "back" and "forward" navigation between FileMaker layouts.
- *		This custom function is designed to be used in a "back" button.
+ *		This custom function is designed to be used in a "forward" button.
  *
  * RETURNS:
- *		The layout name of the next layout in the "backwards" navigation
+ *		The layout name of the next layout in the "forwards" navigation
  *		direction.
  *
  * PARAMETERS: none
@@ -26,19 +26,28 @@
  *		need to be modified to work appropriately in a multi-window application.
  *
  * HISTORY:
+ *		MODIFIED on 2012-01-02 by Jeremy Bante to not modify variables when
+ *		there isn't actually a target layout.
  *		CREATED on 2011-12-30 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
 Let ( [
-	~previous = GetValue ( $$~NAV.BACKLAYOUTS ; 2 );
+	~next = GetValue ( $$~NAV.FORWARDLAYOUTS ; 2 );
 
 	$$~NAV.BACKLAYOUTS =
-		RightValues (
+		If ( IsEmpty ( ~next );
 			$$~NAV.BACKLAYOUTS;
-			ValueCount ( $$~NAV.BACKLAYOUTS ) - 1
+			/* Else */ List ( ~next ; $$~NAV.BACKLAYOUTS )
 		);
-	$$~NAV.FORWARDLAYOUTS = List ( ~previous ; $$~NAV.FORWARDLAYOUTS )
+	$$~NAV.FORWARDLAYOUTS =
+		If ( IsEmpty ( ~next );
+			$$~NAV.FORWARDLAYOUTS;
+			/* Else */ RightValues (
+				$$~NAV.FORWARDLAYOUTS;
+				ValueCount ( $$~NAV.FORWARDLAYOUTS ) - 1
+			)
+		)
 ];
-	~previous
+	~next
 )
