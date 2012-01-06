@@ -1,0 +1,80 @@
+/**
+ * =====================================
+ * KeyGetTable ( theKey )
+ *
+ * RETURNS:
+ *		The value of the tableKey encoded in theKey
+ *
+ * PARAMETERS:
+ *		theKey: A number representing an encoded record-table-check key.
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE: KeyGetTable ( Key ( 1234 ; 321 ) ) = 321
+ *
+ * NOTES:
+ *		The tableKey is encoded as a series of bytes in the least significant
+ *		positions of the combined key (least significant when the check digit is
+ *		removed). The first byte (from right to left) with its most significant
+ *		bit set to 1 (where Div ( byte ; 128 ) = 1) is the last byte of the
+ *		tableKey.
+ *
+ *		For example, the key 809047696 has an ending check digit of 6, so the
+ *		remaining key is 80904679. In binary, this is:
+ *		100 11010010 10000010 01000001
+ *		The second least significant byte, 10000010, is the first byte with a 1
+ *		in its most significant bit, so it is the last byte of the tableKey. So
+ *		the tableKey is 0000010 1000001 in binary (with indicator bits removed),
+ *		or 321 in decimal notation.
+ *
+ * HISTORY:
+ *		CREATED on 2011-12-09 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~key.step;
+		Let ( [
+			~key = Int ( Abs ( GetAsNumber ( theKey ) ) );	// Scrub key value
+			~key = Left ( ~key ; Length ( ~key ) - 1 );	// Remove check digit
+			$~key.step = If ( IsEmpty ( ~key ) ; -1 /* error */ ; /* Else */ 1 )
+		];
+			KeyGetTable ( ~key )
+		);
+
+	/* Step 1, decode tableKey */
+	$~key.step = 1;
+		Let ( [
+			~byte = Mod ( theKey ; 256 );
+			$~key.tableKey =
+				Mod ( ~byte ; 128 ) * ( 2 ^ ( 7 * $~key.i ) )
+				+ $~key.tableKey;
+			~key = Div ( theKey ; 256 );
+
+			$~key.i = $~key.i + 1;
+			$~key.step =
+				Case (
+					Div ( ~byte ; 128 ) ; $~key.step + 1;	// highest bit is 1
+					not ~key ; -1;	// ran out of bytes to process
+					/* Else */ $~key.step
+				)
+		];
+			KeyGetTable ( ~key )
+		);
+
+
+	/* Step 2, clean-up and return result */
+	$~key.step = 2 or $~key.step = -1;
+		Let ( [
+			~error = $~key.step = -1;
+			~tableKey = $~key.tableKey;
+
+			// Purge variables
+			$~key.i = "";
+			$~key.step = "";
+			$~key.tableKey = ""
+		];
+			If ( ~error ; "?" ; /* Else */ ~tableKey )
+		)
+)
