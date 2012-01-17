@@ -12,14 +12,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-01-17 by Jeremy Bante to be more concise.
  *		CREATED on 2011-05-26 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-Let ( [
-	~name = GetFieldName ( theField );
-	~name = Substitute ( ~name ; "::" ; "¶" );
-	~name = GetValue ( ~name ; ValueCount ( ~name ) )
-];
-	~name
-)
+GetValue ( Substitute ( GetFieldName ( theField ) ; "::" ; ¶ ) ; 2 )

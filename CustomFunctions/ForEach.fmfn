@@ -40,23 +40,23 @@
 
 Case (
 	/* Step 0, set-up */
-	not $~step;
+	not $~fe.step;
 		Let ( [
-			$~valueCount = ValueCount ( valueList );
-			$~evaluateLimit =
+			$~fe.valueCount = ValueCount ( valueList );
+			$~fe.evaluateLimit =
 				If ( Left ( Get ( ApplicationVersion ) ; 2 ) = "Go";
 					420;
 					/* Else */ 2600
 				);
 
 			// build text of calculation to wrap around each value
-			~start = "Let ( [ $~n = $~n + 1 ; ~n = $~n ; ~v = \"";
+			~start = "Let ( [ $~fe.n = $~fe.n + 1 ; ~n = $~fe.n ; ~v = \"";
 			~end =
 				"\" ]; "
 				& Substitute ( expression ; ¶ ; "" )
 				& " ) & \¶ &";
 
-			$~step = 1
+			$~fe.step = 1
 		];
 			ForEach (
 				"";
@@ -71,43 +71,43 @@ Case (
 			)
 		);
 
-	/* Step 1, do stuff */
-	$~step = 1;
+	/* Step 1, evaluate calculation in chunks */
+	$~fe.step = 1;
 		Let ( [
-			$~i = $~i + 1;
+			$~fe.i = $~fe.i + 1;
 			~result =
 				MiddleValues (
 					expression;
-					( $~i - 1 ) * $~evaluateLimit + 1;
-					$~evaluateLimit
+					( $~fe.i - 1 ) * $~fe.evaluateLimit + 1;
+					$~fe.evaluateLimit
 				);
 			~result = Evaluate ( ~result & "\"\"" );
-			$~resultList = $~resultList & ~result ;
+			$~fe.resultList = $~fe.resultList & ~result ;
 
-			$~step =	// advance if there are more chunks to evaluate
-				If ( $~i * $~evaluateLimit < $~valueCount;
-					$~step;
-					/* Else */ $~step + 1
+			$~fe.step =	// advance if there are no more chunks to evaluate
+				If ( $~fe.i * $~fe.evaluateLimit < $~fe.valueCount;
+					$~fe.step;
+					/* Else */ $~fe.step + 1
 				)
 		];
 			ForEach ( "" ; expression )
 		);
 
 	/* Step 2, clean-up and return result */
-	$~step = 2;
+	$~fe.step = 2;
 		Let ( [
 			~result =
-				Substitute ( $~resultList & "<<<END>>>";
-					[ "¶<<<END>>>" ; "" ];
-					[ "<<<END>>>" ; "" ]
+				Substitute ( $~fe.resultList & "<|<|<END>|>|>";
+					[ "¶<|<|<END>|>|>" ; "" ];
+					[ "<|<|<END>|>|>" ; "" ]
 				);
 
 			// purge variables
-			$~i = "";
-			$~n = "";
-			$~resultList = "";
-			$~step = "";
-			$~valueCount = ""
+			$~fe.i = "";
+			$~fe.n = "";
+			$~fe.resultList = "";
+			$~fe.step = "";
+			$~fe.valueCount = ""
 		];
 			~result
 		)
