@@ -1,0 +1,46 @@
+/**
+ * =====================================
+ * LogScriptStart
+ *
+ * PURPOSE:
+ *		Creates a new EventLog record for the current script.
+ *
+ * RETURNS: "" (Null)
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES:
+ *		2empowerFM_SQL_Runner (plug-in)
+ *		NanoTime (ScriptMaster registered function)
+ *		GetFieldNameOnly (custom function)
+ *		SQLQuote (custom function)
+ *
+ * VARIABLES:
+ *		$~eventLog.id_script
+ *
+ * NOTES:
+ *		When used in combination with LogScriptEnd, this function can be used to
+ *		log the precise run times of various scripted processes.
+ *
+ * HISTORY:
+ *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	$~eventLog.id_script = GetAsNumber ( UUIDTimeNIC )
+];
+	epSQLExecute (
+		"INSERT INTO EventLog¶( "
+			& GetFieldNameOnly ( EventLog::id_Process )
+			& ",	" & GetFieldNameOnly ( EventLog::scriptName )
+			& ",	" & GetFieldNameOnly ( EventLog::event )
+			& ",	" & GetFieldNameOnly ( EventLog::startNanoseconds )
+		& " )¶VALUES¶( "
+			& $~eventLog.id_script
+			& ",	" & SQLQuote ( Get ( ScriptName ) )
+			& ",	" & SQLQuote ( "script" )
+			& ",	" & NanoTime
+		& " )"
+	)
+)

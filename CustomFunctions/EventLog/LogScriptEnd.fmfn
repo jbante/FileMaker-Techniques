@@ -1,0 +1,35 @@
+/**
+ * =====================================
+ * LogScriptEnd
+ *
+ * PURPOSE:
+ *		Updates an existing EventLog record for a script with a completion time.
+ *
+ * RETURNS: "" (Null)
+ *
+ * PARAMETERS: none
+ *
+ * DEPENDENCIES:
+ *		2empowerFM_SQL_Runner (plug-in)
+ *		NanoTime (ScriptMaster registered function)
+ *		GetFieldNameOnly (custom function)
+ *
+ * VARIABLES:
+ *		$~eventLog.id_script
+ *
+ * NOTES:
+ *		When used in combination with LogScriptStart, this function can be used
+ *		to log the precise run times of various scripted processes.
+ *
+ * HISTORY:
+ *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+epSQLExecute (
+	"UPDATE EventLog"
+	& "¶SET " & GetFieldNameOnly ( EventLog::endNanoseconds )
+		& " = " & NanoTime
+	& "¶WHERE " & GetFieldNameOnly ( EventLog::id_Process )
+		& " = " & $~eventLog.id_script
+)
