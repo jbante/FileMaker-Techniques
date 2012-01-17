@@ -30,7 +30,7 @@ Let ( [
 	epSQLExecute (
 		"INSERT INTO EventLog¶( "
 			& GetFieldNameOnly ( EventLog::id_Pause )
-			& GetFieldNameOnly ( EventLog::id_Process )
+			& ",	" & GetFieldNameOnly ( EventLog::id_Process )
 			& ",	" & GetFieldNameOnly ( EventLog::scriptName )
 			& ",	" & GetFieldNameOnly ( EventLog::event )
 			& ",	" & GetFieldNameOnly ( EventLog::startNanoseconds )
