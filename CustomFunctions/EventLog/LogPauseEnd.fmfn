@@ -1,6 +1,6 @@
 /**
  * =====================================
- * LogScriptEnd
+ * LogPauseEnd
  *
  * PURPOSE:
  *		Updates an existing EventLog record for a script with a completion time.
