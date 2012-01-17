@@ -17,7 +17,7 @@
  *		GetFieldNameOnly (custom function)
  *
  * VARIABLES:
- *		$~eventLog.id_script
+ *		$~eventLog.id_pause
  *
  * HISTORY:
  *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
@@ -28,6 +28,6 @@ epSQLExecute (
 	"UPDATE EventLog"
 	& "¶SET " & GetFieldNameOnly ( EventLog::endNanoseconds )
 		& " = " & NanoTime
-	& "¶WHERE " & GetFieldNameOnly ( EventLog::id_Process )
-		& " = " & $~eventLog.id_script
+	& "¶WHERE " & GetFieldNameOnly ( EventLog::id_Pause )
+		& " = " & $~eventLog.id_pause
 )
