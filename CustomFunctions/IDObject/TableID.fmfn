@@ -1,0 +1,28 @@
+/**
+ * =====================================
+ * TableID ( file ; tableName )
+ *
+ * RETURNS:
+ *		FileMaker's internal ID for a table.
+ *
+ * PARAMETERS:
+ *		file: The name of the FileMaker file containing the layout.
+ *		tableName
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		MODIFIED on 2012-01-26 by Jeremy Bante to accept the file parameter.
+ *		CREATED on 2011-06-01 by Jeremy Bante <http://scr.im/jbante>.
+ *		INSPIRED by custom functions by Fabrice Nordman.
+ * =====================================
+ */
+
+Let ( [
+	~nameList = ¶ & TableNames ( file ) & ¶;
+	~value =
+		Position ( ~nameList ; ¶ & tableName & ¶ ; 1 ; 1 );
+	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ )
+];
+	GetValue ( TableIDs ( file ) ; ~value )
+)

@@ -1,0 +1,27 @@
+/**
+ * =====================================
+ * ScriptID ( file ; theScriptName )
+ *
+ * RETURNS:
+ *		FileMaker's internal ID for a script.
+ *
+ * PARAMETERS:
+ *		file: The name of the FileMaker file containing the layout.
+ *		theScriptName
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-01-26 by Jeremy Bante <http://scr.im/jbante>.
+ *		INSPIRED by custom functions by Fabrice Nordman.
+ * =====================================
+ */
+
+Let ( [
+	~nameList = ¶ & ScriptNames ( file ) & ¶;
+	~value =
+		Position ( ~nameList ; ¶ & theScriptName & ¶ ; 1 ; 1 );
+	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ )
+];
+	GetValue ( ScriptIDs ( file ) ; ~value )
+)
