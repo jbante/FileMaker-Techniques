@@ -1,0 +1,37 @@
+/**
+ * =====================================
+ * RandomWeightedRank ( total )
+ *
+ * PURPOSE:
+ *		Returns a random integer between 1 and total such that the probability
+ *		of each number is proportional to itself. For example, 2 is twice as
+ *		likely as 1, and 3 is 3 times as likely as 1. This may be useful for
+ *		ordinally weighted lotteries, where applicants have a number of lottery
+ *		tickets determined by some ranking. For example, you might want to
+ *		randomly award a scholarship, but you might also want individuals with
+ *		greater financial need to be more likely to receive the scholarship.
+ *
+ * RETURNS:
+ *		A random integer between 1 and total, inclusive.
+ *
+ * PARAMETERS:
+ *		total: The number of items in a list to select from.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-02-08 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	// sum of all ranks ("lottery entries")
+	~sampleSpace = total * ( total + 1 ) / 2;
+	~random = Ceiling ( Random * ~sampleSpace )	// sample from "lottery"
+];
+	// find "winning" rank by applying quadratic formula to sum of ranks formula
+	Ceiling (
+		( Sqrt ( 8 * ~random + 1 ) - 1 ) / 2
+	)
+)
+
