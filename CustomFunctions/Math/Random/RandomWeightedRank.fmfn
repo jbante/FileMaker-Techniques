@@ -25,13 +25,11 @@
  */
 
 Let ( [
-	// sum of all ranks ("lottery entries")
-	~sampleSpace = total * ( total + 1 ) / 2;
+	~sampleSpace = total * ( total + 1 ) / 2;	// sum of all ranks
 	~random = Ceiling ( Random * ~sampleSpace )	// sample from "lottery"
 ];
-	// find "winning" rank by applying quadratic formula to sum of ranks formula
+	// find "winning" rank as inverse of sum of ranks formula
 	Ceiling (
 		( Sqrt ( 8 * ~random + 1 ) - 1 ) / 2
 	)
 )
-
