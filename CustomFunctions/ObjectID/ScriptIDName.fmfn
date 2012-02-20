@@ -12,6 +12,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-02-20 by Jeremy Bante <http://scr.im/jbante> to return
+ *		descriptive text for bad IDs.
  *		CREATED on 2012-01-26 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by custom functions by Fabrice Nordman.
  * =====================================
@@ -21,7 +23,8 @@ Let ( [
 	~idList = ¶ & ScriptIDs ( file ) & ¶;
 	~value =
 		Position ( ~idList ; ¶ & theScriptID & ¶ ; 1 ; 1 );
-	~value = PatternCount ( Left ( ~idList ; ~value ) ; ¶ )
+	~value = PatternCount ( Left ( ~idList ; ~value ) ; ¶ );
+	~name = GetValue ( ScriptNames ( file ) ; ~value )
 ];
-	GetValue ( ScriptNames ( file ) ; ~value )
+	If ( IsEmpty ( ~name ) ; "<Script Unknown>" ; /* Else */ ~name )
 )
