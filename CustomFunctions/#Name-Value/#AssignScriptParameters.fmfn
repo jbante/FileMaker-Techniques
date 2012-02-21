@@ -56,7 +56,7 @@ Let ( [
 			//parse required parameters from script name
 			~BEGIN = "("; //character marking beginning of named parameters
 			//~END = ")"; //character defining end of named parameters
-			~DELIMITER = ","; //character delimiting between named parameters
+			~DELIMITER = ";"; //character delimiting between named parameters
 			~OPTIONAL = "{"; //character marking beginning of optional parameters
 
 			~parameters = Substitute ( Get ( ScriptName ) ; ["¶"; ""]; [" "; ""] );
