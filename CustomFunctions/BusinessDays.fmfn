@@ -22,8 +22,9 @@
  * =====================================
  */
 
-If ( IsEmpty ( startDate ) or IsEmpty ( endDate ) or startDate > endDate;
-	"?";	// input is invalid
+Case (
+	IsEmpty ( startDate ) or IsEmpty ( endDate ) ; "?";	// input is invalid
+	startDate > endDate ; 0 - BusinessDays ( endDate ; startDate );
 /* Else */
 	Let ( [
 		// compare calendar years, in case range spans multiple years
