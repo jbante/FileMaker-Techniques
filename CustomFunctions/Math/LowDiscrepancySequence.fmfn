@@ -1,10 +1,10 @@
 /**
  * =====================================
- * SequenceLowDispersion ( index )
+ * LowDiscrepancySequence ( index )
  *
  * PURPOSE:
  *		When called with successive values for index, this function generates a
- *		low-dispersion sequence designed to maximize the distance between
+ *		low discrepancy sequence designed to maximize the distance between
  *		successive 1-dimensional elements in the sequence.
  *
  * RETURNS:
@@ -20,6 +20,9 @@
  *
  * HISTORY:
  *		CREATED on 2012-03-12 by Jeremy Bante <jtb@gaiaherbs.com>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Low-discrepancy_sequence
  * =====================================
  */
 
@@ -30,7 +33,7 @@ Case (
 			~index = Int ( index );
 			$~seq.step = If ( ~index > 0 ; 1 ; /* Else, error */ -1 )
 		];
-			SequenceLowDispersion ( ~index )
+			LowDiscrepancySequence ( ~index )
 		);
 
 	/* Step 1, reverse binary representation of index */
@@ -43,7 +46,7 @@ Case (
 
 			$~seq.step = If ( ~remainder ; $~seq.step ; /* Else */ $~seq.step + 1 )
 		];
-			SequenceLowDispersion ( ~remainder )
+			LowDiscrepancySequence ( ~remainder )
 		);
 
 	/* Step 2, clean-up and return result */
