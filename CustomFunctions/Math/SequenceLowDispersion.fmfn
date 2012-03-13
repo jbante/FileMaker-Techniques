@@ -1,0 +1,62 @@
+/**
+ * =====================================
+ * SequenceLowDispersion ( index )
+ *
+ * PURPOSE:
+ *		When called with successive values for index, this function generates a
+ *		low-dispersion sequence designed to maximize the distance between
+ *		successive 1-dimensional elements in the sequence.
+ *
+ * RETURNS:
+ *		A number, 0 ≤ result < 1
+ *
+ * PARAMETERS:
+ *		index: A non-negative integer
+ *
+ * DEPENDENCIES: none
+ *
+ * VARIABLES:
+ *		$$~seq.FUNCTION.DATA
+ *
+ * HISTORY:
+ *		CREATED on 2012-03-12 by Jeremy Bante <jtb@gaiaherbs.com>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~seq.step;
+		Let ( [
+			~index = Int ( index );
+			$~seq.step = If ( ~index > 0 ; 1 ; /* Else, error */ -1 )
+		];
+			SequenceLowDispersion ( ~index )
+		);
+
+	/* Step 1, reverse binary representation of index */
+	$~seq.step = 1;
+		Let ( [
+			$~seq.i = $~seq.i + 1;
+			~binaryDigit = Mod ( index ; 2 );
+			~remainder = Div ( index ; 2 );
+			$~seq.result = $~seq.result + ~binaryDigit * 2 ^ -$~seq.i;
+
+			$~seq.step = If ( ~remainder ; $~seq.step ; /* Else */ $~seq.step + 1 )
+		];
+			SequenceLowDispersion ( ~remainder )
+		);
+
+	/* Step 2, clean-up and return result */
+	$~seq.step = 2 or $~seq.step = -1;
+		Let ( [
+			~error = $~seq.step = -1;
+			~result = $~seq.result;
+
+			// purge variables
+			$~seq.i = "";
+			$~seq.result = "";
+			$~seq.step = ""
+		];
+			If ( ~error ; "?" ; /* Else */ ~result )
+		)
+)
