@@ -1,18 +1,25 @@
 /**
  * =====================================
- * KeyCapsLock
+ * KeyCapsLock ( modifierKeys )
  *
  * RETURNS:
- *		True if caps lock is an active modifier key; False otherwise.
+ *		True if caps lock is indicated by the modifierKeys value; False
+ *		otherwise.
  *
- * PARAMETERS: none
+ * PARAMETERS:
+ *		modifierKeys: The modifierKey output to test for from the
+ *		Get ( ActiveModifierKeys ) or Get ( TriggerModifierKeys ) functions.
  *
  * DEPENDENCIES: none
  *
+ * EXAMPLE: KeyCapsLock ( Get ( ActiveModifierKeys ) )
+ *
  * HISTORY:
+ *		MODIFIED on 2012-04-02 by Jeremy Bante <http://scr.im/jbante> to accept
+ *		the modifierKeys parameter.
  *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by a function created by Marx Martin of The Support Group.
  * =====================================
  */
 
-Mod ( Div ( Get ( ActiveModifierKeys ) ; 2 ) ; 2 )
+Mod ( Div ( modifierKeys ; 2 ) ; 2 )

@@ -1,18 +1,24 @@
 /**
  * =====================================
- * KeyShift
+ * KeyShift ( modifierKeys )
  *
  * RETURNS:
- *		True if shift is an active modifier key; False otherwise.
+ *		True if shift is indicated by the modifierKeys value; False otherwise.
  *
- * PARAMETERS: none
+ * PARAMETERS:
+ *		modifierKeys: The modifierKey output to test for from the
+ *		Get ( ActiveModifierKeys ) or Get ( TriggerModifierKeys ) functions.
  *
  * DEPENDENCIES: none
  *
+ * EXAMPLE: KeyShift ( Get ( ActiveModifierKeys ) )
+ *
  * HISTORY:
+ *		MODIFIED on 2012-04-02 by Jeremy Bante <http://scr.im/jbante> to accept
+ *		the modifierKeys parameter.
  *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by a function created by Marx Martin of The Support Group.
  * =====================================
  */
 
-Mod ( Get ( ActiveModifierKeys ) ; 2 )
+Mod ( modifierKeys ; 2 )
