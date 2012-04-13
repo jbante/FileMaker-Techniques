@@ -1,0 +1,28 @@
+/**
+ * =====================================
+ * ValueListID ( file ; theValueListName )
+ *
+ * RETURNS:
+ *		FileMaker's internal ID for a value list.
+ *
+ * PARAMETERS:
+ *		file: The name of the FileMaker file containing the valueList.
+ *		theValueListName
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-04-13 by Jeremy Bante <http://scr.im/jbante>.
+ *		INSPIRED by custom functions by Fabrice Nordman.
+ * =====================================
+ */
+
+Let ( [
+	~nameList = ¶ & ValueListNames ( file ) & ¶;
+	~value =
+		Position ( ~nameList ; ¶ & theValueListName & ¶ ; 1 ; 1 );
+	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ );
+	~id = GetValue ( ValueListIDs ( file ) ; ~value )
+];
+	If ( IsEmpty ( ~id ) ; -1 ; /* Else */ ~id )
+)
