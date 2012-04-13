@@ -6,7 +6,7 @@
  *		FileMaker's internal ID for a script.
  *
  * PARAMETERS:
- *		file: The name of the FileMaker file containing the layout.
+ *		file: The name of the FileMaker file containing the script.
  *		theScriptName
  *
  * DEPENDENCIES: none

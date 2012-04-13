@@ -6,7 +6,7 @@
  *		FileMaker's internal ID for a table.
  *
  * PARAMETERS:
- *		file: The name of the FileMaker file containing the layout.
+ *		file: The name of the FileMaker file containing the table.
  *		tableName
  *
  * DEPENDENCIES: none
