@@ -15,7 +15,7 @@
  *
  * RETURNS:
  *		A 41-digit delimited number of the form:
- *		v-r-nnnnnnnnnnnn-nnnnnnn-nnnnn@nnnnnnnnnnnnnnn
+ *		v-r-nnnnnnnnnnnn-nnnnnnn-nnnnn-nnnnnnnnnnnnnnn
  *		The sections of the UUID correspond to:
  *		v: A UUID version (type) number
  *		r: A variant code reserved by the RFC 4122 standard
