@@ -1,0 +1,20 @@
+/**
+ * =====================================
+ * GetValueListValue ( file ; valueListName ; value )
+ *
+ * RETURNS:
+ *		The specified value from the specified value list.
+ *
+ * PARAMETERS:
+ *		file: The name of the file containing the value list.
+ *		valueListName: The name of the value list containing the value
+ *		value: The number of the value within the value list.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-04-13 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+GetValue ( ValueListItems ( file ; valueListName ) ; value )
