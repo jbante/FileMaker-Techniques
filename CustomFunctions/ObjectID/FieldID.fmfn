@@ -23,7 +23,7 @@
  */
 
 Let ( [
-	~fieldName = Substitute ( GetFieldName ( ~fieldName ) ; "::" ; "¶" );
+	~fieldName = Substitute ( GetFieldName ( field ) ; "::" ; "¶" );
 	~tableName = GetValue ( ~fieldName ; 1 );
 	~fieldName = GetValue ( ~fieldName ; 2 );
 

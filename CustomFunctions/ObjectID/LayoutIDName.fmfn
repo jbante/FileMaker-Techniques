@@ -20,7 +20,7 @@
 Let ( [
 	~idList = ¶ & LayoutIDs ( file ) & ¶;
 	~value =
-		Position ( ~idList ; ¶ & theLayoutName & ¶ ; 1 ; 1 );
+		Position ( ~idList ; ¶ & theLayoutID & ¶ ; 1 ; 1 );
 	~value = PatternCount ( Left ( ~idList ; ~value ) ; ¶ )
 ];
 	GetValue ( LayoutNames ( file ) ; ~value )

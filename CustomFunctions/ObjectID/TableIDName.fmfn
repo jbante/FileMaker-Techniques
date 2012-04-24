@@ -20,7 +20,7 @@
 Let ( [
 	~idList = ¶ & TableIDs ( file ) & ¶;
 	~value =
-		Position ( ~idList ; ¶ & tableName & ¶ ; 1 ; 1 );
+		Position ( ~idList ; ¶ & theTableID & ¶ ; 1 ; 1 );
 	~value = PatternCount ( Left ( ~idList ; ~value ) ; ¶ )
 ];
 	GetValue ( TableNames ( file ) ; ~value )
