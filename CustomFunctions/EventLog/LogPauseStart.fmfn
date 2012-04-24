@@ -3,43 +3,46 @@
  * LogPauseStart
  *
  * PURPOSE:
- *		Creates a new pause EventLog record for the current script so that user pauses are not included in measures of machine performance. When used in combination with the other Log* functions, this function can be used to log the precise run times of various scripted processes.
+ *		Creates a new pause EventLog record for the current script so that user
+ *		pauses are not included in measures of machine performance. When used in
+ *		combination with the other Log* functions, this function can be used to
+ *		log the precise run times of various scripted processes.
  *
  * RETURNS: "" (Null)
  *
  * PARAMETERS: none
  *
  * DEPENDENCIES:
- *		2empowerFM_SQL_Runner (plug-in)
- *		NanoTime (ScriptMaster registered function)
+ *		GaiaPlugin (plug-in)
  *		GetFieldNameOnly (custom function)
  *		SQLQuote (custom function)
  *
  * VARIABLES:
- *		$~eventLog.id_script
+ *		$~eventLog.id_process
  *		$~eventLog.id_pause
  *
  * HISTORY:
  *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
+ *		MODIFIED on 2012-04-24 by Jeremy Bante <http://scr.im/jbante> to use the
+ *		GaiaPlugin.
  * =====================================
  */
 
 Let ( [
 	$~eventLog.id_pause = GetAsNumber ( UUIDTimeNIC )
 ];
-	epSQLExecute (
+	GaiaExecuteSQL (
 		"INSERT INTO EventLog¶( "
 			& GetFieldNameOnly ( EventLog::id_Pause )
 			& ",	" & GetFieldNameOnly ( EventLog::id_Process )
-			& ",	" & GetFieldNameOnly ( EventLog::scriptName )
 			& ",	" & GetFieldNameOnly ( EventLog::event )
 			& ",	" & GetFieldNameOnly ( EventLog::startNanoseconds )
 		& " )¶VALUES¶( "
 			& $~eventLog.id_pause
-			& ",	" & $~eventLog.id_script
-			& ",	" & SQLQuote ( Get ( ScriptName ) )
+			& ",	" & $~eventLog.id_process
 			& ",	" & SQLQuote ( "pause" )
-			& ",	" & NanoTime
-		& " )"
+			& ",	" & GaiaNanoTime
+		& " )";
+		"" ; ""	// column and row separators
 	)
 )

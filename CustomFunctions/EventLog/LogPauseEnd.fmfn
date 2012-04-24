@@ -12,8 +12,7 @@
  * PARAMETERS: none
  *
  * DEPENDENCIES:
- *		2empowerFM_SQL_Runner (plug-in)
- *		NanoTime (ScriptMaster registered function)
+ *		GaiaPlugin (plug-in)
  *		GetFieldNameOnly (custom function)
  *
  * VARIABLES:
@@ -21,13 +20,16 @@
  *
  * HISTORY:
  *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
+ *		MODIFIED on 2012-04-24 by Jeremy Bante <http://scr.im/jbante> to use the
+ *		GaiaPlugin.
  * =====================================
  */
 
-epSQLExecute (
+GaiaExecuteSQL (
 	"UPDATE EventLog"
 	& "¶SET " & GetFieldNameOnly ( EventLog::endNanoseconds )
-		& " = " & NanoTime
+		& " = " & GaiaNanoTime
 	& "¶WHERE " & GetFieldNameOnly ( EventLog::id_Pause )
-		& " = " & $~eventLog.id_pause
+		& " = " & $~eventLog.id_pause;
+	"" ; ""	// column and row separators
 )

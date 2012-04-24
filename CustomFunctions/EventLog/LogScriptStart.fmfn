@@ -12,33 +12,38 @@
  * PARAMETERS: none
  *
  * DEPENDENCIES:
- *		2empowerFM_SQL_Runner (plug-in)
- *		NanoTime (ScriptMaster registered function)
+ *		GaiaPlugin (plug-in)
  *		GetFieldNameOnly (custom function)
+ *		ScriptID (custom function)
  *		SQLQuote (custom function)
  *
  * VARIABLES:
- *		$~eventLog.id_script
+ *		$~eventLog.id_process
  *
  * HISTORY:
  *		CREATED on 2012-01-17 by Jeremy Bante <http://scr.im/jbante>.
+ *		MODIFIED on 2012-04-24 by Jeremy Bante <http://scr.im/jbante> to use the
+ *		GaiaPlugin.
  * =====================================
  */
 
 Let ( [
-	$~eventLog.id_script = GetAsNumber ( UUIDTimeNIC )
+	$~eventLog.id_process = GetAsNumber ( UUIDTimeNIC )
 ];
-	epSQLExecute (
+	GaiaExecuteSQL (
 		"INSERT INTO EventLog¶( "
 			& GetFieldNameOnly ( EventLog::id_Process )
-			& ",	" & GetFieldNameOnly ( EventLog::scriptName )
+			& ",	" & GetFieldNameOnly ( EventLog::id_Script )
+			& ",	" & GetFieldNameOnly ( EventLog::fileName )
 			& ",	" & GetFieldNameOnly ( EventLog::event )
 			& ",	" & GetFieldNameOnly ( EventLog::startNanoseconds )
 		& " )¶VALUES¶( "
-			& $~eventLog.id_script
-			& ",	" & SQLQuote ( Get ( ScriptName ) )
+			& $~eventLog.id_process
+			& ",	" & ScriptID ( Get ( FileName ) ; Get ( ScriptName ) )
+			& ",	" & SQLQuote ( Get ( FileName ) )
 			& ",	" & SQLQuote ( "script" )
-			& ",	" & NanoTime
-		& " )"
+			& ",	" & GaiaNanoTime
+		& " )";
+		"" ; ""	// column and row separators
 	)
 )
