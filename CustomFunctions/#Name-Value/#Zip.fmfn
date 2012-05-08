@@ -1,0 +1,39 @@
+/**
+ * =====================================
+ * #Zip ( nameList ; valueList )
+ *
+ * PURPOSE:
+ *		Converts two return-delimited lists into a series of name/value pairs.
+ *
+ * RETURNS:
+ *		A series of name/value pairs compatible with the #* functions where each name is
+ *		from nameList and each value is from the corresponding element in valueList.
+ *
+ * PARAMETERS:
+ *		nameList: A return-delimited list
+ *		valueList:  A return-delimited list
+ *
+ * DEPENDENCIES:
+ *		# ( name ; value )
+ *
+ * HISTORY:
+ *		CREATED on 2012-05-08 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	$#.valueCount =
+		If ( $#.valueCount;
+			$#.valueCount;
+		/* Else */
+			Max ( ValueCount ( nameList ) ; ValueCount ( valueList ) )
+		);
+	$#.i = $#.i + 1
+];
+	# ( GetValue ( nameList ; $#.i ) ; GetValue ( valueList ; $#.i ) )
+	& If ( $#.i < $#.valueCount;
+		#Zip ( nameList ; valueList );
+	/* Else, clear variables */
+		Let ( [ $#.valueCount = "" ; $#.i = "" ]; "" )
+	)
+)
