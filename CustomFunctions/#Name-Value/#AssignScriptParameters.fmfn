@@ -41,47 +41,58 @@ Let ( [
 	~evaluateString =
 		"Let ( [¶"
 		& Get ( ScriptParameter )
-		& "$void = $void" //terminating variable to keep semicolon-delimited sytax in ScriptParameter consistent
+		& "$void = $void" // terminating variable to keep parameter syntax consistent
 		& "¶];¶"
-	& "True¶)"
+		& "True¶)"
 ];
-	Case(
+	Case (
 		not IsValidExpression ( ~evaluateString );
 			False;
 
-		//else, ~evaluateString is a valid expression, so check that required parameters are populated
+		// Else, check that required parameters are populated
 		Evaluate ( ~evaluateString )
 		and
 		Let ( [
-			//parse required parameters from script name
-			~BEGIN = "("; //character marking beginning of named parameters
-			//~END = ")"; //character defining end of named parameters
-			~DELIMITER = ";"; //character delimiting between named parameters
-			~OPTIONAL = "{"; //character marking beginning of optional parameters
+			// define delimiters in script name
+			~BEGIN = "(";
+			//~END = ")";
+			~DELIMITER = ";";
+			~OPTIONAL = "{";
 
+			// parse required parameters from script name
 			~parameters = Substitute ( Get ( ScriptName ) ; ["¶"; ""]; [" "; ""] );
 			~beginParameters = Position ( ~parameters ; ~BEGIN ; 1 ; 1 );
 			~endParameters = Position ( ~parameters ; ~OPTIONAL ; 1 ; 1 );
-			~endParameters = Case ( not ~endParameters ; Length ( ~parameters ) ; ~endParameters );
-			~parameters = Middle ( ~parameters ; ~beginParameters + 1 ; ~endParameters - ~beginParameters - 1 );
-			~parameters =
+			~endParameters =
+				Case ( not ~endParameters ; Length ( ~parameters ) ; ~endParameters );
+			~parameters =	// isolate required parameter names
+				Middle (
+					~parameters;
+					~beginParameters + 1;
+					~endParameters - ~beginParameters - 1
+				);
+			~parameters =	// remove any trailing delimiter
 				Substitute (
 					Trim ( ~parameters ) & "☠";
-					[ ~DELIMITER & "☠" ; "" ]; //remove possible erroneous trailing delimiter
+					[ ~DELIMITER & "☠" ; "" ];
 					[ "☠" ; "" ];
 					[ ~DELIMITER ; "¶" ]
 				)
 		];
-			//check that required parameters are non-null
+			// check that required parameters are non-null
 			Case (
-				~beginParameters and Length ( ~parameters ); //script name specifies parameters
-					Evaluate ( //string returns true when all required parameters are populated
+				~beginParameters and Length ( ~parameters );
+					Evaluate ( // return True if required parameters are populated
 						"Length ( $"
-						& Substitute ( ~parameters ; "¶" ; " ) and Length ( $" )
+						& Substitute (
+							~parameters;
+							"¶";
+							" ) and Length ( $"
+						)
 						& " )"
 					);
 
-				//else, parameters are adequate by default
+				// Else, no required parameters, return True by default
 					True
 			)
 		)

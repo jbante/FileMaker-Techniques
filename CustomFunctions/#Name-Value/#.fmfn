@@ -41,6 +41,7 @@
  *		Script Parameter Interface Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557462
  * =====================================
  */
+
 "$"
 & Substitute (
 	name;

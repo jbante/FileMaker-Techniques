@@ -41,21 +41,19 @@
  * =====================================
  */
 
-Let (
-        ~evaluateString =
-                "Let( [¶"
-                & parameters
-                & "$void = $void"  //terminating variable to keep semicolon-delimited sytax in variableString consistent
-                & "¶];¶"
-                & "True¶)";
+Let ( [
+    ~evaluateString =
+		"Let( [¶"
+		& parameters
+		& "$void = $void"  // terminating variable keeps syntax in parameters consistent
+		& "¶];¶"
+		& "True¶)"
+];
+	Case (
+		IsValidExpression ( ~evaluateString );
+			Evaluate ( ~evaluateString );
 
-        //end variable definitions
-
-        Case (
-                IsValidExpression ( ~evaluateString );
-                        Evaluate ( ~evaluateString );
-
-                //else, ~evaluateString is not a valid expression...
-                        False
-        )
+		// Else, ~evaluateString is not a valid expression...
+			False
+	)
 )
