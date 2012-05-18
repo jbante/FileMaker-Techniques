@@ -7,7 +7,7 @@
  //       http://www.filemaker.com/12help/html/error_codes.html
 
 
-Case(
+Case (
 	errorNumber = -1; "Unknown error";
 	errorNumber = 0; "No error";
 	errorNumber = 1; "User canceled action";
