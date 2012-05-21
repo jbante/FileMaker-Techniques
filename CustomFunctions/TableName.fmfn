@@ -16,4 +16,4 @@
  * =====================================
  */
 
-GetValue ( Substitute ( GetFieldName ( fieldReference ) ; "::" ; ¶ ) ; 2 )
+GetValue ( Substitute ( GetFieldName ( fieldReference ) ; "::" ; ¶ ) ; 1 )
