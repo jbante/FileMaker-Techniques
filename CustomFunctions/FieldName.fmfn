@@ -1,13 +1,13 @@
 /**
  * =====================================
- * GetFieldNameOnly ( theField )
+ * FieldName ( fieldReference )
  *
  * RETURNS:
  *		The field name of the field passed as a parameter, not including the
  *		table occurrence name.
  *
  * PARAMETERS:
- *		theField: A reference to a field (not the field name)
+ *		fieldReference: A reference to a field (not the field name)
  *
  * DEPENDENCIES: none
  *
@@ -17,4 +17,4 @@
  * =====================================
  */
 
-GetValue ( Substitute ( GetFieldName ( theField ) ; "::" ; ¶ ) ; 2 )
+GetValue ( Substitute ( GetFieldName ( fieldReference ) ; "::" ; ¶ ) ; 2 )
