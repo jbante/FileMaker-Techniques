@@ -1,0 +1,35 @@
+/**
+ * =====================================
+ * ValueReverse ( valueList )
+ *
+ * PURPOSE:
+ *		Does stuff with argument1 and argument2.
+ *
+ * RETURNS:
+ *		A return-delimited list of values from valueList in reversed order.
+ *
+ * PARAMETERS:
+ *		valueList: A return-delimited list of values
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-05-21 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	$~vr.valueCount =
+		If ( $~vr.valueCount ; $~vr.valueCount ; /* Else */ ValueCount ( valueList ) );
+	$~vr.i = $~vr.i + 1;
+	~i = $~vr.i	// extra variable needed for GetValue calls to work correctly
+];
+	If ( $~vr.i < $~vr.valueCount;
+		ValueReverse ( valueList )
+		& ¶ & GetValue ( valueList ; ~i );
+
+	/* Else, $~vr.i = $~vr.valueCount */
+		GetValue ( valueList ; ~i )
+		& Let ( [ $~vr.valueCount = "" ; $~vr.i = "" ]; "" )	// purge variables
+	)
+)
