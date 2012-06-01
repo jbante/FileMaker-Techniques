@@ -1,0 +1,49 @@
+/**
+ * =====================================
+ * ByteSize ( bytes ; precision )
+ *
+ * RETURNS:
+ *		The same quantity of bytes expressed in a unit of appropriate magnitude.
+ *
+ * PARAMETERS:
+ *		bytes: The number of bytes.
+ *		precision: The precision for the final result, treated the same as the
+ *		Round function.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		SI (metric) and binary units for *bytes are different for different orders of
+ *		magnitude. This function was designed with the assumption that a given solution
+ *		will only use one or the other, which can be controlled by setting the ~isMetric
+ *		Let variable in the function. If both are needed in the same file, make separate
+ *		copies of this function, one for each system of units.
+ *
+ * HISTORY:
+ *		CREATED on 2012-06-01 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Byte
+ * =====================================
+ */
+
+Let ( [
+	~isMetric = False;
+
+	~ratio = If ( ~isMetric ; 1000 ; /* Else */ 1024 );
+	~magnitude = Floor ( Ln ( bytes ) / Ln ( ~ratio ) );
+	~magnitude = Min ( ~magnitude ; 8 )	// don't exceed known magnitude units
+];
+	Round ( bytes / ~ratio ^ ~magnitude ; precision )	// convert magnitude
+	& Choose ( ~magnitude;	// postfix for magnitude appropriate unit
+		" B";	// byte
+		" kB";	// kilo
+		" MB";	// mega
+		" GB";	// giga
+		" TB";	// tera
+		" PB";	// peta
+		" EB";	// exa
+		" ZB";	// zetta
+		" YB"	// yotta
+	)
+)
