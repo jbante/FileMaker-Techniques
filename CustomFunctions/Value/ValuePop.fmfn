@@ -1,0 +1,45 @@
+/**
+ * =====================================
+ * ValuePop ( valueList ; numberToPop )
+ *
+ * PURPOSE:
+ *		Removes the first several from a return-delimited list.
+ *
+ * RETURNS:
+ *		A return-delimited list consisting of contents of valueList with the first several
+ *		values, defined by "numberToPop", removed.
+ *
+ * PARAMETERS:
+ *		valueList: A return-delimited list
+ *		numberToPop: A number of values to remove from valueList
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		Unlike popular implementations of stack pop functionality in other languages, this
+ *		function will not return the value(s) being removed. Values being removed should
+ *		be extracted before calling ValuePop.
+ *
+ * EXAMPLE:
+ * 		Set Variable [$value[1]; Value:GetValue ( $valueList ; 1 )]
+ *		Set Variable [$valueList; Value:ValuePop ( $valueList ; 1 )]
+ *
+ * HISTORY:
+ *		CREATED on 2012-07-14 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+If ( numberToPop < 1;
+	valueList;
+/* Else */
+	Substitute (
+		MiddleValues (
+			valueList;
+			numberToPop + 1;
+			ValueCount ( valueList )
+		)
+		& "<<<END>>>";
+		[ "¶<<<END>>>" ; "" ];
+		[ "<<<END>>>" ; "" ]
+	)
+)
