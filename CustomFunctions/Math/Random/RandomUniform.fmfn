@@ -26,8 +26,8 @@
  */
 Case (
 	minimum ≤ maximum;	// arguments are in order
-		Random * (maximum - minimum ) + minimum;
+		Random * ( maximum - minimum ) + minimum;
 
 	// Else, arguments are in reverse order
-		Random * (minimum - maximum ) + maximum
+		Random * ( minimum - maximum ) + maximum
 )
