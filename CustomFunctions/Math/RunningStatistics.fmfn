@@ -1,0 +1,60 @@
+/**
+ * =====================================
+ * RunningStatistics ( values ; n ; mean ; theVariance )
+ *
+ * PURPOSE:
+ *		Updates running calculated values for count, mean, and variance based on a
+ *		return-delimited list of numbers. This function could be used to calculate these
+ *		statistics for a list of numbers from scratch, but it was created for updating
+ *		existing statistics.
+ *
+ * RETURNS:
+ *		A return-delimited list of numbers representing the updated count, mean, and
+ *		variance for the data, in that order.
+ *
+ * PARAMETERS:
+ *		values: A return-delimited list of numbers.
+ *		n: The number of elements the current mean and variance are based on, not
+ *		including the new values being passed.
+ *		mean: The current calculated mean.
+ *		theVariance: The current calculated variance.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This function calculates running mean and variance by the Welford algorithm,
+ *		illustrated by Donald Knuth in The Art of Computer Programming, Volume 2.
+ *
+ * HISTORY:
+ *		CREATED on 2012-08-10 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+ * =====================================
+ */
+
+ Let ( [
+	~value = GetValue ( values ; 1 );
+
+	~count = n + 1;
+	~delta = ~value - mean;
+	~mean = mean + ~delta / ~count;
+	~squareSumOld = theVariance * ( n - 1 );
+	~squareSumNew = ~squareSumOld + ~delta * ( ~value - ~mean );
+	~variance = If ( n < 1 ; 0 ; ~squareSumNew / n );
+
+	~remainingCount = ValueCount ( values ) - 1
+];
+	If ( ~remainingCount > 0;
+		RunningStatistics (
+			RightValues ( values ; ~remainingCount );
+			~count;
+			~mean;
+			~variance
+		);
+	/* Else */
+		~count
+		& ¶ & ~mean
+		& ¶ & ~variance
+	)
+)
