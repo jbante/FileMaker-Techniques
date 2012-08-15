@@ -1,0 +1,23 @@
+/**
+ * =====================================
+ * ValueIn ( referenceList ; searchValue )
+ *
+ * PURPOSE:
+ *		Does stuff with argument1 and argument2.
+ *
+ * RETURNS:
+ *		True (1) if searchValue is an element in referenceList; False (0) otherwise.
+ *
+ * PARAMETERS:
+ *		referenceList:	A return-delimited list of values
+ *		searchValue: A value to search for
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-08-15 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+ValueCount ( searchValue ) = 1
+and IsEmpty ( FilterValues ( referenceList ; searchValue ) )
