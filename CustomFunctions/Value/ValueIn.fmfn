@@ -20,4 +20,4 @@
  */
 
 ValueCount ( searchValue ) = 1
-and IsEmpty ( FilterValues ( referenceList ; searchValue ) )
+and not IsEmpty ( FilterValues ( referenceList ; searchValue ) )
