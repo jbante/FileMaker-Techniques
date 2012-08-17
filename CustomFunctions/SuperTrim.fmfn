@@ -13,20 +13,25 @@ LAST MODIFIED: 20-AUG-2008 by Debi Fuchs of Aptworks Consulting
 */
 
 
-Let(
-  [
+Let ( [
     // Determine value of original string with ALL whitespace removed.
-    t2 = Substitute( text; [ " "; "" ]; [ " "; "" ]; [ "	"; "" ]; [ "¶"; "" ] );
+    ~t2 =
+    	Substitute (
+    		text;
+    		[ " "; "" ];
+    		[ " "; "" ];
+    		[ "	"; "" ];
+    		[ "¶"; "" ]
+    	);
 
     // Determine position of first non-ws character in original string.
-    first_char = Position( text; Left( t2; 1 ); 0; 1 );
+    ~first_char = Position ( text ; Left ( ~t2 ; 1 ) ; 0 ; 1 );
 
     // Determine position of last non-ww character in original string.
-    last_char = Position( text; Right( t2; 1 ); Length( text ); -1 )
-  ];
-
-  // If any non-whitespace characters exist return appropriate
-  // middle portion of original text.
-
-  Case( first_char; Middle( text; first_char; last_char - first_char + 1 ) )
+    ~last_char = Position ( text ; Right ( ~t2 ; 1 ) ; Length ( text ) ; -1 )
+];
+	// If any non-whitespace characters exist return appropriate
+	// middle portion of original text.
+	If ( ~first_char;
+		Middle ( text ; ~first_char ; ~last_char - ~first_char + 1 ) )
 )
