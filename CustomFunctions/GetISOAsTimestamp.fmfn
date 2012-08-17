@@ -1,0 +1,34 @@
+/**
+ * =====================================
+ * GetISOAsTimestamp ( isoTimestamp )
+ *
+ * RETURNS:
+ *		A FileMaker-type timestamp extracted from isoTimestamp
+ *
+ * PARAMETERS:
+ *		isoTimestamp: A text string representing a timestamp in ISO 8601 format, which is:
+ *		YYYY-MM-DD hh:mm:ss (24-hour time)
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-07-27 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/ISO_8601
+ * =====================================
+ */
+
+Let ( [
+	~year = Middle ( isoTimestamp ; 1 ; 4 );
+	~month = Middle ( isoTimestamp ; 6 ; 2 );
+	~day = Middle ( isoTimestamp ; 9 ; 2 );
+	~hour = Middle ( isoTimestamp ; 12 ; 2 );
+	~minute = Middle ( isoTimestamp ; 15 ; 2 );
+	~second = Right ( isoTimestamp ; Length ( isoTimestamp ) - 17 )
+];
+	Timestamp (
+		Date ( ~month ; ~day ; ~year );
+		Time ( ~hour ; ~minute ; ~second )
+	)
+)
