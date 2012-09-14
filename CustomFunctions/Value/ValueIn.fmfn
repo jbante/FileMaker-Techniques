@@ -15,9 +15,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-09-14 by Jeremy Bante <http://scr.im/jbante> to be faster.
  *		CREATED on 2012-08-15 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-ValueCount ( searchValue ) = 1
-and not IsEmpty ( FilterValues ( referenceList ; searchValue ) )
+Position ( ¶ & referenceList & ¶ ; ¶ & searchValue & ¶ ; 1 ; 1 ) > 0
