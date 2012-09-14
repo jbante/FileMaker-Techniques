@@ -26,5 +26,5 @@ Let ( [
 	~value = PatternCount ( Left ( ~idList ; ~value ) ; ¶ );
 	~name = GetValue ( ScriptNames ( file ) ; ~value )
 ];
-	If ( IsEmpty ( ~name ) ; "<Script Unknown>" ; /* Else */ ~name )
+	If ( IsEmpty ( ~name ) ; "?" ; /* Else */ ~name )
 )
