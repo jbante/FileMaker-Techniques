@@ -1,0 +1,63 @@
+/**
+ * =====================================
+ * GeoBoxBounds ( latitude ; longitude ; radiusInMeters )
+ *
+ * PURPOSE:
+ *		Calculates the approximate coordinate bounds for an approximately square region
+ *		around a point on the surface of the Earth. This can be useful for finding data
+ *		within a certain distance of a reference point.
+ *
+ * RETURNS:
+ *		A return-delimited list of 4 numbers:
+ *		1. The north latitude boundary for the calculated region
+ *		2. The south latitude boundary for the calculated region
+ *		3. The east longitude boundary for the calculated region
+ *		4. The west longitude boundary for the calculated region
+ *
+ * PARAMETERS:
+ *		latitude: The latitude for the center of the region, in degrees
+ *		longitude: The longitude for the center of the region, in degrees
+ *		radiusInMeters: The distance in meters from the center of the region to the
+ *		closest points on the edges of the square bounding region.
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		Use FileMaker's GetValue function to retrieve each value from the result.
+ *
+ *		The bounding region's approximation to a square shape is less accurate as
+ *		radiusInMeters grows large and as the region approaches either pole. However, the
+ *		region will always contain the circular region of the same radius.
+ *
+ *		Square bounding regions are more computationally convenient for finding data.
+ *		Developers needing an exact circular region can use a square region to constrain
+ *		the available data to a smaller found set, then use the GeoDistance function to
+ *		omit points between the circular and square neighborhoods of the reference point.
+ *
+ * HISTORY:
+ *		CREATED on 2012-09-26 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		Haversine formula:	http://en.wikipedia.org/wiki/Haversine_formula
+ *		Radius of Earth:	http://www.wolframalpha.com/input/?i=radius+of+earth
+ * =====================================
+ */
+
+Let ( [
+	~earthRadius = 6367500;	// meters
+	~latitudeDifference = Degrees ( radiusInMeters / ~earthRadius );
+	~longitudeDifference =
+		// inverse of Haversine formula simplified for same-latitude points
+		Degrees ( Acos (
+			1
+			- ( 1 - Cos ( radiusInMeters / ~earthRadius )  )
+			/ ( Cos ( Radians ( latitude ) ) ^ 2 )
+		) )
+];
+	List (
+		latitude + ~latitudeDifference;	// north boundary
+		latitude - ~latitudeDifference;	// south boundary
+		longitude + ~longitudeDifference;	// east boundary
+		longitude - ~longitudeDifference	// west boundary
+	)
+)

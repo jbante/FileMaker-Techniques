@@ -1,0 +1,37 @@
+/**
+ * =====================================
+ * GeoDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ *
+ * RETURNS:
+ *		The approximate distance in meters between two points on the surface of the Earth.
+ *
+ * PARAMETERS:
+ *		latitude1: Latitude of the first point, in degrees
+ *		longitude1: Longitude of the first point, in degrees
+ *		latitude2: Latitude of the second point, in degrees
+ *		longitude2: Longitude of the first point, in degrees
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This function computes an approximation based on the Haversine formula. It uses
+ *		the cosine-based definition for haversine rather than the sine-based formula for
+ *		better numerical stability.
+ *
+ * HISTORY:
+ *		CREATED on 2012-09-26 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		Haversine formula:	http://en.wikipedia.org/wiki/Haversine_formula
+ *		Radius of Earth:	http://www.wolframalpha.com/input/?i=radius+of+earth
+ * =====================================
+ */
+
+6367500	// radius of earth in meters
+* Acos (
+	1
+	- ( 1 - Cos ( Radians ( latitude2 - latitude1 ) ) )
+	- Cos ( Radians ( latitude1 ) )
+	* Cos ( Radians ( latitude2 ) )
+	* ( 1 - Cos ( Radians ( longitude2 - longitude1 ) ) )
+)
