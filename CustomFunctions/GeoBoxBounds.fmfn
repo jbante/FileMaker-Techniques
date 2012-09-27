@@ -56,10 +56,6 @@
  */
 
 Let ( [
-	latitude = 0;
-	longitude = 179;
-	radiusInMeters = 100 * 1000;	// km
-
 	~earthRadius = 6367500;	// meters
 	~angularDifference = radiusInMeters / ~earthRadius;	// radians
 
@@ -81,7 +77,6 @@ Let ( [
 			~wrapNorth ; Min ( ~south ; 180 - ~north );
 			~south
 		);
-
 
 	// calculate longitude bounds
 	~longitudeDifference =
@@ -106,9 +101,7 @@ Let ( [
 			-180;
 			/* Else */ longitude - ~longitudeDifference
 		);
-	~westBound = If ( ~westBound > 180 ; ~westBound + 360 ; /* Else */ ~westBound );
-
-	~ = ""
+	~westBound = If ( ~westBound > 180 ; ~westBound + 360 ; /* Else */ ~westBound )
 ];
 	List (
 		~southBound;
