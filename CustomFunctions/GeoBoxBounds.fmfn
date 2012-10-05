@@ -64,12 +64,11 @@
 
 Let ( [
 	~earthRadius = 6367500;	// meters
-	~angularDifference = radiusInMeters / ~earthRadius;	// radians
 
 	// calculate latitude bounds
-	~latitudeDifference = Degrees ( ~angularDifference );
-	~north = latitude + ~latitudeDifference;
-	~south = latitude - ~latitudeDifference;
+	~latitudeOffset = Degrees ( radiusInMeters / ~earthRadius );
+	~north = latitude + ~latitudeOffset;
+	~south = latitude - ~latitudeOffset;
 	~wrapNorth = ~north > 90;
 	~wrapSouth = ~south < -90;
 	~northBound =
@@ -86,28 +85,12 @@ Let ( [
 		);
 
 	// calculate longitude bounds
-	~longitudeDifference =
-		If ( ~wrapNorth or ~wrapSouth;	// ~longitudeDifference not applicable
-			"";
-		/* Else */
-			// inverse of Haversine formula simplified for same-latitude points
-			Degrees ( Acos (
-				1
-				- ( 1 - Cos ( ~angularDifference )  )
-				/ ( Cos ( Radians ( latitude ) ) ^ 2 )
-			) )
-		);
+	~longitudeOffset = ~latitudeOffset * Cos ( Radians ( latitude ) );
 	~eastBound =
-		If ( ~wrapNorth or ~wrapSouth;
-			180;
-			/* Else */ longitude + ~longitudeDifference
-		);
+		If ( ~wrapNorth or ~wrapSouth ; 180 ; /* Else */ longitude + ~longitudeOffset );
 	~eastBound = If ( ~eastBound > 180 ; ~eastBound - 360 ; /* Else */ ~eastBound );
 	~westBound =
-		If ( ~wrapNorth or ~wrapSouth;
-			-180;
-			/* Else */ longitude - ~longitudeDifference
-		);
+		If ( ~wrapNorth or ~wrapSouth ; -180 ; /* Else */ longitude - ~longitudeOffset );
 	~westBound = If ( ~westBound < -180 ; ~westBound + 360 ; /* Else */ ~westBound )
 ];
 	List (
