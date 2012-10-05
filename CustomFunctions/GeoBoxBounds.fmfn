@@ -22,6 +22,13 @@
  *
  * DEPENDENCIES: none
  *
+ * EXAMPLE: Find records within a search radius
+ *		Set Variable [$geoBox; Value:GeoBoxBounds ( $latitude ; $longitude ; $radius)]
+ *		Enter Find Mode []
+ *		Set Field [Table::latitude; Value:GetValue ( $geoBox ; 1 ) & "..." & GetValue ( $geoBox ; 2 )]
+ *		Set Field [Table::longitude; Value:GetValue ( $geoBox ; 3 ) & "..." & GetValue ( $geoBox ; 4 )]
+ *		Perform Find []
+ *
  * NOTES:
  *		Use FileMaker's GetValue function to retrieve each value from the result.
  *
@@ -80,7 +87,7 @@ Let ( [
 
 	// calculate longitude bounds
 	~longitudeDifference =
-		If ( ~wrapNorth or ~wrapSouth;	// not applicable
+		If ( ~wrapNorth or ~wrapSouth;	// ~longitudeDifference not applicable
 			"";
 		/* Else */
 			// inverse of Haversine formula simplified for same-latitude points
@@ -101,7 +108,7 @@ Let ( [
 			-180;
 			/* Else */ longitude - ~longitudeDifference
 		);
-	~westBound = If ( ~westBound > 180 ; ~westBound + 360 ; /* Else */ ~westBound )
+	~westBound = If ( ~westBound < -180 ; ~westBound + 360 ; /* Else */ ~westBound )
 ];
 	List (
 		~southBound;

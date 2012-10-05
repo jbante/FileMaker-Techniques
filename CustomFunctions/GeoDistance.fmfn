@@ -29,8 +29,7 @@
 
 6367500	// radius of earth in meters
 * Acos (
-	1
-	- ( 1 - Cos ( Radians ( latitude2 - latitude1 ) ) )
+	Cos ( Radians ( latitude2 - latitude1 ) )
 	- Cos ( Radians ( latitude1 ) )
 	* Cos ( Radians ( latitude2 ) )
 	* ( 1 - Cos ( Radians ( longitude2 - longitude1 ) ) )
