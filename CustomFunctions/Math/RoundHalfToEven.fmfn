@@ -1,0 +1,47 @@
+/**
+ * =====================================
+ * RoundHalfToEven ( number ; precision )
+ *
+ * PURPOSE:
+ *		Rounds numbers ending with 5 — halfway between two values it might round to — to
+ *		whichever nearest value end with an even digit. This is sometimes called
+ *		"statisticans rounding" or "bankers rounding," and it is used to limit the upward
+ *		bias from systematically rounding half values away from zero. This is the
+ *		preferred rounding method defined by the IEEE 754 and ISO 60559:2011 standards.
+ *
+ * RETURNS:
+ *		A number
+ *
+ * PARAMETERS:
+ *		number: The number to round
+ *		precision: The number of digits to round to — behaves similarly to FileMaker's
+ *		built-in Round () function.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-10-22 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/IEEE_floating_point#Rounding_rules
+ * =====================================
+ */
+
+Let ( [
+	~power = 10 ^ precision;
+	~number = Truncate ( number * ~power ; 1 );
+	~remainder = Mod ( ~number ; 1 );
+	~ceiling = Ceiling ( ~number );
+	~isHalf = ~remainder = .5
+];
+	Case (
+		~isHalf and Mod ( ~ceiling ; 2 ) = 0;
+			~ceiling / ~power;
+
+		~isHalf;
+			Floor ( ~number ) / ~power;
+
+		/* Else */
+			Round ( number ; precision )
+	)
+)
