@@ -1,0 +1,31 @@
+/**
+ * =====================================
+ * RandomStringWithCharacterSet ( stringLength ; characterSet )
+ *
+ * RETURNS:
+ *		A random text string of length stringLength. The returned string can include
+ *		characters from the specified characterSet.
+ *
+ * PARAMETERS:
+ *		stringLength: The length of the desired result
+ *		characterSet: A string containing all possible characters to include in the result
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+If ( stringLength ≤ 0 or IsEmpty ( characterSet );
+	"";
+/* Else */
+	Let ( [
+		~setLength = Length ( characterSet );
+		~position = Ceiling ( ( 1 - Random ) * ~setLength );
+		~character = Middle ( characterSet ; ~position ; 1 )
+	];
+		~character
+		& RandomStringWithCharacterSet ( stringLength - 1 ; characterSet )
+	)
+)
