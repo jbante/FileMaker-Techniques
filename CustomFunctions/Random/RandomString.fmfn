@@ -18,6 +18,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante> to fix a bug where
+ *		the character range could be incorrect if one parameter is empty and the other is
+ *		not.
  *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
@@ -25,6 +28,13 @@
 Case (
 	stringLength ≤ 0;
 		"";
+
+	IsEmpty ( minCharCode ) or IsEmpty ( maxCharCode );
+		RandomString (
+			stringLength;
+			Max ( minCharCode ; 32 );
+			Min ( maxCharCode ; 65535 )
+		);
 
 	maxCharCode < minCharCode;
 		RandomString ( stringLength ; maxCharCode ; minCharCode );
