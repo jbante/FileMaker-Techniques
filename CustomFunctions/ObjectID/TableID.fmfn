@@ -1,13 +1,13 @@
 /**
  * =====================================
- * TableID ( file ; tableName )
+ * TableID ( file ; theTableName )
  *
  * RETURNS:
  *		FileMaker's internal ID for a table.
  *
  * PARAMETERS:
  *		file: The name of the FileMaker file containing the table.
- *		tableName
+ *		theTableName
  *
  * DEPENDENCIES: none
  *
@@ -21,7 +21,7 @@
 Let ( [
 	~nameList = ¶ & TableNames ( file ) & ¶;
 	~value =
-		Position ( ~nameList ; ¶ & tableName & ¶ ; 1 ; 1 );
+		Position ( ~nameList ; ¶ & theTableName & ¶ ; 1 ; 1 );
 	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ )
 ];
 	GetValue ( TableIDs ( file ) ; ~value )
