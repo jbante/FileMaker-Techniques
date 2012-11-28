@@ -18,6 +18,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to not return
+ *		characters between Unicode 55295 and 57348, which are sometimes mishandled by
+ *		FileMaker.
  *		MODIFIED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante> to fix a bug where
  *		the character range could be incorrect if one parameter is empty and the other is
  *		not.
@@ -26,7 +29,7 @@
  */
 
 Case (
-	stringLength ≤ 0;
+	stringLength < 1;
 		"";
 
 	IsEmpty ( minCharCode ) or IsEmpty ( maxCharCode );
@@ -42,14 +45,21 @@ Case (
 	/* Else */
 		Let ( [
 			minCharCode = Max ( minCharCode ; 32 );
-			maxCharCode = Min ( maxCharCode ; 65535 );
+			maxCharCode =
+				If ( maxCharCode > 57348;	// characters 55295-57348 forbidden
+					Min ( maxCharCode ; 65535 );
+					/* Else */ Min ( maxCharCode ; 55294 )
+				);
 			~code = Round ( Random * ( maxCharCode - minCharCode ) + minCharCode ; 0 )
 		];
-			If ( ~code = 127;	// DEL[ete] character, reject and try again
-				RandomString ( stringLength ; minCharCode ; maxCharCode );
-			/* Else */
-				Char ( ~code )
-				& RandomString ( stringLength - 1 ; minCharCode ; maxCharCode )
+			Case (
+				( ~code > 55294 and ~code < 57349 )	// forbidden range
+				or ~code = 127;	// DEL[ete] character, reject & re-try
+					RandomString ( stringLength ; minCharCode ; maxCharCode );
+
+				/* Else */
+					Char ( ~code )
+					& RandomString ( stringLength - 1 ; minCharCode ; maxCharCode )
 			)
 		)
 )
