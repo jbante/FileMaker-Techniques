@@ -3,27 +3,28 @@
  * RandomString ( stringLength ; minCharCode ; maxCharCode )
  *
  * RETURNS:
- *		A random text string of length stringLength. The returned string can include
- *		characters from the range between minCharCode and maxCharCode, up to the entire
- *		character set supported by FileMaker, excluding ASCII control characters (code 0
- *		through 32, and 127).
+ *		A random text string of length stringLength. The returned string can
+ *		include characters from the range between minCharCode and maxCharCode,
+ *		up to the entire character set supported by FileMaker, excluding ASCII
+ *		control characters (code 0 through 32, and 127).
  *
  * PARAMETERS:
  *		stringLength: The length of the desired result
- *		minCharCode: The Unicode character code at the minimum of the range of acceptable
- *		values. Defaults to 32 when passed a smaller or empty value.
- *		maxCharCode: The Unicode character code at the maximum of the range of acceptable
- *		values. Defaults to 65535 when passed a larger or empty value.
+ *		minCharCode: The Unicode character code at the minimum of the range of
+ *		acceptable values. Defaults to 32 when passed a smaller or empty value.
+ *		maxCharCode: The Unicode character code at the maximum of the range of
+ *		acceptable values. Defaults to 65535 when passed a larger or empty
+ *		value.
  *
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to not return
- *		characters between Unicode 55295 and 57348, which are sometimes mishandled by
- *		FileMaker.
- *		MODIFIED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante> to fix a bug where
- *		the character range could be incorrect if one parameter is empty and the other is
- *		not.
+ *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to not
+ *		return characters between Unicode 55295 and 57348, which are sometimes
+ *		mishandled by FileMaker.
+ *		MODIFIED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante> to fix a
+ *		bug where the character range could be incorrect if one parameter is
+ *		empty and the other is not.
  *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
