@@ -1,0 +1,100 @@
+/**
+ * =====================================
+ * ValueShuffleMerge ( valueList1 ; valueList2 )
+ *
+ * PURPOSE:
+ *		Merges the return-delimited values in valueList1 and valueList2, such
+ *		that values in the new list will be in the same order relative to other
+ *		values from the same source list, but random order relative to values in
+ *		the other list. This is analogous to riffling together two halves of a
+ *		deck of cards when shuffling the deck.
+ *
+ * RETURNS:
+ *		A return-delimited list containing values from valueList1 and valueList2
+ *
+ * PARAMETERS:
+ *		valueList1: A return-delimited list
+ *		valueList2: A return-delimited list
+ *
+ * EXAMPLE:
+ *		ValueShuffle ( "1¶2¶3" ; "a¶b¶c¶d" )	// = "a¶b¶1¶2¶c¶3¶d"
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-12-02 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~value.step;
+		Let ( [
+			$~value.count[1] = ValueCount ( valueList1 );
+			$~value.count[2] = ValueCount ( valueList2 );
+			$~value.randomThreshold =
+				$~value.count[1] / ( $~value.count[1] + $~value.count[2] );
+			$~value.step =
+				If ( $~value.count[1] < 1 or $~value.count[2] < 1;
+					2;	// skip to end
+					/* Else */ 1
+				)
+		];
+			ValueShuffleMerge ( valueList1 ; valueList2 )
+		);
+
+	/* Step 1, append randomly selected list values to result */
+	$~value.step = 1;
+		Let ( [
+			~useList1 = Random < $~value.randomThreshold;
+			$~value.i[1] = $~value.i[1] + If ( ~useList1 ; 1 ; /* Else */ 0 );
+			$~value.i[2] = $~value.i[2] + If ( ~useList1 ; 0 ; /* Else */ 1 );
+			$~value.result =
+				$~value.result
+				& If ( $~value.i[1] + $~value.i[2] > 1 ; ¶ )
+				& If ( ~useList1;
+					GetValue ( valueList1 ; $~value.i[1] );
+					/* Else */ GetValue ( valueList2 ; $~value.i[2] )
+				);
+			$~value.step =
+				If (
+					$~value.i[1] < $~value.count[1]
+					and $~value.i[2] < $~value.count[2];
+					$~value.step;
+					/* Else */ $~value.step + 1
+				)
+		];
+			ValueShuffleMerge ( valueList1 ; valueList2 )
+		);
+
+	/* Step 2, clean-up and return result */
+	$~value.step = 2;
+		Let ( [
+			~remainder =
+				If ( $~value.i[1] < $~value.count[1];
+					RightValues ( valueList1 ; $~value.count[1] - $~value.i[1] )
+				)
+				& If ( $~value.i[2] < $~value.count[2];
+					RightValues ( valueList2 ; $~value.count[2] - $~value.i[2] )
+				);
+			~result =
+				$~value.result
+				& If ( $~value.i[1] + $~value.i[2] > 0 ; ¶ )
+				& Substitute (	// strip trailing ¶ from ~remainder
+					~remainder & "⚛end⚛";
+					[ "¶⚛end⚛" ; "" ];
+					[ "⚛end⚛" ; "" ]
+				);
+
+			// purge variables
+			$~value.count[1] = "";
+			$~value.count[2] = "";
+			$~value.i[1] = "";
+			$~value.i[2] = "";
+			$~value.randomThreshold = "";
+			$~value.result = "";
+			$~value.step = ""
+		];
+			~result
+		)
+)
