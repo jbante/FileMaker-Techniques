@@ -2,9 +2,6 @@
  * =====================================
  * ValueReverse ( valueList )
  *
- * PURPOSE:
- *		Does stuff with argument1 and argument2.
- *
  * RETURNS:
  *		A return-delimited list of values from valueList in reversed order.
  *

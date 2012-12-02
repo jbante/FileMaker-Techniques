@@ -13,11 +13,12 @@
  * DEPENDENCIES: none
  *
  * NOTES:
- *		SI (metric) and binary units for *bytes are different for different orders of
- *		magnitude. This function was designed with the assumption that a given solution
- *		will only use one or the other, which can be controlled by setting the ~isMetric
- *		Let variable in the function. If both are needed in the same file, make separate
- *		copies of this function, one for each system of units.
+ *		SI (metric) and binary units for *bytes are different for different
+ *		orders of magnitude. This function was designed with the assumption that
+ *		a given solution will only use one or the other, which can be controlled
+ *		by setting the ~isMetric Let variable in the function. If both are
+ *		needed in the same file, make separate copies of this function, one for
+ *		each system of units. Alternately, add isMetric as a function argument.
  *
  * HISTORY:
  *		CREATED on 2012-06-01 by Jeremy Bante <http://scr.im/jbante>.

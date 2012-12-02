@@ -2,9 +2,6 @@
  * =====================================
  * ValueIn ( referenceList ; searchValue )
  *
- * PURPOSE:
- *		Does stuff with argument1 and argument2.
- *
  * RETURNS:
  *		True (1) if searchValue is an element in referenceList; False (0) otherwise.
  *
