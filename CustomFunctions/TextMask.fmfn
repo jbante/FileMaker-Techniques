@@ -1,0 +1,63 @@
+/**
+ * =====================================
+ * TextMask ( text ; prototype )
+ *
+ * PURPOSE:
+ *		Formats text to match the form specified by prototype.
+ *
+ * RETURNS:
+ *		text
+ *
+ * PARAMETERS:
+ *		text: The text to adapt to the format specified by prototype
+ *		prototype: The format the text content should be fit to
+ *
+ * EXAMPLE:
+ *		TextMask ( "133650987669876" ; "# (###) ###-#### ext. *" )
+ *		// = 1 (336) 509-8766 ext. 9876
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This function uses the following interpretations for each character in
+ *		the prototype parameter:
+ *		- # (hash symbol): Use one character from text
+ *		- * (asterisk): Use all remaining characters from text
+ *		- \ (backslash): Use the next character in prototype as-is (escape it)
+ *		- <all others>: Use the character in prototype
+ *
+ * HISTORY:
+ *		CREATED on 2012-12-05 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Let ( [
+	~protoCharacter = Left ( prototype ; 1 )
+];
+	Case (
+		IsEmpty ( text ) or IsEmpty ( prototype );
+			"";
+
+		~protoCharacter = "*";	// use all remaining text
+			text
+			& TextMask ( "" ; Right ( prototype ; Length ( prototype ) - 1 ) );
+
+		~protoCharacter = "#";	// use next digit of text
+			Left ( text ; 1 )
+			& TextMask (
+				Right ( text ; Length ( text ) - 1 );
+				Right ( prototype ; Length ( prototype ) - 1 )
+			);
+
+		~protoCharacter = "\\";	// escape character
+			Middle ( prototype ; 2 ; 1 )
+			& TextMask (
+				text;
+				Right ( prototype ; Length ( prototype ) - 2 )
+			);
+
+		/* Else, use next character of prototype */
+			~protoCharacter
+			& TextMask ( text ; Right ( prototype ; Length ( prototype ) - 1 ) )
+	)
+)
