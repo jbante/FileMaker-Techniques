@@ -17,7 +17,7 @@
  */
 
 Let ( [
-	~alphanumeric = "0123456789abcdefghijklmnopqrstuvwxyz";
+	~alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
 	~text = Filter ( Upper ( phoneNumber ) ; ~alphanumeric );
 	~length = Length ( ~text )
 ];
