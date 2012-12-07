@@ -1,13 +1,13 @@
 /**
  * =====================================
- * RandomStringWithCharacterSet ( stringLength ; characterSet )
+ * RandomTextWithCharacterSet ( textLength ; characterSet )
  *
  * RETURNS:
- *		A random text string of length stringLength. The returned string can include
+ *		A random text string of length textLength. The returned string can include
  *		characters from the specified characterSet.
  *
  * PARAMETERS:
- *		stringLength: The length of the desired result
+ *		textLength: The length of the desired result
  *		characterSet: A string containing all possible characters to include in the result
  *
  * DEPENDENCIES: none
@@ -17,7 +17,7 @@
  * =====================================
  */
 
-If ( stringLength ≤ 0 or IsEmpty ( characterSet );
+If ( textLength ≤ 0 or IsEmpty ( characterSet );
 	"";
 /* Else */
 	Let ( [
@@ -26,6 +26,6 @@ If ( stringLength ≤ 0 or IsEmpty ( characterSet );
 		~character = Middle ( characterSet ; ~position ; 1 )
 	];
 		~character
-		& RandomStringWithCharacterSet ( stringLength - 1 ; characterSet )
+		& RandomTextWithCharacterSet ( textLength - 1 ; characterSet )
 	)
 )

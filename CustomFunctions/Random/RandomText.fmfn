@@ -1,15 +1,15 @@
 /**
  * =====================================
- * RandomString ( stringLength ; minCharCode ; maxCharCode )
+ * RandomText ( textLength ; minCharCode ; maxCharCode )
  *
  * RETURNS:
- *		A random text string of length stringLength. The returned string can
+ *		A random text string of length textLength. The returned string can
  *		include characters from the range between minCharCode and maxCharCode,
  *		up to the entire character set supported by FileMaker, excluding ASCII
  *		control characters (code 0 through 32, and 127).
  *
  * PARAMETERS:
- *		stringLength: The length of the desired result
+ *		textLength: The length of the desired result
  *		minCharCode: The Unicode character code at the minimum of the range of
  *		acceptable values. Defaults to 32 when passed a smaller or empty value.
  *		maxCharCode: The Unicode character code at the maximum of the range of
@@ -30,18 +30,18 @@
  */
 
 Case (
-	stringLength < 1;
+	textLength < 1;
 		"";
 
 	IsEmpty ( minCharCode ) or IsEmpty ( maxCharCode );
-		RandomString (
-			stringLength;
+		RandomText (
+			textLength;
 			Max ( minCharCode ; 32 );
 			Min ( maxCharCode ; 65535 )
 		);
 
 	maxCharCode < minCharCode;
-		RandomString ( stringLength ; maxCharCode ; minCharCode );
+		RandomText ( textLength ; maxCharCode ; minCharCode );
 
 	/* Else */
 		Let ( [
@@ -56,11 +56,11 @@ Case (
 			Case (
 				( ~code > 55294 and ~code < 57349 )	// forbidden range
 				or ~code = 127;	// DEL[ete] character, reject & re-try
-					RandomString ( stringLength ; minCharCode ; maxCharCode );
+					RandomText ( textLength ; minCharCode ; maxCharCode );
 
 				/* Else */
 					Char ( ~code )
-					& RandomString ( stringLength - 1 ; minCharCode ; maxCharCode )
+					& RandomText ( textLength - 1 ; minCharCode ; maxCharCode )
 			)
 		)
 )
