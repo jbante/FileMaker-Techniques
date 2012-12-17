@@ -12,16 +12,24 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		MODIFIED on 2012-01-26 by Jeremy Bante to accept the file parameter.
+ *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/jbante> to use the
+ *		current layout table occurrence name if none is specified.
+ *		MODIFIED on 2012-01-26 by Jeremy Bante <http://scr.im/jbante> to accept
+ *		the file parameter.
  *		CREATED on 2011-06-01 by Jeremy Bante <http://scr.im/jbante>.
  *		INSPIRED by custom functions by Fabrice Nordman.
  * =====================================
  */
 
 Let ( [
-	~nameList = ¶ & TableNames ( file ) & ¶;
+	theTableName =
+		If ( IsEmpty ( theTableName ) ;
+			Get ( LayoutTableName ) ;
+			/* Else */ theTableName
+		) ;
+	~nameList = ¶ & TableNames ( file ) & ¶ ;
 	~value =
-		Position ( ~nameList ; ¶ & theTableName & ¶ ; 1 ; 1 );
+		Position ( ~nameList ; ¶ & theTableName & ¶ ; 1 ; 1 ) ;
 	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ )
 ];
 	GetValue ( TableIDs ( file ) ; ~value )
