@@ -17,5 +17,5 @@
  */
 
 "\""
-& Substitute ( GetFieldName ( field ) ; "::" ; "\".\"" ) )
+& Substitute ( GetFieldName ( field ) ; "::" ; "\".\"" )
 & "\""

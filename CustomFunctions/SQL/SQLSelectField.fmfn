@@ -27,7 +27,7 @@ Let ( [
 	~selectFieldName = Substitute ( GetFieldName ( selectField ) ; "::" ; ¶ ) ;
 	~selectTableName = GetValue ( ~selectFieldName ; 1 ) ;
 	~selectFieldName = GetValue ( ~selectFieldName ; 2 ) ;
-	~match = not IsEmpty ( matchField ) and not IsEmpty ( matchValue )
+	~match = not IsEmpty ( matchField ) and not IsEmpty ( matchValue ) ;
 	~sql =
 		"SELECT "
 		& Quote ( ~selectFieldname )
