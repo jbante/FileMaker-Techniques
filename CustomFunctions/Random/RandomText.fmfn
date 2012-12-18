@@ -19,6 +19,9 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/jbante> to reject
+ *		problem characters for diacritical marks and accept some control
+ *		characters.
  *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to not
  *		return characters between Unicode 55295 and 57348, which are sometimes
  *		mishandled by FileMaker.
@@ -26,41 +29,51 @@
  *		bug where the character range could be incorrect if one parameter is
  *		empty and the other is not.
  *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/ASCII
+ *		http://en.wikipedia.org/wiki/UTF-8
  * =====================================
  */
 
 Case (
-	textLength < 1;
-		"";
+	textLength < 1 ;
+		"" ;
 
-	IsEmpty ( minCharCode ) or IsEmpty ( maxCharCode );
+	IsEmpty ( minCharCode ) or IsEmpty ( maxCharCode ) ;
 		RandomText (
-			textLength;
-			Max ( minCharCode ; 32 );
+			textLength ;
+			Max ( minCharCode ; 0 ) ;
 			Min ( maxCharCode ; 65535 )
 		);
 
-	maxCharCode < minCharCode;
-		RandomText ( textLength ; maxCharCode ; minCharCode );
+	maxCharCode < minCharCode ;
+		RandomText ( textLength ; maxCharCode ; minCharCode ) ;
 
 	/* Else */
 		Let ( [
-			minCharCode = Max ( minCharCode ; 32 );
-			maxCharCode =
-				If ( maxCharCode > 57348;	// characters 55295-57348 forbidden
-					Min ( maxCharCode ; 65535 );
-					/* Else */ Min ( maxCharCode ; 55294 )
-				);
-			~code = Round ( Random * ( maxCharCode - minCharCode ) + minCharCode ; 0 )
+			minCharCode = Max ( minCharCode ; 0 ) ;
+			maxCharCode = Min ( maxCharCode ; 65535 ) ;
+			~code =
+				Round (
+					Random * ( maxCharCode - minCharCode ) + minCharCode ;
+					0
+				) ;
+			~character = Char ( ~code ) ;
+			~reject =	// check that character is well-behaved
+				~code < 9	// reject most control characters
+				or ( ~code > 13 and ~code < 32 )
+				or ~code = 127	// delete character
+				// some characters attach themselves to the preceding character
+				or Length ( Code ( Left ( "$" & ~character ; 1 ) ) ) > 5
+				// some characters get converted to other characters
+				or Code ( Evaluate ( Quote ( ~character ) ) ) ≠ ~code
 		];
-			Case (
-				( ~code > 55294 and ~code < 57349 )	// forbidden range
-				or ~code = 127;	// DEL[ete] character, reject & re-try
-					RandomText ( textLength ; minCharCode ; maxCharCode );
-
-				/* Else */
-					Char ( ~code )
-					& RandomText ( textLength - 1 ; minCharCode ; maxCharCode )
+			If ( ~reject ;
+				RandomText ( textLength ; minCharCode ; maxCharCode ) ;
+			/* Else */
+				~character
+				& RandomText ( textLength - 1 ; minCharCode ; maxCharCode )
 			)
 		)
 )
