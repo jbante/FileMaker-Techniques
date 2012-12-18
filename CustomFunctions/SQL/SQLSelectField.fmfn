@@ -1,0 +1,49 @@
+/**
+ * =====================================
+ * SQLSelectField ( selectField ; matchField ; matchValue )
+ *
+ * PURPOSE:
+ *		Serves as a wrapper for a basic one-column SQL query with one match
+ *		value on one match field. Leave matchField and matchValue empty to
+ *		select all values in the field.
+ *
+ * RETURNS:
+ *		The result from the ExecuteSQL function.
+ *
+ * PARAMETERS:
+ *		selectField: A reference to the field to retrieve values from
+ *		matchField: A reference to the field to match records on
+ *		matchValue: The value to match on in the specified records
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
+ *		Based on a function by Todd Geist.
+ * =====================================
+ */
+
+Let ( [
+	~selectFieldName = Substitute ( GetFieldName ( selectField ) ; "::" ; ¶ ) ;
+	~selectTableName = GetValue ( ~selectFieldName ; 1 ) ;
+	~selectFieldName = GetValue ( ~selectFieldName ; 2 ) ;
+	~match = not IsEmpty ( matchField ) and not IsEmpty ( matchValue )
+	~sql =
+		"SELECT "
+		& Quote ( ~selectFieldname )
+		& " FROM "
+		& Quote ( ~selectTableName )
+		& If ( ~match ;	// only include WHERE clause if match parameters exist
+			" WHERE "
+			& Quote ( GetValue (
+				Substitute ( GetFieldName ( matchField ) ; "::" ; ¶ ) ;
+				1
+			) )
+			& " = ?"
+		)
+];
+	If ( ~match ;
+		ExecuteSQL ( ~sql ; "" ; "" ; matchValue );
+		/* Else */ ExecuteSQL ( ~sql ; "" ; "" )
+	)
+)

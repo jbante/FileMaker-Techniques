@@ -1,0 +1,21 @@
+/**
+ * =====================================
+ * SQLField ( field )
+ *
+ * RETURNS:
+ *		The field name formatted as a fully qualified SQL column name.
+ *
+ * PARAMETERS:
+ *		field: A reference to a field (not the text of the field name)
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
+ *		Based on functions by Todd Geist and Dan Smith.
+ * =====================================
+ */
+
+"\""
+& Substitute ( GetFieldName ( field ) ; "::" ; "\".\"" ) )
+& "\""
