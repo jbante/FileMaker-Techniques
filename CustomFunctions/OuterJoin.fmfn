@@ -1,0 +1,132 @@
+/**
+ * =====================================
+ * OuterJoin ( leftData ; rightData )
+ *
+ * PURPOSE:
+ *		Adds the data from rows in rightData to matching rows in leftData.
+ *		Columns are delimited by commas, and rows are delimited by returns. The
+ *		first field in each data set is used as the match field, and will only
+ *		be used once in the result; so the returned result will include rows of
+ *		the form "id,<left data>,<right data>". The result will be in the order
+ *		of the leftData parameter. This function is similar to a left outer join
+ *		in SQL.
+ *
+ * RETURNS:
+ *		Comma- and return-delimited text.
+ *
+ * PARAMETERS:
+ *		leftData: Comma- and return-delimited data.
+ *		rightData: Comma- and return-delimited data to be merged with leftData
+ *		as available.
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE:
+ *		Let ( [
+ *			~leftData = List ( "1,A" ; "2,B" ; "3,C" ) ;
+ *			~rightData = List ( "1,D" ; "2,E" ; "4,F" ; "2,G" )
+ *		] ;
+ *			OuterJoin ( ~leftData ; ~rightData )
+ *		)
+ *	RESULT:
+ *		1,A,D
+ *		2,B,E
+ *		2,B,G
+ *		3,C
+ *
+ * HISTORY:
+ *		CREATED on 2013-01-18 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~oj.step ;
+		Let ( [
+			$~oj.rowCount = ValueCount ( leftData ) ;
+			$~oj.step = If ( $~oj.rowCount > 0 ; 1 ; /* Else */ 3 )
+		] ;
+			OuterJoin ( leftData ; ¶ & rightData & ¶ )
+		) ;
+
+	/* Step 1, get next leftData row */
+	$~oj.step = 1 ;
+		Let ( [
+			$~oj.i = $~oj.i + 1;
+			$~oj.leftRow = GetValue ( leftData ; $~oj.i ) ;
+			~delimiter = Position ( $~oj.leftRow ; "," ; 1 ; 1 ) ;
+			$~oj.matchKey =
+				If ( ~delimiter = 0 ;
+					$~oj.leftRow ;
+					/* Else */ Left ( $~oj.leftRow ; ~delimiter - 1 )
+				) ;
+
+			// reset rightData-sca3ing loop
+			$~oj.matchFound = False ;
+			$~oj.matchRowEnd = 1 ;
+			$~oj.step =
+				If ( $~oj.i > $~oj.rowCount ;
+					$~oj.step + 2 ;
+					/* Else */ $~oj.step + 1
+				)
+		] ;
+			OuterJoin ( leftData ; rightData )
+		) ;
+
+	/* Step 2, scan for matching rows in rightData */
+	$~oj.step = 2 ;
+		Let ( [
+			// extract the first matching row
+			~matchRowStart =
+				Position (
+					rightData ;
+					¶ & $~oj.matchKey & "," ;
+					$~oj.matchRowEnd ;
+					1
+				) ;
+			$~oj.matchRowEnd =
+				Position ( rightData ; ¶ ; ~matchRowStart + 1 ; 1 ) ;
+			~delimiter = Position ( rightData ; "," ; ~matchRowStart ; 1 ) ;
+			~matchRow =
+				If ( ~matchRowStart > 0 ;
+					Middle (
+						rightData ;
+						~delimiter ;
+						$~oj.matchRowEnd - ~delimiter
+					)
+				) ;
+
+			// append match to result
+			~matchRow =
+				If ( not $~oj.matchFound or ~matchRowStart > 0 ; $~oj.leftRow )
+				& ~matchRow ;
+			$~oj.result = List ( $~oj.result ; ~matchRow ) ;
+			$~oj.matchFound = True ;
+			$~oj.step =
+				Case (
+					~matchRowStart = 0 and $~oj.i ≥ $~oj.rowCount ; 3 ;
+					~matchRowStart = 0 ; $~oj.step - 1 ;
+					/* Else */ $~oj.step
+				)
+		] ;
+			OuterJoin ( leftData ; rightData )
+		) ;
+
+	/* Step 3, clean-up and return result */
+	$~oj.step = 3 ;
+		Let ( [
+			~result = If ( $~oj.rowCount = 0 ; "" ; $~oj.result ) ;
+
+			// purge variables
+			$~oj.i = "";
+			$~oj.leftRow = "" ;
+			$~oj.matchFound = "" ;
+			$~oj.matchKey = "" ;
+			$~oj.matchRowEnd = "" ;
+			$~oj.result = "";
+			$~oj.rowCount = "" ;
+			$~oj.step = ""
+		] ;
+			~result
+		)
+)
