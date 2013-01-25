@@ -20,9 +20,9 @@
  */
 
 Let ( [
-	~year = Middle ( isoTimestamp ; 1 ; 4 ) ;
-	~month = Middle ( isoTimestamp ; 6 ; 2 ) ;
-	~day = Middle ( isoTimestamp ; 9 ; 2 )
+	~year = Middle ( isoDate ; 1 ; 4 ) ;
+	~month = Middle ( isoDate ; 6 ; 2 ) ;
+	~day = Middle ( isoDate ; 9 ; 2 )
 ];
 	Date ( ~month ; ~day ; ~year )
 )
