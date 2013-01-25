@@ -1,0 +1,28 @@
+/**
+ * =====================================
+ * GetISOAsDate ( isoDate )
+ *
+ * RETURNS:
+ *		A FileMaker-type date parsed from isoDate
+ *
+ * PARAMETERS:
+ *		isoDate: A text string representing a date in ISO 8601 format, which is:
+ *		YYYY-MM-DD
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2013-01-25 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/ISO_8601
+ * =====================================
+ */
+
+Let ( [
+	~year = Middle ( isoTimestamp ; 1 ; 4 ) ;
+	~month = Middle ( isoTimestamp ; 6 ; 2 ) ;
+	~day = Middle ( isoTimestamp ; 9 ; 2 )
+];
+	Date ( ~month ; ~day ; ~year )
+)
