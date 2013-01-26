@@ -1,16 +1,19 @@
 /**
  * =====================================
- * SQLTable ( field )
+ * SQLTable ( field ; tabletableAlias )
  *
  * RETURNS:
  *		The table name of a field formatted as a fully qualified SQL table name.
  *
  * PARAMETERS:
  *		field: A reference to a field (not the text of the field name)
+ *		tableAlias: Any alias to use for the table in a SQL statement
  *
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-01-26 by Jeremy Bante <http://scr.im/jbante> to accept
+ *		the tableAlias parameter.
  *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
  *		Based on a function by Todd Geist.
  * =====================================
@@ -22,3 +25,4 @@ Quote (
 		1
 	)
 )
+& If ( not IsEmpty ( tableAlias ) ; " AS " & tableAlias )
