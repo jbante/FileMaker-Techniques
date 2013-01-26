@@ -1,0 +1,65 @@
+/**
+ * =====================================
+ * ColumnSlice ( data ; column )
+ *
+ * PURPOSE:
+ *		Does stuff with argument1 and argument2.
+ *
+ * RETURNS:
+ *		A return-delimited list of values from a specific column in data.
+ *
+ * PARAMETERS:
+ *		data: A list of data delimited according to the default settings of the
+ *		ExecuteSQL function.
+ *		column: The number of the column to select.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2013-01-26 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~cs.step ;
+		Let ( [
+			$~cs.rowCount = ValueCount ( data ) ;
+			$~cs.step = If ( $~cs.rowCount > 0 ; 1 ; /* Else */ 2 )
+		] ;
+			ColumnSlice ( data ; column )
+		) ;
+
+	/* Step 1, gather values from specified column */
+	$~cs.step = 1 ;
+		Let ( [
+			$~cs.i = $~cs.i + 1 ;
+			~row = Substitute ( GetValue ( data ; $~cs.i ) ; "," ; ¶ ) ;
+			~column = GetValue ( ~row ; column ) ;
+			$~cs.result =
+				$~cs.result
+				& If ( $~cs.i > 1 ; ¶ )
+				& ~column ;
+			$~cs.step =
+				If ( $~cs.i ≥ $~cs.rowCount ;
+					$~cs.step + 1 ;
+					/* Else */ $~cs.step
+				)
+		] ;
+			ColumnSlice ( data ; column )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~cs.step = 2 ;
+		Let ( [
+			~result = $~cs.result ;
+
+			// purge variables
+			$~cs.i = "" ;
+			$~cs.result = "" ;
+			$~cs.rowCount = "" ;
+			$~cs.step = ""
+		] ;
+			~result
+		)
+)
