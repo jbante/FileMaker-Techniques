@@ -1,6 +1,6 @@
 /**
  * =====================================
- * SQLTable ( field ; tabletableAlias )
+ * SQLTable ( field ; tableAlias )
  *
  * RETURNS:
  *		The table name of a field formatted as a fully qualified SQL table name.
@@ -19,10 +19,7 @@
  * =====================================
  */
 
-Quote (
-	GetValue (
-		Substitute ( GetFieldName ( field ) ; "::" ; "¶" ) ;
-		1
-	)
-)
+"\""
+& GetValue ( Substitute ( GetFieldName ( field ) ; "::" ; "¶" ) ; 1 )
+& "\""
 & If ( not IsEmpty ( tableAlias ) ; " AS " & tableAlias )
