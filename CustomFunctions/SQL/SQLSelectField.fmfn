@@ -18,6 +18,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-01-29 by Jeremy Bante <http://scr.im/jbante> to fix a
+ *		bug where the matchField parameter was not correctly recognized.
  *		MODIFIED on 2013-01-21 by Jeremy Bante <http://scr.im/jbante> to fix a
  *		bug where the table name was used instead of the field name in the where
  *		clause.
@@ -30,7 +32,8 @@ Let ( [
 	~selectFieldName = Substitute ( GetFieldName ( selectField ) ; "::" ; ¶ ) ;
 	~selectTableName = GetValue ( ~selectFieldName ; 1 ) ;
 	~selectFieldName = GetValue ( ~selectFieldName ; 2 ) ;
-	~match = not IsEmpty ( matchField ) and not IsEmpty ( matchValue ) ;
+	~matchFieldName = GetFieldName ( matchField ) ;
+	~match = not IsEmpty ( ~matchFieldName ) and not IsEmpty ( matchValue ) ;
 	~sql =
 		"SELECT "
 		& Quote ( ~selectFieldname )
@@ -39,7 +42,7 @@ Let ( [
 		& If ( ~match ;	// only include WHERE clause if match parameters exist
 			" WHERE "
 			& Quote ( GetValue (
-				Substitute ( GetFieldName ( matchField ) ; "::" ; ¶ ) ;
+				Substitute ( ~matchFieldName ; "::" ; ¶ ) ;
 				2
 			) )
 			& " = ?"
