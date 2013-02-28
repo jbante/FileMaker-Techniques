@@ -1,0 +1,25 @@
+/**
+ * =====================================
+ * CheckPrivilege ( extendedPrivilegeName )
+ *
+ * RETURNS:
+ *		True (1) if the current logged-in account has the specified extended
+ *		privilege; False (0) otherwise.
+ *
+ * PARAMETERS:
+ *		extendedPrivilegeName: The name of an extended privilege to check for.
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2013-02-28 by Jeremy Bante <http://scr.im/jbante>.
+ * =====================================
+ */
+
+Position (
+	¶ & Get ( AccountExtendedPrivileges ) & ¶ ;
+	¶ & extendedPrivilegeName & ¶ ;
+	1 ;
+	1
+)
+≠ 0
