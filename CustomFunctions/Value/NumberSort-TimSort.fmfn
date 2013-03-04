@@ -25,238 +25,259 @@
 
 Case (
 	/* Step 0, initialize variables */
-	not $~step;
+	not $~sort.step ;
 		Let ( [
-			$~runStart = 1;
-			$~runMin = GetValue ( valueList ; 1 );
-			$~runMax = GetValue ( valueList ; 1 );
-			$~valueCount = ValueCount ( valueList );
-			$~step = 1
-		];
+			$~sort.runStart		= 1 ;
+			$~sort.runMin		= GetValue ( valueList ; 1 ) ;
+			$~sort.runMax		= GetValue ( valueList ; 1 ) ;
+			$~sort.valueCount	= ValueCount ( valueList ) ;
+			$~sort.step			= 1
+		] ;
 			NumberSort ( valueList )
-		);
+		) ;
 
 	/* Step 1, search for runs */
-	$~step = 1;
+	$~sort.step = 1 ;
 		Let ( [
-			~value = GetAsNumber ( GetValue ( valueList ; $~runStart ) );
-			~isLastRun = $~runStart > $~valueCount;
-			$~runStart = $~runStart + 1
-		];
+			~value =
+				GetAsNumber ( GetValue ( valueList ; $~sort.runStart ) ) ;
+			~isLastRun		= $~sort.runStart > $~sort.valueCount ;
+			$~sort.runStart	= $~sort.runStart + 1
+		] ;
 			Case (
-				~value < $~runMin and not ~isLastRun;
-					Let ( [ // Append ~value to current run
-						$~runList = List ( ~value ; $~runList );
-						$~runMin = ~value;
-						$~runSize = $~runSize + 1
-					];
+				~value < $~sort.runMin and not ~isLastRun ;
+					Let ( [	// Append ~value to current run
+						$~sort.runList	= List ( ~value ; $~sort.runList ) ;
+						$~sort.runMin	= ~value ;
+						$~sort.runSize	= $~sort.runSize + 1
+					] ;
 						NumberSort ( valueList )
-					);
+					) ;
 
-				~value ≥ $~runMax and not ~isLastRun;
-					Let ( [ // Append ~value to current run
-						$~runList = List ( $~runList ; ~value );
-						$~runMax = ~value;
-						$~runSize = $~runSize + 1
-					];
+				~value ≥ $~sort.runMax and not ~isLastRun ;
+					Let ( [	// Append ~value to current run
+						$~sort.runList	= List ( $~sort.runList ; ~value ) ;
+						$~sort.runMax	= ~value ;
+						$~sort.runSize	= $~sort.runSize + 1
+					] ;
 						NumberSort ( valueList )
-					);
+					) ;
+
 				/* Else */
 					Let ( [
 						// Save run for merge
-						$~mergeList = List ( $~mergeList ; $~runList );
-						$~mergeSizeList = List ( $~mergeSizeList ; $~runSize );
-						$~mergeCount = $~mergeCount + 1;
+						$~sort.mergeList =
+							List ( $~sort.mergeList ; $~sort.runList ) ;
+						$~sort.mergeSizeList =
+							List ( $~sort.mergeSizeList ; $~sort.runSize ) ;
+						$~sort.mergeCount = $~sort.mergeCount + 1 ;
 
 						// Reset run
-						$~runList = ~value;
-						$~runMin = ~value;
-						$~runMax = ~value;
-						$~runSize = 1;
+						$~sort.runList	= ~value ;
+						$~sort.runMin	= ~value ;
+						$~sort.runMax	= ~value ;
+						$~sort.runSize	= 1 ;
 
-						$~step = If ( ~isLastRun ; $~step + 1 ; $~step )
-					];
+						$~sort.step =
+							If ( ~isLastRun ; $~sort.step + 1 ; $~sort.step )
+					] ;
 						NumberSort ( valueList )
 					)
 			)
-		);
+		) ;
 
 	/* Step 2, initialize merge passes through valueList */
-	$~step = 2;
+	$~sort.step = 2 ;
 		Let ( [
 			~oddRunSize =
-				If ( Mod ( $~runCount ; 2 ); // Odd
-					GetValue ( $~runSizeList ; $~runCount )
-				);
-			$~sortedList =
+				If ( Mod ( $~sort.runCount ; 2 ) ;	// Odd
+					GetValue ( $~sort.runSizeList ; $~sort.runCount )
+				) ;
+			$~sort.sortedList =
 				List (
-					$~mergeList;
-					RightValues ( $~sortedList ; ~oddRunSize )
-				);
-			$~runSizeList = List ( $~mergeSizeList ; ~oddRunSize );
-			$~runCount = ValueCount ( $~runSizeList );
-			$~runPair = 1;
-			$~run2End = "";
+					$~sort.mergeList ;
+					RightValues ( $~sort.sortedList ; ~oddRunSize )
+				) ;
+			$~sort.runSizeList	= List ( $~sort.mergeSizeList ; ~oddRunSize ) ;
+			$~sort.runCount		= ValueCount ( $~sort.runSizeList ) ;
+			$~sort.runPair		= 1 ;
+			$~sort.run2End		= "" ;
 
-			$~mergeList = "";
-			$~mergeSizeList = "";
-			$~mergeCount = "";
+			$~sort.mergeList		= "" ;
+			$~sort.mergeSizeList	= "" ;
+			$~sort.mergeCount		= "" ;
 
-			$~step =
-				If ( // There are no more merges to do
-					$~runCount ≤ 1;
-						5;
+			$~sort.step =
+				If (	// There are no more merges to do
+					$~sort.runCount ≤ 1 ;
+						5 ;
 					/* Else */
-						$~step + 1
+						$~sort.step + 1
 				)
-		];
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
 	/* Step 3, initialize merges of successive pairs of runs */
-	$~step = 3;
+	$~sort.step = 3 ;
 		Let ( [
-			$~run1Start = $~run2End + 1;
-			~run1Size = GetValue ( $~runSizeList ; $~runPair * 2 - 1 );
-			$~run1End = $~run1Start + ~run1Size - 1;
-			$~run1Value =
-				GetAsNumber ( GetValue ( $~sortedList ; $~run1Start ) );
-			$~run1Max = GetAsNumber ( GetValue ( $~sortedList ; $~run1End ) );
+			$~sort.run1Start = $~sort.run2End + 1 ;
+			~run1Size =
+				GetValue ( $~sort.runSizeList ; $~sort.runPair * 2 - 1 ) ;
+			$~sort.run1End = $~sort.run1Start + ~run1Size - 1 ;
+			$~sort.run1Value =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run1Start )
+				) ;
+			$~sort.run1Max =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run1End )
+				) ;
 
-			$~run2Start = $~run1End + 1;
-			~run2Size = GetValue ( $~runSizeList ; $~runPair * 2 );
-			$~run2End = $~run2Start + ~run2Size - 1;
-			$~run2Value =
-				GetAsNumber ( GetValue ( $~sortedList ; $~run2Start ) );
-			$~run2Max = GetAsNumber ( GetValue ( $~sortedList ; $~run2End ) );
+			$~sort.run2Start = $~sort.run1End + 1 ;
+			~run2Size = GetValue ( $~sort.runSizeList ; $~sort.runPair * 2 ) ;
+			$~sort.run2End = $~sort.run2Start + ~run2Size - 1 ;
+			$~sort.run2Value =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run2Start )
+				) ;
+			$~sort.run2Max =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run2End )
+				) ;
 
-			$~mergeSizeList = List ( $~mergeSizeList ; ~run1Size + ~run2Size );
-			$~mergeCount = $~mergeCount + 1;
-			$~runPair = $~runPair + 1;
+			$~sort.mergeSizeList =
+				List ( $~sort.mergeSizeList ; ~run1Size + ~run2Size ) ;
+			$~sort.mergeCount	= $~sort.mergeCount + 1 ;
+			$~sort.runPair		= $~sort.runPair + 1 ;
 
-			$~step = $~step + 1
-		];
+			$~sort.step			= $~sort.step + 1
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
 	/* Step 4, merge pair of runs */
-	$~step = 4
-	and $~run1Max < $~run2Value; // run1 is less
+	$~sort.step = 4
+	and $~sort.run1Max < $~sort.run2Value ;	// run1 is less
 		Let ( [
 			~run1 =
 				Substitute (
 					MiddleValues (
-						$~sortedList;
-						$~run1Start;
-						$~run1End - $~run1Start + 1
+						$~sort.sortedList ;
+						$~sort.run1Start ;
+						$~sort.run1End - $~sort.run1Start + 1
 					)
-					& "¶END";
+					& "¶END" ;
 					[ "¶¶END" ; "" ] ; [ "¶END" ; "" ]
-				);
+				) ;
 			~run2 =
 				Substitute (
 					MiddleValues (
-						$~sortedList;
-						$~run2Start;
-						$~run2End - $~run2Start + 1
+						$~sort.sortedList ;
+						$~sort.run2Start ;
+						$~sort.run2End - $~sort.run2Start + 1
 					)
-					& "¶END";
+					& "¶END" ;
 					[ "¶¶END" ; "" ] ; [ "¶END" ; "" ]
-				);
-			$~mergeList = List ( $~mergeList ; ~run1 ; ~run2 );
+				) ;
+			$~sort.mergeList = List ( $~sort.mergeList ; ~run1 ; ~run2 ) ;
 
-			$~step =
-				If ( $~runCount > $~runPair * 2 - 1;
-					$~step - 1;
-					/* Else */ $~step - 2
+			$~sort.step =
+				If ( $~sort.runCount > $~sort.runPair * 2 - 1 ;
+					$~sort.step - 1 ;
+					/* Else */ $~sort.step - 2
 				)
-		];
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
-	$~step = 4
-	and $~run1Value ≥ $~run2Max; // run2 is less
+	$~sort.step = 4
+	and $~sort.run1Value ≥ $~sort.run2Max ;	// run2 is less
 		Let ( [
 			~run1 =
 				Substitute (
 					MiddleValues (
-						$~sortedList;
-						$~run1Start;
-						$~run1End - $~run1Start + 1
+						$~sort.sortedList ;
+						$~sort.run1Start ;
+						$~sort.run1End - $~sort.run1Start + 1
 					)
-					& "¶END";
+					& "¶END" ;
 					[ "¶¶END" ; "" ] ; [ "¶END" ; "" ]
-				);
+				) ;
 			~run2 =
 				Substitute (
 					MiddleValues (
-						$~sortedList;
-						$~run2Start;
-						$~run2End - $~run2Start + 1
+						$~sort.sortedList ;
+						$~sort.run2Start ;
+						$~sort.run2End - $~sort.run2Start + 1
 					)
-					& "¶END";
+					& "¶END" ;
 					[ "¶¶END" ; "" ] ; [ "¶END" ; "" ]
-				);
-			$~mergeList = List ( $~mergeList ; ~run2 ; ~run1 );
-			$~step =
-				If ( $~runCount > $~runPair * 2 - 1;
-					$~step - 1;
-					/* Else */ $~step - 2
+				) ;
+			$~sort.mergeList = List ( $~sort.mergeList ; ~run2 ; ~run1 ) ;
+			$~sort.step =
+				If ( $~sort.runCount > $~sort.runPair * 2 - 1 ;
+					$~sort.step - 1 ;
+					/* Else */ $~sort.step - 2
 				)
-		];
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
-	$~step = 4
-	and $~run1Value < $~run2Value; // run1Value is less
+	$~sort.step = 4
+	and $~sort.run1Value < $~sort.run2Value ;	// run1Value is less
 		Let ( [
-			$~mergeList = List ( $~mergeList ; $~run1Value );
-			$~run1Start = $~run1Start + 1;
-			$~run1Value =
-				GetAsNumber ( GetValue ( $~sortedList ; $~run1Start ) )
-		];
+			$~sort.mergeList	= List ( $~sort.mergeList ; $~sort.run1Value ) ;
+			$~sort.run1Start	= $~sort.run1Start + 1 ;
+			$~sort.run1Value =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run1Start )
+				)
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
-	$~step = 4; // run2Value is less
+	$~sort.step = 4 ;	// run2Value is less
 		Let ( [
-			$~mergeList = List ( $~mergeList ; $~run2Value );
-			$~run2Start = $~run2Start + 1;
-			$~run2Value =
-				GetAsNumber ( GetValue ( $~sortedList ; $~run2Start ) )
-		];
+			$~sort.mergeList	= List ( $~sort.mergeList ; $~sort.run2Value ) ;
+			$~sort.run2Start	= $~sort.run2Start + 1 ;
+			$~sort.run2Value =
+				GetAsNumber (
+					GetValue ( $~sort.sortedList ; $~sort.run2Start )
+				)
+		] ;
 			NumberSort ( "" )
-		);
+		) ;
 
 	/* Step 5, clean-up and return result */
-	$~step = 5;
+	$~sort.step = 5 ;
 		Let ( [
-			~sortedList = $~sortedList;
+			~sortedList = $~sort.sortedList ;
 
 			// purge variables
-			$~mergeList = "";
-			$~mergeCount = "";
-			$~mergeSizeList = "";
-			$~run1End = "";
-			$~run1Max = "";
-			$~run1Start = "";
-			$~run1Value = "";
-			$~run2End = "";
-			$~run2Max = "";
-			$~run2Start = "";
-			$~run2Value = "";
-			$~runCount = "";
-			$~runList = "";
-			$~runMax = "";
-			$~runMin = "";
-			$~runPair = "";
-			$~runSize = "";
-			$~runSizeList = "";
-			$~runStart = "";
-			$~sortedList = "";
-			$~step = "";
-			$~valueCount = ""
-		];
+			$~sort.mergeList		= "" ;
+			$~sort.mergeCount		= "" ;
+			$~sort.mergeSizeList	= "" ;
+			$~sort.run1End			= "" ;
+			$~sort.run1Max			= "" ;
+			$~sort.run1Start		= "" ;
+			$~sort.run1Value		= "" ;
+			$~sort.run2End			= "" ;
+			$~sort.run2Max			= "" ;
+			$~sort.run2Start		= "" ;
+			$~sort.run2Value		= "" ;
+			$~sort.runCount			= "" ;
+			$~sort.runList			= "" ;
+			$~sort.runMax			= "" ;
+			$~sort.runMin			= "" ;
+			$~sort.runPair			= "" ;
+			$~sort.runSize			= "" ;
+			$~sort.runSizeList		= "" ;
+			$~sort.runStart			= "" ;
+			$~sort.sortedList		= "" ;
+			$~sort.step				= "" ;
+			$~sort.valueCount		= ""
+		] ;
 			~sortedList
 		)
 )
