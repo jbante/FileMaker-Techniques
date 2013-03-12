@@ -1,0 +1,38 @@
+/**
+ * =====================================
+ * QuantileNormal ( mean ; standardDeviation ; p )
+ *
+ *
+ * RETURNS:
+ *		The value from the specified normal distribution such that other values
+ *		sampled from the same distribution fall below that value with p
+ *		probability. This is sometimes known as the probit function in other
+ *		programming environments.
+ *
+ * PARAMETERS:
+ *		mean: The mean of a normal distribution. Defaults to 0 (standard normal
+ *		distribution) if left empty.
+ *		standardDeviation: The standardDeviation of a normal distribution.
+ *		Defaults to 1 (standard normal distribution) if left empty.
+ *		p: The cumulative probability at the desired quantile
+ *
+ * DEPENDENCIES:
+ *		ErrorFunctionInverse ( x )
+ *
+ * HISTORY:
+ *		CREATED on 2013-03-12 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Normal_distribution
+ *		http://en.wikipedia.org/wiki/Error_function#Related_functions
+ * =====================================
+ */
+
+If ( p ≤ 0 or p ≥ 1 ;	// out of bounds
+	"?" ;
+/* Else */
+	Sqrt ( 2 )
+	* ErrorFunctionInverse ( 2 * p - 1 )
+	* If ( IsEmpty ( standardDeviation ) ; 1 ; /* Else */ standardDeviation )
+	+ If ( IsEmpty ( mean ) ; 0 ; /* Else */ mean )
+)
