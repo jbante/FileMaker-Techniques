@@ -2,7 +2,6 @@
  * =====================================
  * QuantileNormal ( mean ; standardDeviation ; p )
  *
- *
  * RETURNS:
  *		The value from the specified normal distribution such that other values
  *		sampled from the same distribution fall below that value with p
