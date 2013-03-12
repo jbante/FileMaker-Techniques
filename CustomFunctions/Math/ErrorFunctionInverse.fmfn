@@ -1,6 +1,7 @@
 /**
  * =====================================
  * ErrorFunctionInverse ( x )
+ * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Math/ErrorFunctionInverse.fmfn
  *
  * RETURNS:
  *		The inverse error function of x (commonly represented as erfinv in other
@@ -28,70 +29,77 @@
 
 Case (
 	/* Step 0, set-up */
-	not $~step ;
+	not $~erfinv.step ;
 		Let ( [
-			$~coefficient[0] = 1 ;
+			$~erfinv.coefficient[0] = 1 ;
 			x = x * Sqrt ( Pi ) / 2 ;	// common factor in Taylor series
-			$~step = If ( x ≤ -1 or x ≥ 1 ; -1 ; /* Else */ 1 )
+			$~erfinv.step = If ( x ≤ -1 or x ≥ 1 ; -1 ; /* Else */ 1 )
 		] ;
 			ErrorFunctionInverse ( x )
 		) ;
 
 	/* Step 1, accumulate Taylor series */
-	$~step = 1 ;
+	$~erfinv.step = 1 ;
 		Let ( [
-			$~k = $~k + 1 ;
-			$~m = -1 ;	// reset inner loop
+			$~erfinv.k = $~erfinv.k + 1 ;
+			$~erfinv.m = -1 ;	// reset inner loop
 
 			// use previously calculated coefficient to add next term of series
-			~u = 2 * ( $~k - 1 ) + 1 ;
-			$~result = $~result + x ^ ~u * $~coefficient[$~k - 1] / ~u ;
+			~u = 2 * ( $~erfinv.k - 1 ) + 1 ;
+			$~erfinv.result =
+				$~erfinv.result
+				+ x ^ ~u * $~erfinv.coefficient[$~erfinv.k - 1] / ~u ;
 
-			$~step =
+			$~erfinv.step =
 				Case (
 					// precision limit reached
-					$~result - $~priorResult = 0 ;
+					$~erfinv.result - $~erfinv.priorResult = 0 ;
 						3 ;
 
 					// coefficient for next term is not memoized
-					IsEmpty ( $~coefficient[$~k] ) ;
-						$~step + 1 ;
+					IsEmpty ( $~erfinv.coefficient[$~erfinv.k] ) ;
+						$~erfinv.step + 1 ;
 
 					/* Else, add next series term */
-						$~step
+						$~erfinv.step
 				) ;
-			$~priorResult = $~result
+			$~erfinv.priorResult = $~erfinv.result
 		] ;
 			ErrorFunctionInverse ( x )
 		) ;
 
 	/* Step 2, calculate series term coefficient (inner loop) */
-	$~step = 2 ;
+	$~erfinv.step = 2 ;
 		Let ( [
-			$~m = $~m + 1 ;
-			$~coefficient[$~k] =
-				$~coefficient[$~k]
-				+ $~coefficient[$~m] * $~coefficient[$~k - 1 - $~m ]
-				/ ( ( $~m + 1 ) * ( 2 * $~m + 1 ) ) ;
-			$~step = If ( $~m < $~k - 1 ; $~step ; /* Else */ $~step - 1 )
+			$~erfinv.m = $~erfinv.m + 1 ;
+			$~erfinv.coefficient[$~erfinv.k] =
+				$~erfinv.coefficient[$~erfinv.k]
+				+ $~erfinv.coefficient[$~erfinv.m]
+				* $~erfinv.coefficient[$~erfinv.k - 1 - $~erfinv.m ]
+				/ ( ( $~erfinv.m + 1 ) * ( 2 * $~erfinv.m + 1 ) ) ;
+			$~erfinv.step =
+				If ( $~erfinv.m < $~erfinv.k - 1 ;
+					$~erfinv.step ;
+					/* Else */ $~erfinv.step - 1
+				)
 		] ;
 			ErrorFunctionInverse ( x )
 		) ;
 
 	/* Step 3, clean-up and return result */
-	$~step = 3 or $~step = -1 ;
+	$~erfinv.step = 3 or $~erfinv.step = -1 ;
 		Let ( [
-			~error = $~step = -1 ;
-			~result = $~result ;
+			~error = $~erfinv.step = -1 ;
+			~result = $~erfinv.result ;
 
 			// purge variables
-			// $~coefficient variables not purged to improve performance
-			$~i = "" ;
-			$~k = "" ;
-			$~m = "" ;
-			$~priorResult = "" ;
-			$~result = "" ;
-			$~step = ""
+			// $~erfinv.coefficient variables not purged to improve performance
+			$~erfinv.i = "" ;
+			$~erfinv.k = "" ;
+			$~erfinv.m = "" ;
+			$~erfinv.priorResult = "" ;
+			$~erfinv.result = "" ;
+			$~erfinv.step = ""
 		] ;
 			If ( ~error ; "?" ; /* Else */ ~result )
 		)
