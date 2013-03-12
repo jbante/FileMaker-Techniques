@@ -1,0 +1,98 @@
+/**
+ * =====================================
+ * ErrorFunctionInverse ( x )
+ *
+ * RETURNS:
+ *		The inverse error function of x (commonly represented as erfinv in other
+ *		programming environments).
+ *
+ * PARAMETERS:
+ *		x: A number. -1 < x < 1
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This function calculates the inverse error function by adding successive
+ *		values from its Taylor/Maclaurin series until the difference falls to
+ *		zero at the current precision. The coefficients for the terms of the
+ *		series are memoized in variables to improve performance in repeated
+ *		calls to the function within the same local scope.
+ *
+ * HISTORY:
+ *		CREATED on 2013-03-12 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		http://en.wikipedia.org/wiki/Error_function#Inverse_functions
+ * =====================================
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~step ;
+		Let ( [
+			$~coefficient[0] = 1 ;
+			x = x * Sqrt ( Pi ) / 2 ;	// common factor in Taylor series
+			$~step = If ( x ≤ -1 or x ≥ 1 ; -1 ; /* Else */ 1 )
+		] ;
+			ErrorFunctionInverse ( x )
+		) ;
+
+	/* Step 1, accumulate Taylor series */
+	$~step = 1 ;
+		Let ( [
+			$~k = $~k + 1 ;
+			$~m = -1 ;	// reset inner loop
+
+			// use previously calculated coefficient to add next term of series
+			~u = 2 * ( $~k - 1 ) + 1 ;
+			$~result = $~result + x ^ ~u * $~coefficient[$~k - 1] / ~u ;
+
+			$~step =
+				Case (
+					// precision limit reached
+					$~result - $~priorResult = 0 ;
+						3 ;
+
+					// coefficient for next term is not memoized
+					IsEmpty ( $~coefficient[$~k] ) ;
+						$~step + 1 ;
+
+					/* Else, add next series term */
+						$~step
+				) ;
+			$~priorResult = $~result
+		] ;
+			ErrorFunctionInverse ( x )
+		) ;
+
+	/* Step 2, calculate series term coefficient (inner loop) */
+	$~step = 2 ;
+		Let ( [
+			$~m = $~m + 1 ;
+			$~coefficient[$~k] =
+				$~coefficient[$~k]
+				+ $~coefficient[$~m] * $~coefficient[$~k - 1 - $~m ]
+				/ ( ( $~m + 1 ) * ( 2 * $~m + 1 ) ) ;
+			$~step = If ( $~m < $~k - 1 ; $~step ; /* Else */ $~step - 1 )
+		] ;
+			ErrorFunctionInverse ( x )
+		) ;
+
+	/* Step 3, clean-up and return result */
+	$~step = 3 or $~step = -1 ;
+		Let ( [
+			~error = $~step = -1 ;
+			~result = $~result ;
+
+			// purge variables
+			// $~coefficient variables not purged to improve performance
+			$~i = "" ;
+			$~k = "" ;
+			$~m = "" ;
+			$~priorResult = "" ;
+			$~result = "" ;
+			$~step = ""
+		] ;
+			If ( ~error ; "?" ; /* Else */ ~result )
+		)
+)
