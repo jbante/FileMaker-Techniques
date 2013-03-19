@@ -18,4 +18,4 @@
  * =====================================
  */
 
-If ( number = 1 ; singularForm ; /* Else */ pluralForm )
+If ( quantity = 1 ; singularForm ; /* Else */ pluralForm )
