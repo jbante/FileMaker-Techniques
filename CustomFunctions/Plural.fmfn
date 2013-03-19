@@ -1,0 +1,21 @@
+/**
+ * =====================================
+ * Plural ( quantity ; singularForm ; pluralForm )
+ *
+ * RETURNS:
+ *		singularForm if number = 1; pluralForm otherwise.
+ *
+ * PARAMETERS:
+ *		quantity: A number
+ *		singularForm: Text to use when quantity = 1
+ *		pluralForm: Text to use when quantity ≠ 1
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2012-08-22 by Jeremy Bante <jtb@gaiaherbs.com> based on a
+ *		custom function by Matt Petrowsky.
+ * =====================================
+ */
+
+If ( number = 1 ; singularForm ; /* Else */ pluralForm )
