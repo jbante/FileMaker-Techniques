@@ -1,7 +1,7 @@
 ﻿/**
  * =====================================
  * TriggersAreActive
- *		http://www.briandunning.com/cf/1247
+ * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Triggers/TriggersAreActive.fmfn
  *
  * PURPOSE:
  *		TriggersAreActive checks a global variable to identify whether or not
@@ -20,8 +20,8 @@
  * DEPENDENCIES: none
  *
  * EXAMPLE (triggered script):
- *		If [ TriggersAreActive ]
- *			# Do something
+ *		If [not TriggersAreActive]
+ *			Exit Script [True	// allow triggering event to proceed]
  *		End If
  *
  * HISTORY:
@@ -33,10 +33,7 @@
  *
  * REFERENCES:
  *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
- *		TriggersAreActive: http://www.briandunning.com/cf/1247
- *		TriggersDisable: http://www.briandunning.com/cf/1248
- *		TriggersEnable: http://www.briandunning.com/cf/1249
- *		TriggersReset: http://www.briandunning.com/cf/1250
  * =====================================
  */
+
 not $$~TRIGGERS_DISABLE

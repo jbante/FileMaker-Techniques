@@ -1,7 +1,7 @@
 ﻿/**
  * =====================================
  * TriggersReset
- *		http://www.briandunning.com/cf/1250
+ * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Triggers/TriggersReset.fmfn
  *
  * PURPOSE:
  *		TriggersReset sets global variables to indicate that script triggers
@@ -18,10 +18,13 @@
  * REFERENCED VARIABLES:
  *		$$~TRIGGERS_DISABLE
  *		$$~TRIGGERS_SCRIPTS
+ *		$~triggers_disableKey
  *
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-03-25 by Jeremy Bante <http://scr.im/jbante> to be more
+ *		robust to certain programming errors.
  *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
  *		variables.
  *		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
@@ -30,16 +33,13 @@
  *
  * REFERENCES:
  *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
- *		TriggersAreActive: http://www.briandunning.com/cf/1247
- *		TriggersDisable: http://www.briandunning.com/cf/1248
- *		TriggersEnable: http://www.briandunning.com/cf/1249
- *		TriggersReset: http://www.briandunning.com/cf/1250
  * =====================================
  */
 
 Let ( [
-	$$~TRIGGERS_SCRIPTS = "";
-	$$~TRIGGERS_DISABLE = ""
-];
-	"" //Null
+	$$~TRIGGERS_SCRIPTS		= "" ;
+	$$~TRIGGERS_DISABLE		= "" ;
+	$~triggers_disableKey	= ""
+] ;
+	""
 )
