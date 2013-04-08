@@ -15,6 +15,7 @@
  * PARAMETERS: none
  *
  * REFERENCED VARIABLES:
+ *		$$~DISABLETRIGGERS (deprecated)
  *		$$~TRIGGERS_DISABLE
  *
  * DEPENDENCIES: none
@@ -25,6 +26,8 @@
  *		End If
  *
  * HISTORY:
+ *		MODIFIED on 2013-04-08 by Jeremy Bante <http://scr.im/jbante> for
+ *		backwards compatibility with older variable names.
  *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
  *		variables.
  *		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
@@ -36,4 +39,7 @@
  * =====================================
  */
 
-not $$~TRIGGERS_DISABLE
+not (
+	$$~TRIGGERS_DISABLE
+	or $$~DISABLETRIGGERS
+)
