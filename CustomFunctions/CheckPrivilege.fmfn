@@ -12,14 +12,13 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-04-08 by Jeremy Bante <http://scr.im/jbante> to improve
+ *		performance.
  *		CREATED on 2013-02-28 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-Position (
-	¶ & Get ( AccountExtendedPrivileges ) & ¶ ;
-	¶ & extendedPrivilegeName & ¶ ;
-	1 ;
-	1
-)
-≠ 0
+not IsEmpty ( FilterValues (
+	extendedPrivilegeName ;
+	Get ( AccountExtendedPrivileges )
+) )
