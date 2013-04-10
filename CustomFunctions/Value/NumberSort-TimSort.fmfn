@@ -17,6 +17,9 @@
  *		calculation speed.
  *
  * HISTORY:
+ *		MODIFIED on 2013-04-10 by Jeremy Bante <http://scr.im/jbante> to
+ *		preserve non-numeric data (such as trailing decimal zeros) in sorted
+ *		values.
  *		CREATED on 2011-04-13 by Jeremy Bante <http://scr.im/jbante>.
  *
  * REFERENCES:
@@ -28,8 +31,8 @@ Case (
 	not $~sort.step ;
 		Let ( [
 			$~sort.runStart		= 1 ;
-			$~sort.runMin		= GetValue ( valueList ; 1 ) ;
-			$~sort.runMax		= GetValue ( valueList ; 1 ) ;
+			$~sort.runMin		= GetAsNumber ( GetValue ( valueList ; 1 ) ) ;
+			$~sort.runMax		= GetAsNumber ( GetValue ( valueList ; 1 ) ) ;
 			$~sort.valueCount	= ValueCount ( valueList ) ;
 			$~sort.step			= 1
 		] ;
@@ -39,25 +42,25 @@ Case (
 	/* Step 1, search for runs */
 	$~sort.step = 1 ;
 		Let ( [
-			~value =
-				GetAsNumber ( GetValue ( valueList ; $~sort.runStart ) ) ;
+			~value			= GetValue ( valueList ; $~sort.runStart ) ;
+			~number			= GetAsNumber ( ~value ) ;
 			~isLastRun		= $~sort.runStart > $~sort.valueCount ;
 			$~sort.runStart	= $~sort.runStart + 1
 		] ;
 			Case (
-				~value < $~sort.runMin and not ~isLastRun ;
+				~number < $~sort.runMin and not ~isLastRun ;
 					Let ( [	// Append ~value to current run
 						$~sort.runList	= List ( ~value ; $~sort.runList ) ;
-						$~sort.runMin	= ~value ;
+						$~sort.runMin	= ~number ;
 						$~sort.runSize	= $~sort.runSize + 1
 					] ;
 						NumberSort ( valueList )
 					) ;
 
-				~value ≥ $~sort.runMax and not ~isLastRun ;
+				~number ≥ $~sort.runMax and not ~isLastRun ;
 					Let ( [	// Append ~value to current run
 						$~sort.runList	= List ( $~sort.runList ; ~value ) ;
-						$~sort.runMax	= ~value ;
+						$~sort.runMax	= ~number ;
 						$~sort.runSize	= $~sort.runSize + 1
 					] ;
 						NumberSort ( valueList )
@@ -74,8 +77,8 @@ Case (
 
 						// Reset run
 						$~sort.runList	= ~value ;
-						$~sort.runMin	= ~value ;
-						$~sort.runMax	= ~value ;
+						$~sort.runMin	= ~number ;
+						$~sort.runMax	= ~number ;
 						$~sort.runSize	= 1 ;
 
 						$~sort.step =
@@ -126,9 +129,8 @@ Case (
 				GetValue ( $~sort.runSizeList ; $~sort.runPair * 2 - 1 ) ;
 			$~sort.run1End = $~sort.run1Start + ~run1Size - 1 ;
 			$~sort.run1Value =
-				GetAsNumber (
-					GetValue ( $~sort.sortedList ; $~sort.run1Start )
-				) ;
+				GetValue ( $~sort.sortedList ; $~sort.run1Start ) ;
+			$~sort.run1Number = GetAsNumber ( $~sort.run1Value ) ;
 			$~sort.run1Max =
 				GetAsNumber (
 					GetValue ( $~sort.sortedList ; $~sort.run1End )
@@ -138,9 +140,8 @@ Case (
 			~run2Size = GetValue ( $~sort.runSizeList ; $~sort.runPair * 2 ) ;
 			$~sort.run2End = $~sort.run2Start + ~run2Size - 1 ;
 			$~sort.run2Value =
-				GetAsNumber (
-					GetValue ( $~sort.sortedList ; $~sort.run2Start )
-				) ;
+				GetValue ( $~sort.sortedList ; $~sort.run2Start ) ;
+			$~sort.run2Number = GetAsNumber ( $~sort.run2Value ) ;
 			$~sort.run2Max =
 				GetAsNumber (
 					GetValue ( $~sort.sortedList ; $~sort.run2End )
@@ -158,7 +159,7 @@ Case (
 
 	/* Step 4, merge pair of runs */
 	$~sort.step = 4
-	and $~sort.run1Max < $~sort.run2Value ;	// run1 is less
+	and $~sort.run1Max < $~sort.run2Number ;	// run1 is less
 		Let ( [
 			~run1 =
 				Substitute (
@@ -192,7 +193,7 @@ Case (
 		) ;
 
 	$~sort.step = 4
-	and $~sort.run1Value ≥ $~sort.run2Max ;	// run2 is less
+	and $~sort.run1Number ≥ $~sort.run2Max ;	// run2 is less
 		Let ( [
 			~run1 =
 				Substitute (
@@ -225,14 +226,13 @@ Case (
 		) ;
 
 	$~sort.step = 4
-	and $~sort.run1Value < $~sort.run2Value ;	// run1Value is less
+	and $~sort.run1Number < $~sort.run2Number ;	// run1Value is less
 		Let ( [
 			$~sort.mergeList	= List ( $~sort.mergeList ; $~sort.run1Value ) ;
 			$~sort.run1Start	= $~sort.run1Start + 1 ;
 			$~sort.run1Value =
-				GetAsNumber (
-					GetValue ( $~sort.sortedList ; $~sort.run1Start )
-				)
+				GetValue ( $~sort.sortedList ; $~sort.run1Start ) ;
+			$~sort.run1Number = GetAsNumber ( $~sort.run1Value )
 		] ;
 			NumberSort ( "" )
 		) ;
@@ -242,9 +242,8 @@ Case (
 			$~sort.mergeList	= List ( $~sort.mergeList ; $~sort.run2Value ) ;
 			$~sort.run2Start	= $~sort.run2Start + 1 ;
 			$~sort.run2Value =
-				GetAsNumber (
-					GetValue ( $~sort.sortedList ; $~sort.run2Start )
-				)
+				GetValue ( $~sort.sortedList ; $~sort.run2Start ) ;
+			$~sort.run2Number = GetAsNumber ( $~sort.run2Value )
 		] ;
 			NumberSort ( "" )
 		) ;
@@ -260,10 +259,12 @@ Case (
 			$~sort.mergeSizeList	= "" ;
 			$~sort.run1End			= "" ;
 			$~sort.run1Max			= "" ;
+			$~sort.run1Number		= "" ;
 			$~sort.run1Start		= "" ;
 			$~sort.run1Value		= "" ;
 			$~sort.run2End			= "" ;
 			$~sort.run2Max			= "" ;
+			$~sort.run2Number		= "" ;
 			$~sort.run2Start		= "" ;
 			$~sort.run2Value		= "" ;
 			$~sort.runCount			= "" ;
