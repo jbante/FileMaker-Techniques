@@ -1,0 +1,126 @@
+/**
+ *******************************************************************************
+ * LineNumbering ( text ; suffix ; indent )
+ *
+ * PURPOSE:
+ *		Adds line numbers to return-delimited text, with hierarchical numbering
+ *		for indented lines.
+ *
+ * RETURNS:
+ *		Text, with hierarchical line numbering added.
+ *
+ * PARAMETERS:
+ *		text:	The text to add line numbers to.
+ *		suffix:	The character to use as a delimiter between and after line
+ *		numbers.
+ *		indent:	The whitespace character used to indicate indents
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2013-04-10 by Jeremy Bante <http://scr.im/jbante>.
+ *******************************************************************************
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~lnum.step ;
+		Let ( [
+			$~lnum.valueCount = ValueCount ( text ) ;
+			$~lnum.step = If ( $~lnum.valueCount < 1 ; 4 ; /* Else */ 1 )
+		] ;
+			LineNumbering ( text ; suffix ; indent )
+		) ;
+
+	/* Step 1, Check indent for each line */
+	$~lnum.step = 1 ;
+		Let ( [
+			$~lnum.i = $~lnum.i + 1 ;
+			$~lnum.value = GetValue ( text ; $~lnum.i ) ;
+			~firstCharacter =	// first character of ~value after indent
+				Left ( Substitute ( $~lnum.value ; indent ; "" ) ; 1 ) ;
+			$~lnum.indentDepth =
+				Max (
+					Position ( $~lnum.value ; ~firstCharacter ; 1 ; 1 ) ;
+					1
+				) ;
+			$~lnum.indent = Left ( $~lnum.value ; $~lnum.indentDepth -1 ) ;
+			$~lnum.value =
+				Right (
+					$~lnum.value ;
+					Length ( $~lnum.value ) - $~lnum.indentDepth + 1
+				) ;
+
+			$~lnum.j = 0 ;
+			$~lnum.newLineNumberList = "" ;
+			$~lnum.step = $~lnum.step + 1
+		] ;
+			LineNumbering ( text ; suffix ; indent )
+		) ;
+
+	/* Step 2, Check that numbering is complete for each indent */
+	$~lnum.step = 2 ;
+		Let ( [
+			$~lnum.j = $~lnum.j + 1 ;
+			~lineNumber = GetValue ( $~lnum.lineNumberList ; $~lnum.j ) ;
+			$~lnum.newLineNumberList =
+				List (
+					$~lnum.newLineNumberList ;
+					If ( $~lnum.j = $~lnum.indentDepth ;
+						~lineNumber + 1 ;
+						/* Else */ Max ( ~lineNumber ; 1 )
+					)
+				) ;
+
+			$~lnum.step =
+				If ( $~lnum.j < $~lnum.indentDepth ;
+					$~lnum.step ;
+					/* Else */ $~lnum.step + 1
+				)
+		] ;
+			LineNumbering ( text ; suffix ; indent )
+		) ;
+
+	/* Step 3, Add line number to result */
+	$~lnum.step = 3 ;
+		Let ( [
+			$~lnum.lineNumberList = $~lnum.newLineNumberList ;
+			~lineNumber =
+				Substitute ( $~lnum.lineNumberList ; ¶ ; suffix )
+				& suffix
+				& " " ;
+			$~lnum.result =
+				List (
+					$~lnum.result ;
+					$~lnum.indent & ~lineNumber & $~lnum.value
+				) ;
+
+			$~lnum.step =
+				If ( $~lnum.i < $~lnum.valueCount ;
+					1 ;
+					/* Else */ $~lnum.step + 1
+				)
+		] ;
+			LineNumbering ( text ; suffix ; indent )
+		) ;
+
+	/* Step 4, clean-up and return result */
+	$~lnum.step = 4 ;
+		Let ( [
+			~result = $~lnum.result ;
+
+			// purge variables
+			$~lnum.i					= "" ;
+			$~lnum.indent			= "" ;
+			$~lnum.indentDepth		= "" ;
+			$~lnum.j					= "" ;
+			$~lnum.lineNumberList	= "" ;
+			$~lnum.newLineNumberList	= "" ;
+			$~lnum.result			= "" ;
+			$~lnum.step				= "" ;
+			$~lnum.value				= "" ;
+			$~lnum.valueCount		= ""
+		] ;
+			~result
+		)
+)
