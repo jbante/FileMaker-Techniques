@@ -1,6 +1,6 @@
 /**
  * =====================================
- * CheckPrivilege ( extendedPrivilegeName )
+ * UserHasPrivilege ( extendedPrivilegeName )
  *
  * RETURNS:
  *		True (1) if the current logged-in account has the specified extended
