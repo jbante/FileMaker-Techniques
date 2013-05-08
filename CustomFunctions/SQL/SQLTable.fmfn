@@ -1,6 +1,6 @@
 /**
  * =====================================
- * SQLTable ( field ; tableAlias )
+ * SQLTable ( field )
  *
  * RETURNS:
  *		The table name of a field formatted as a fully qualified SQL table name.
@@ -12,6 +12,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-05-08 by Jeremy Bante <http://scr.im/jbante> to not
+ *		accept the tableAlias parameter.
  *		MODIFIED on 2013-01-26 by Jeremy Bante <http://scr.im/jbante> to accept
  *		the tableAlias parameter.
  *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
@@ -19,7 +21,13 @@
  * =====================================
  */
 
-"\""
-& GetValue ( Substitute ( GetFieldName ( field ) ; "::" ; "¶" ) ; 1 )
-& "\""
-& If ( not IsEmpty ( tableAlias ) ; " AS " & tableAlias )
+Quote (
+	GetValue (
+		Substitute (
+			GetFieldName ( field ) ;
+			"::" ;
+			¶
+		) ;
+		1
+	)
+)
