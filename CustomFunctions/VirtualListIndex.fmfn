@@ -1,0 +1,78 @@
+/**
+ *******************************************************************************
+ * VirtualListIndex ( virtualListID ; rowID ; columnID )
+ *
+ * PURPOSE:
+ *		Combines the arguments into a single number suitable for use as a
+ *		repeating variable (or field) index.
+ *
+ * RETURNS:
+ *		A number
+ *
+ * PARAMETERS:
+ *		virtualListID: A number representing the virtual list to address
+ *		rowID: A number representing the row to address
+ *		columnID: A number representing the column to address
+ *
+ * DEPENDENCIES: none
+ *
+ * HISTORY:
+ *		CREATED on 2013-05-14 by Jeremy Bante <http://scr.im/jbante>.
+ *******************************************************************************
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~vli.step ;
+		Let ( [
+			~virtualListID = Int ( virtualListID ) ;
+			~rowID = Int ( rowID ) ;
+			~columnID = Int ( columnID ) ;
+			$~vli.powerMax =
+				Floor ( Max (
+					Log ( ~virtualListID ) ;
+					Log ( ~rowID ) ;
+					Log ( ~columnID )
+				) ) ;
+			$~vli.power = -1 ;	// initialize loop
+			$~vli.step = 1
+		] ;
+			VirtualListIndex ( ~virtualListID ; ~rowID ; ~columnID )
+		) ;
+
+	/* Step 1, combine digits from each ID */
+	$~vli.step = 1 ;
+		Let ( [
+			$~vli.power = $~vli.power + 1 ;
+
+			~virtualDigit =
+				Mod ( Div ( virtualListID ; 10 ^ $~vli.power ) ; 10 ) ;
+			~rowDigit = Mod ( Div ( rowID ; 10 ^ $~vli.power ) ; 10 ) ;
+			~columnDigit = Mod ( Div ( columnID ; 10 ^ $~vli.power ) ; 10 ) ;
+
+			~newDigits = ~virtualDigit * 100 + ~rowDigit * 10 + ~columnDigit ;
+			$~vli.result = $~vli.result + ~newDigits * 1000 ^ $~vli.power ;
+
+			$~vli.step =
+				If ( $~vli.power < $~vli.powerMax ;
+					$~vli.step ;
+					/* Else */ $~vli.step + 1
+				)
+		] ;
+			VirtualListIndex ( virtualListID ; rowID ; columnID )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~vli.step = 2 ;
+		Let ( [
+			~result = $~vli.result ;
+
+			// purge variables
+			$~vli.power = "" ;
+			$~vli.powerMax = "" ;
+			$~vli.result = "" ;
+			$~vli.step = ""
+		] ;
+			~result
+		)
+)
