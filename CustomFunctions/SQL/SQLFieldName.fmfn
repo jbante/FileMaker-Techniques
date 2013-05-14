@@ -1,6 +1,6 @@
 /**
  * =====================================
- * SQLField ( field )
+ * SQLFieldName ( field )
  *
  * RETURNS:
  *		The field name formatted as a fully qualified SQL column name.

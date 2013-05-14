@@ -1,6 +1,6 @@
 /**
  * =====================================
- * SQLTable ( field )
+ * SQLTableName ( field )
  *
  * RETURNS:
  *		The table name of a field formatted as a fully qualified SQL table name.
