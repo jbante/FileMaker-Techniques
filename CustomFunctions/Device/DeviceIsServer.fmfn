@@ -11,8 +11,10 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
+ *		MODIFIED on 2013-05-24 by Jeremy Bante <http://scr.im/jbante> to improve
+ *		performance.
  *		CREATED on 2011-03-11 by Jeremy Bante <http://scr.im/jbante>.
  * =====================================
  */
 
-PatternCount ( Get ( ApplicationVersion ) ; "Server" )
+Position ( Get ( ApplicationVersion ) ; "Server" ) > 0
