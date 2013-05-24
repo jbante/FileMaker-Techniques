@@ -17,4 +17,4 @@
  * =====================================
  */
 
-Position ( Get ( ApplicationVersion ) ; "Server" ) > 0
+Position ( Get ( ApplicationVersion ) ; "Server" ; "" ; "" ) > 0
