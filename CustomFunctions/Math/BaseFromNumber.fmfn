@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetNumberAsBaseN ( number ; base )
+ * BaseFromNumber ( number ; base )
  *
  * PURPOSE:
  *		Encodes numbers in any base between 2 and 36. Results from converting

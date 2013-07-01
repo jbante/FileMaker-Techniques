@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetValueListValue ( file ; valueListName ; value )
+ * ValueListValue ( file ; valueListName ; value )
  *
  * RETURNS:
  *		The specified value from the specified value list.

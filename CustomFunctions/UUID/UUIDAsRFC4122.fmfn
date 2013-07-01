@@ -1,6 +1,6 @@
 ﻿/**
  * ======================================
- * UUIDGetAsRFC4122 ( theID )
+ * UUIDAsRFC4122 ( theID )
  *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDGetAsRFC4122.fmfn
  *
  * PURPOSE:
@@ -78,7 +78,7 @@ Case (
 			$~hex = "";
 			$~uuid.step = 1
 		];
-			UUIDGetAsRFC4122 ( "" )
+			UUIDAsRFC4122 ( "" )
 		);
 
 	/*Convert to base 16*/
@@ -89,7 +89,7 @@ Case (
 			$~uuid = Div ( $~uuid ; 16 );
 			$~uuid.step = If ( $~uuid ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
 		];
-			UUIDGetAsRFC4122 ( "" )
+			UUIDAsRFC4122 ( "" )
 		);
 
 	/*Return result*/

@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetDateAsISO ( theDate )
+ * ISOFromDate ( theDate )
  *
  * RETURNS:
  *		theDate rendered in ISO 8601 format, which is:

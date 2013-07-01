@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetUTCOffset
+ * UTCOffset
  *
  * RETURNS:
  *		The offset from UTC of the current device clock, in seconds.
@@ -8,13 +8,14 @@
  * PARAMETERS: none
  *
  * EXAMPLE: return timestamp in the current time zone
- *		GetAsTimestamp ( GET ( UTCmSecs ) / 1000 + GetUTCOffset )
+ *		GetAsTimestamp ( Get ( UTCmSecs ) / 1000 + UTCOffset )
  *
  * DEPENDENCIES: none
  *
  * NOTES:
- *		This function uses the undocumented Get ( UTCmSecs ) function in FileMaker 12. If
- *		FileMaker deprecates it, this function may no longer work.
+ *		This function uses the undocumented Get ( UTCmSecs ) function in
+ *		FileMaker 12. If FileMaker deprecates it, this function may no longer
+ *		work.
  *
  * HISTORY:
  *		CREATED on 2012-05-18 by Jeremy Bante <http://scr.im/jbante>.

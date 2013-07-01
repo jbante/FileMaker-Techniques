@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetISOAsDate ( isoDate )
+ * DateFromISO ( isoDate )
  *
  * RETURNS:
  *		A FileMaker-type date parsed from isoDate

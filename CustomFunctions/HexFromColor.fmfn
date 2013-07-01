@@ -1,5 +1,5 @@
 /**
- * GetColorAsHex ( color )
+ * HexFromColor ( color )
  *
  * PURPOSE:
  *		Converts a FileMaker color value (values from the

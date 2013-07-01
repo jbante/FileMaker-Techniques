@@ -1,6 +1,6 @@
 ﻿/**
  * ======================================
- * UUIDGetAsUUID ( rfc4122 )
+ * UUIDFromRFC4122 ( rfc4122 )
  *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDGetAsUUID.fmfn
  *
  * PURPOSE:
@@ -39,7 +39,7 @@ Case (
 		Let ( [
 			$~uuid.step = 1
 		];
-			UUIDGetAsUUID (
+			UUIDFromRFC4122 (
 				Right ( Filter ( Lower ( rfc4122 ) ; "0123456789abcdef" ) ; 32 )
 			)
 		);
@@ -55,7 +55,7 @@ Case (
 			$~uuid.step =
 				If ( $~uuid.i < 32 ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
 		];
-			UUIDGetAsUUID ( rfc4122 )
+			UUIDFromRFC4122 ( rfc4122 )
 		);
 
 	/*Format and return result*/

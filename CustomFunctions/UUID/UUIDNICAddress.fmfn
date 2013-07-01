@@ -1,6 +1,6 @@
 ﻿/**
  * ======================================
- * UUIDGetNICAddress ( theID )
+ * UUIDNICAddress ( theID )
  *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDGetNICAddress.fmfn
  *
  * PURPOSE:

@@ -1,6 +1,6 @@
 ﻿/**
  * =====================================
- * GetRecordRange ( fieldName ; start ; end )
+ * FieldRecordRange ( fieldName ; start ; end )
  *
  * RETURNS:
  *		A ¶-delimited value list of all values of fieldName from a range

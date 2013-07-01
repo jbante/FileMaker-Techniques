@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetISOAsTimestamp ( isoTimestamp )
+ * TimestampFromISO ( isoTimestamp )
  *
  * RETURNS:
  *		A FileMaker-type timestamp extracted from isoTimestamp

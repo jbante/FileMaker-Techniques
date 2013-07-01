@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetAsApproximateTime ( theTime )
+ * ApproximateTime ( theTime )
  *
  * RETURNS:
  *		theTime expressed as an interval length in only its most significant

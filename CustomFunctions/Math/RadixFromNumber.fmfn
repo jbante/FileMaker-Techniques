@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetNumberAsRadix ( number ; characterSet )
+ * RadixFromNumber ( number ; characterSet )
  *
  * PURPOSE:
  *		Encodes numbers in an arbitrary $~radix.base specified by characterSet. Results

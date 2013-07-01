@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GetTimestampAsISO ( theTimestamp )
+ * ISOFromTimestamp ( theTimestamp )
  *
  * RETURNS:
  *		theTimestamp rendered in ISO 8601 format, which is:
