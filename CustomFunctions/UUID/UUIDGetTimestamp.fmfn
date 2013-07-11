@@ -34,15 +34,15 @@
  * ======================================
  */
 Let( [
-	~idAsNumber = GetAsNumber ( theID );
-	~length = Length ( ~idAsNumber );
+	~idAsNumber = GetAsNumber ( theID ) ;
+	~length = Length ( ~idAsNumber ) ;
 	~version = Left ( ~idAsNumber ; ~length - 40 )
-];
-	If ( ~version < 3;
+] ;
+	If ( ~version < 3 ;
 		GetAsTimestamp ( GetAsNumber (
-			Middle ( ~idAsNumber ; ~length - 38 ; 12 ) //seconds
+			Middle ( ~idAsNumber ; ~length - 38 ; 12 )	// seconds
 			& "."
-			& Middle ( ~idAsNumber ; ~length - 26 ; 7 ) //sub-seconds
+			& Middle ( ~idAsNumber ; ~length - 26 ; 7 )	// sub-seconds
 		) )
 
 		/* Else, UUID does not have a timestamp; return Null */

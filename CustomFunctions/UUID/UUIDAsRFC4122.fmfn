@@ -34,80 +34,89 @@
  * ======================================
  */
 Case (
-	/*Extract and arrange UUID components*/
-	not $~uuid.step;
+	/* Extract and arrange UUID components */
+	not $~uuid.step ;
 		Let ( [
-			~idAsNumber = GetAsNumber ( theID );
-			~idLength = Length ( ~idAsNumber );
+			~idAsNumber = GetAsNumber ( theID ) ;
+			~idLength = Length ( ~idAsNumber ) ;
 
 			// extract components of FileMaker-centric format
-			~version = Left ( ~idAsNumber ; ~idLength - 40 );
-			~reserved = Middle ( ~idAsNumber ; ~idLength - 39 ; 1 );
-			~timestamp = Middle ( ~idAsNumber ; ~idLength - 38 ; 12 );
+			~version = Left ( ~idAsNumber ; ~idLength - 40 ) ;
+			~reserved = Middle ( ~idAsNumber ; ~idLength - 39 ; 1 ) ;
+			~timestamp = Middle ( ~idAsNumber ; ~idLength - 38 ; 12 ) ;
 			// move epoch from 0001-01-01T00:00:00 to 1582-10-15T00:00:00
-			~timestamp = Max ( ~timestamp - 49916304000 ; 0 );
-			~timestamp = ~timestamp & Middle ( ~idAsNumber ; ~idLength - 26 ; 7 );
-			~clockSequence = Middle ( ~idAsNumber ; ~idLength - 19 ; 5 );
-			~node = Right ( ~idAsNumber ; 15 );
+			~timestamp = Max ( ~timestamp - 49916304000 ; 0 ) ;
+			~timestamp =
+				~timestamp
+				& Middle ( ~idAsNumber ; ~idLength - 26 ; 7 ) ;
+			~clockSequence = Middle ( ~idAsNumber ; ~idLength - 19 ; 5 ) ;
+			~node = Right ( ~idAsNumber ; 15 ) ;
 
 			// convert to RFC 4122 components
-			~time_low = Mod ( ~timestamp ; 2^32 ); //32 bits
-			~time_mid = Mod ( Div ( ~timestamp ; 2^32 ) ; 2^16 ); //next 16 bits
-			~time_hi = Mod ( Div ( ~timestamp ; 2^48 ) ; 2^12 ); //next 12 bits
-			~time_hi_and_version = ~version * (2^12) + ~time_hi;
-			~clock_seq = Mod ( ~clockSequence ; 2^15 );
+			~time_low = Mod ( ~timestamp ; 2^32 ) ;	// 32 bits
+			~time_mid =	// next 16 bits
+				Mod ( Div ( ~timestamp ; 2^32 ) ; 2^16 ) ;
+			~time_hi =	//next 12 bits
+				Mod ( Div ( ~timestamp ; 2^48 ) ; 2^12 ) ;
+			~time_hi_and_version = ~version * ( 2^12 ) + ~time_hi ;
+			~clock_seq = Mod ( ~clockSequence ; 2^15 ) ;
 			~clock_seq_and_reserved =
 				Case (
-					~reserved < 2; //1 bit
-						~reserved * 2^15 + ~clock_seq;
+					~reserved < 2 ;	// 1 bit
+						~reserved * 2^15 + ~clock_seq ;
 
-					~reserved < 4; //2 bits
-						~reserved * 2^14 + Mod ( ~clock_seq ; 2^14 );
+					~reserved < 4;	// 2 bits
+						~reserved * 2^14 + Mod ( ~clock_seq ; 2^14 ) ;
 
-					/*else, ~reserved is 3 bits*/
+					/* else, ~reserved is 3 bits */
 					Mod ( ~reserved ; 8 ) * 2^13 + Mod ( ~clock_seq ; 2^13 )
-				);
+				) ;
 			$~uuid =
-				~time_low * (2^96)
-				+ ~time_mid * (2^80)
-				+ ~time_hi_and_version * (2^64)
-				+ ~clock_seq_and_reserved * (2^48)
-				+ ~node;
+				~time_low * ( 2^96 )
+				+ ~time_mid * ( 2^80 )
+				+ ~time_hi_and_version * ( 2^64 )
+				+ ~clock_seq_and_reserved * ( 2^48 )
+				+ ~node ;
 
 			//set-up conversion from base 10 to base 16
-			$~hex = "";
+			$~hex = "" ;
 			$~uuid.step = 1
-		];
+		] ;
 			UUIDAsRFC4122 ( "" )
-		);
+		) ;
 
-	/*Convert to base 16*/
-	$~uuid.step = 1;
+	/* Convert to base 16 */
+	$~uuid.step = 1 ;
 		Let ( [
-			~hexDigit = Mod ( $~uuid ; 16 );
-			$~hex = Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~hex;
-			$~uuid = Div ( $~uuid ; 16 );
-			$~uuid.step = If ( $~uuid ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
-		];
+			~hexDigit = Mod ( $~uuid ; 16 ) ;
+			$~hex = Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~hex ;
+			$~uuid = Div ( $~uuid ; 16 ) ;
+			$~uuid.step =
+				If ( $~uuid ; $~uuid.step ; /* Else */ $~uuid.step + 1 )
+		] ;
 			UUIDAsRFC4122 ( "" )
-		);
+		) ;
 
-	/*Return result*/
-	$~uuid.step = 2;
+	/* Return result */
+	$~uuid.step = 2 ;
 		Let ( [
-			~hex = $~hex;
+			~hex = $~hex ;
 			~hex =
-				Left ( ~hex ; 8 ) & "-"
-				& Middle ( ~hex ; 9 ; 4 ) & "-"
-				& Middle ( ~hex ; 13 ; 4 ) & "-"
-				& Middle ( ~hex ; 17 ; 4 ) & "-"
-				& Right ( ~hex ; 12 );
+				Left ( ~hex ; 8 )
+				& "-"
+				& Middle ( ~hex ; 9 ; 4 )
+				& "-"
+				& Middle ( ~hex ; 13 ; 4 )
+				& "-"
+				& Middle ( ~hex ; 17 ; 4 )
+				& "-"
+				& Right ( ~hex ; 12 ) ;
 
-			//purge variables
-			$~hex = "";
-			$~uuid.step = "";
+			// purge variables
+			$~hex = "" ;
+			$~uuid.step = "" ;
 			$~uuid = ""
-		];
+		] ;
 			~hex
 		)
 )

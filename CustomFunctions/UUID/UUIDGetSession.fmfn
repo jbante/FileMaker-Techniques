@@ -27,12 +27,12 @@
  */
 
 Let ( [
-	~idAsNumber = GetAsNumber ( theID );
-	~session = Right ( ~idAsNumber ; 20 );
-	~length = Length ( ~idAsNumber );
+	~idAsNumber = GetAsNumber ( theID ) ;
+	~session = Right ( ~idAsNumber ; 20 ) ;
+	~length = Length ( ~idAsNumber ) ;
 	~version = Left ( ~idAsNumber ; ~length - 40 )
-];
-	If ( ~version < 3; // UUID format includes a "session" key
+] ;
+	If ( ~version < 3 ;	// UUID format includes a "session" key
 		left ( ~session ; 5 )
 		& "-"
 		& Right ( ~session ; 15 )

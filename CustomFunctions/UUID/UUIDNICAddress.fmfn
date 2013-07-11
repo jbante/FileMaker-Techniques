@@ -37,72 +37,66 @@
  * ======================================
  */
 Case (
-	/*Pull node field from UUID, and set-up conversion loop*/
-	not $~uuid.step;
+	/* Pull node field from UUID, and set-up conversion loop */
+	not $~uuid.step ;
 		Let ( [
-			~idAsNumber = GetAsNumber ( theID );
-			~version = Left ( ~idAsNumber ; Length ( ~idAsNumber ) - 40 );
-			$~nicAddress = Right ( ~idAsNumber ; 15 );
-			~isMulticast = Mod ( Div ( $~nicAddress ; 1099511627776 ) ; 2 );
-			$~hexNICAddress = "";
-			$~base16 = "0123456789abcdef";
+			~idAsNumber = GetAsNumber ( theID ) ;
+			~version = Left ( ~idAsNumber ; Length ( ~idAsNumber ) - 40 ) ;
+			$~nicAddress = Right ( ~idAsNumber ; 15 ) ;
+			~isMulticast = Mod ( Div ( $~nicAddress ; 1099511627776 ) ; 2 ) ;
+			$~hexNICAddress = "" ;
+			$~base16 = "0123456789abcdef" ;
 			$~uuid.step =
 				If (
-					~version < 3  //NIC is valid
+					~version < 3  // NIC is valid
 					and $~nicAddress ≤ 281474976710656
-					and not ~isMulticast;
-						1;
-					/*else*/
-						-1 //error
+					and not ~isMulticast ;
+						1 ;
+					/* Else */
+						-1	// error
 				)
-		];
+		] ;
 			UUIDGetNICAddress ( "" )
-		);
+		) ;
 
-	/*Convert NIC address from base 10 to base 16*/
-	$~uuid.step = 1;
+	/* Convert NIC address from base 10 to base 16 */
+	$~uuid.step = 1 ;
 		Let ( [
 			$~hexNICAddress =
-				Middle ( $~base16 ; Mod ( $~nicAddress ; 16 ) + 1 ; 1 ) &
-				$~hexNICAddress;
-				$~nicAddress = Div ( $~nicAddress ; 16 );
-				$~uuid.step = If ( $~nicAddress ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
-		];
+				Middle ( $~base16 ; Mod ( $~nicAddress ; 16 ) + 1 ; 1 )
+				& $~hexNICAddress ;
+			$~nicAddress = Div ( $~nicAddress ; 16 ) ;
+			$~uuid.step =
+				If ( $~nicAddress ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
+		] ;
 			UUIDGetNICAddress ( "" )
-		);
+		) ;
 
-	/*Insert colons and return result*/
-	$~uuid.step = 2;
+	/* Insert colons and return result */
+	$~uuid.step = 2 or $~uuid.step = -1;
 		Let ( [
-			~nicAddress = Right ( "000000000000" & $~hexNICAddress ; 12 );
+			~error = $~uuid.step = -1 ;
+			~nicAddress = Right ( "000000000000" & $~hexNICAddress ; 12 ) ;
 			~nicAddress =
-				Middle ( ~nicAddress ; 1 ; 2 ) & ":"
-				& Middle ( ~nicAddress ; 3 ; 2 ) & ":"
-				& Middle ( ~nicAddress ; 5 ; 2 ) & ":"
-				& Middle ( ~nicAddress ; 7 ; 2 ) & ":"
-				& Middle ( ~nicAddress ; 9 ; 2 ) & ":"
-				& Middle ( ~nicAddress ; 11 ; 2 );
+				Middle ( ~nicAddress ; 1 ; 2 )
+				& ":"
+				& Middle ( ~nicAddress ; 3 ; 2 )
+				& ":"
+				& Middle ( ~nicAddress ; 5 ; 2 )
+				& ":"
+				& Middle ( ~nicAddress ; 7 ; 2 )
+				& ":"
+				& Middle ( ~nicAddress ; 9 ; 2 )
+				& ":"
+				& Middle ( ~nicAddress ; 11 ; 2 ) ;
 
-			//purge variables
-			$~nicAddress = "";
-			$~hexNICAddress = "";
-			$~base16 = "";
-			$~i = "";
+			// purge variables
+			$~nicAddress = "" ;
+			$~hexNICAddress = "" ;
+			$~base16 = "" ;
+			$~i = "" ;
 			$~uuid.step = ""
-		];
-			~nicAddress
-		);
-
-	/*Return error value*/
-	$~uuid.step = -1;
-		Let ( [
-			//purge variables
-			$~nicAddress = "";
-			$~hexNICAddress = "";
-			$~base16 = "";
-			$~i = "";
-			$~uuid.step = ""
-		];
-			"" //Null
-		)
+		] ;
+			If ( ~error ; "" ; /* Else */ ~nicAddress )
+		) ;
 )
