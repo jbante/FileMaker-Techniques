@@ -50,8 +50,12 @@
  */
 
 //v-r-mmm mmm mmm mmmTsss ssss-ccccc@nnnnn nnnnn nnnnn
-"4-2-" //version and reserved variant code
-& Right ( "000000000000" & Floor ( Random * 165208454460 ) ; 12 ) & "-"
-& Right ( Random ; 7 ) & "-"
-& Right ( "00000" & Floor ( Random * 16384 ) ; 5 ) & "-"
+"42" //version and reserved variant code
+// "4-2-"
+& Right ( "000000000000" & Floor ( Random * 165208454460 ) ; 12 )
+// & "-"
+& Right ( Random ; 7 )
+// & "-"
+& Right ( "00000" & Floor ( Random * 16384 ) ; 5 )
+// & "-"
 & Right ( "000000000000000" & Floor ( Random * 281474976710656 ) ; 15 )

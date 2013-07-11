@@ -62,62 +62,63 @@
 
 Let ( [
 	// Set-up timestamp, serial number, and session key
-	~session = GetValue ( $$~UUID.DATA[2] ; 1 );
-	~lastTimestamp = GetValue ( $$~UUID.DATA[2] ; 2 );
-	~serial = GetAsNumber ( GetValue ( $$~UUID.DATA[2] ; 3 ) );
-	~node = GetValue ( $$~UUID.DATA[2] ; 4 );
+	~session = GetValue ( $$~UUID.DATA[2] ; 1 ) ;
+	~lastTimestamp = GetValue ( $$~UUID.DATA[2] ; 2 ) ;
+	~serial = GetAsNumber ( GetValue ( $$~UUID.DATA[2] ; 3 ) ) ;
+	~node = GetValue ( $$~UUID.DATA[2] ; 4 ) ;
 
 	~now =
 		Mod (
-			GetAsNumber ( Get ( CurrentHostTimeStamp ) );
+			GetAsNumber ( Get ( CurrentHostTimeStamp ) ) ;
 			165208454460
-		);
+		) ;
 	~session =
 		Case (
-			IsEmpty ( ~session ); //new session
-				Floor ( Random * 16384 );
+			IsEmpty ( ~session ) ;	//new session
+				Floor ( Random * 16384 ) ;
 
 			(
-				~serial ≥ .9999999 //serial number overflow
+				~serial ≥ .9999999	//serial number overflow
 				and ~now = ~lastTimestamp
 			)
-			or ~now < ~lastTimestamp; //clock change
-				Mod ( ~session + 1 ; 16384 );
+			or ~now < ~lastTimestamp ;	//clock change
+				Mod ( ~session + 1 ; 16384 ) ;
 
 			/* Else */
 				~session
-		);
+		) ;
 	~magnitude =
 		Max (
-			Left ( Substitute ( ~serial ; "." ; "" ) ; 1 );
+			Left ( Substitute ( ~serial ; "." ; "" ) ; 1 ) ;
 			1
-		);
+		) ;
 	~serial =
 		Case (
-			~now ≠ ~lastTimestamp or ~serial = .9999999 ; 0;
-			~serial = 0 ; .1;
-			~serial < .7 ; ~serial + 10 ^ ( 0 - ~magnitude );
+			~now ≠ ~lastTimestamp or ~serial = .9999999 ; 0 ;
+			~serial = 0 ; .1 ;
+			~serial < .7 ; ~serial + 10 ^ ( 0 - ~magnitude ) ;
 			/* Else */ ~serial + 10 ^ -7
-		);
+		) ;
 	~node =
-		If ( ~node;
-			~node;
+		If ( ~node ;
+			~node ;
 		/* Else, new random node */
-			//set multicast bit to avoid colliding with NIC addresses
+			// set multicast bit to avoid colliding with NIC addresses
 			( Floor ( Random * 128 ) *2 + 1 ) * 1099511627776
 			+ Floor ( Random * 1099511627776 )
-		);
+		) ;
 
 	// Store data for future reference
 	$$~UUID.DATA[2] = List ( ~session ; ~now ; ~serial ; ~node )
-];
+] ;
 	// v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
-	"1-2-" //version and reserved variant code
+	"12" //version and reserved variant code
+	// "1-2-"
 	& Right ( "000000000000" & ~now ; 12 )
-	& "-"
+	// & "-"
 	& Left ( Substitute ( ~serial ; "." ; "" ) & "0000000" ; 7 )
-	& "-"
+	// & "-"
 	& Right ( "00000" & ~session ; 5 )
-	& "-"
+	// & "-"
 	& Right ( "000000000000000" & ~node ; 15 )
 )
