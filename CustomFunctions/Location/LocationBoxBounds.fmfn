@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GeoBoxBounds ( latitude ; longitude ; radiusInMeters )
+ * LocationBoxBounds ( latitude ; longitude ; radiusInMeters )
  *
  * PURPOSE:
  *		Calculates the approximate coordinate bounds for an approximately square
@@ -23,7 +23,7 @@
  * DEPENDENCIES: none
  *
  * EXAMPLE: Find records within a search radius
- *		Set Variable [$geoBox; Value:GeoBoxBounds ( $latitude ; $longitude ; $radius)]
+ *		Set Variable [$geoBox; Value:LocationBoxBounds ( $latitude ; $longitude ; $radius)]
  *		Enter Find Mode []
  *		Set Field [Table::latitude; Value:GetValue ( $geoBox ; 1 ) & "..." & GetValue ( $geoBox ; 2 )]
  *		Set Field [Table::longitude; Value:GetValue ( $geoBox ; 3 ) & "..." & GetValue ( $geoBox ; 4 )]

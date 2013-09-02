@@ -1,6 +1,6 @@
 /**
  * =====================================
- * GeoDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ * LocationDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
  *
  * RETURNS:
  *		The approximate distance in meters between two points on the surface of
