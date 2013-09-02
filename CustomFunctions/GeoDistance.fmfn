@@ -28,7 +28,7 @@
  * =====================================
  */
 
-6371009	// WGS84 mean radius of Earth in meters
+6371008.7714	// mean radius of Earth in meters
 * Acos (
 	Cos ( Radians ( latitude2 - latitude1 ) )
 	- Cos ( Radians ( latitude1 ) )

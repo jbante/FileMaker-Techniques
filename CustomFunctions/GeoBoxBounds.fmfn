@@ -66,7 +66,7 @@
  */
 
 Let ( [
-	~earthRadius = 6371009 ;	// meters
+	~earthRadius = 6371008.7714 ;	// meters
 
 	// calculate latitude bounds
 	~latitudeOffset = Degrees ( radiusInMeters / ~earthRadius ) ;
