@@ -1,0 +1,81 @@
+/**
+ *******************************************************************************
+ * LocationPathValues ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ *
+ * RETURNS:
+ *		A return-delimited list of data about the path between two points on the
+ *		surface of the Earth:
+ *		- distance in meters between the two points
+ *		- initial bearing starting from the first point towards the second point
+ *
+ * PARAMETERS:
+ *		latitude1: Latitude of the first point, in degrees
+ *		longitude1: Longitude of the first point, in degrees
+ *		latitude2: Latitude of the second point, in degrees
+ *		longitude2: Longitude of the first point, in degrees
+ *
+ * DEPENDENCIES: none
+ *
+ * NOTES:
+ *		This function calculates based on a spherical approximation of the
+ *		surface of the Earth.
+ *
+ * HISTORY:
+ *		CREATED on 2013-09-02 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		Haversine formula:	http://en.wikipedia.org/wiki/Haversine_formula
+ *		Radius of Earth:	http://en.wikipedia.org/wiki/Earth_radius
+ *******************************************************************************
+ */
+
+Let ( [
+	// precompute values used in formulas more than once
+	~longitudeDifference = Radians ( longitude2 - longitude1 ) ;
+	~cosLatitudeDifference = Cos ( Radians ( latitude2 - latitude1 ) ) ;
+	~cosLongitudeDifference = Cos ( ~longitudeDifference ) ;
+	~latitude1 = Radians ( latitude1 ) ;
+	~longitude1 = Radians ( longitude1 ) ;
+	~latitude2 = Radians ( latitude2 ) ;
+	~longitude2 = Radians ( longitude2 ) ;
+	~cosLatitude1 = Cos ( ~latitude1 ) ;
+	~cosLatitude2 = Cos ( ~latitude2 ) ;
+
+	~distance =
+		6371008.7714	// mean radius of Earth in meters
+		* Acos (
+			~cosLatitudeDifference
+			- ~cosLatitude1
+			* ~cosLatitude2
+			* ( 1 - ~cosLongitudeDifference )
+		) ;
+
+	~bearingY = Sin ( ~longitudeDifference ) * ~cosLatitudeDifference ;
+	~bearingX =
+		~cosLatitude1 * Sin ( ~latitude2 )
+		- Sin ( ~latitude1 ) * ~cosLatitude2 * ~cosLongitudeDifference ;
+	~bearing =	// Atan2 ( ~bearingY ; ~bearingX ) in range [0,2*Pi)
+		Case (
+			~bearingX < 0 ;
+				Atan ( ~bearingY / ~bearingX ) + Pi ;
+
+			~bearingX > 0 and ~bearingY < 0 ;
+				Atan ( ~bearingY / ~bearingX ) + 2 * Pi ;
+
+			~bearingX ≠ 0 ;
+				Atan ( ~bearingY / ~bearingX ) ;
+
+			~bearingY > 0 ;
+				Pi / 2 ;
+
+			~bearingY < 0 ;
+				3 / 2 * Pi ;
+
+			/* Else, ~bearingX = ~bearingY = 0 */
+				0
+		)
+] ;
+	~distance
+	& ¶
+	& Degrees ( ~bearing )
+)
