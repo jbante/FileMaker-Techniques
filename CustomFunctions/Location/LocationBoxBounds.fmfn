@@ -59,14 +59,11 @@
  *		MODIFIED on 2012-09-27 by Jeremy Bante <http://scr.im/jbante> to account
  *		for geoboxes that may span a pole or meridian.
  *		CREATED on 2012-09-26 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Radius of Earth:	http://en.wikipedia.org/wiki/Earth_radius
  * =====================================
  */
 
 Let ( [
-	~earthRadius = 6371008.7714 ;	// meters
+	~earthRadius = 6378137 ;	//  equatorial radius of Earth (WGS 84)
 
 	// calculate latitude bounds
 	~latitudeOffset = Degrees ( radiusInMeters / ~earthRadius ) ;

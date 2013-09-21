@@ -42,7 +42,7 @@ Let ( [
 	~cosLatitude2 = Cos ( ~latitude2 ) ;
 
 	~distance =
-		6371008.7714	// mean radius of Earth in meters
+		6378137	// equatorial radius of Earth (WGS 84)
 		* Acos (
 			~cosLatitudeDifference
 			- ~cosLatitude1
