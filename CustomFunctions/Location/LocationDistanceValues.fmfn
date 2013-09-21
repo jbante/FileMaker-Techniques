@@ -1,6 +1,6 @@
 /**
  *******************************************************************************
- * LocationPathValues ( startLatitude ; startLongitude ; endLatitude ; endLongitude )
+ * LocationDistanceValues ( startLatitude ; startLongitude ; endLatitude ; endLongitude )
  *
  * RETURNS:
  *		A return-delimited list of data about the path between two points on the
