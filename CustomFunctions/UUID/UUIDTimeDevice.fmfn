@@ -1,5 +1,6 @@
 ﻿/*******************************************************************************
  * UUIDTimeDevice
+ * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDTimeDevice.fmfn
  *
  * Creates a universally unique identifier suitable for use as a primary key in
  * FileMaker number fields. The UUID is an encoding of the creation timestamp, a
