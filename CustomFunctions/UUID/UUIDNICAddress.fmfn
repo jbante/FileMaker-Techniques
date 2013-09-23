@@ -42,14 +42,15 @@ Case (
 		Let ( [
 			~idAsNumber = GetAsNumber ( theID ) ;
 			~version = Left ( ~idAsNumber ; Length ( ~idAsNumber ) - 40 ) ;
-			$~nicAddress = Right ( ~idAsNumber ; 15 ) ;
-			~isMulticast = Mod ( Div ( $~nicAddress ; 1099511627776 ) ; 2 ) ;
-			$~hexNICAddress = "" ;
-			$~base16 = "0123456789abcdef" ;
+			$~uuid.nicAddress = Right ( ~idAsNumber ; 15 ) ;
+			~isMulticast =
+				Mod ( Div ( $~uuid.nicAddress ; 1099511627776 ) ; 2 ) ;
+			$~uuid.hexNICAddress = "" ;
+			$~uuid.base16 = "0123456789abcdef" ;
 			$~uuid.step =
 				If (
 					~version < 3  // NIC is valid
-					and $~nicAddress ≤ 281474976710656
+					and $~uuid.nicAddress ≤ 281474976710656
 					and not ~isMulticast ;
 						1 ;
 					/* Else */
@@ -62,12 +63,19 @@ Case (
 	/* Convert NIC address from base 10 to base 16 */
 	$~uuid.step = 1 ;
 		Let ( [
-			$~hexNICAddress =
-				Middle ( $~base16 ; Mod ( $~nicAddress ; 16 ) + 1 ; 1 )
-				& $~hexNICAddress ;
-			$~nicAddress = Div ( $~nicAddress ; 16 ) ;
+			$~uuid.hexNICAddress =
+				Middle (
+					$~uuid.base16 ;
+					Mod ( $~uuid.nicAddress ; 16 ) + 1 ;
+					1
+				)
+				& $~uuid.hexNICAddress ;
+			$~uuid.nicAddress = Div ( $~uuid.nicAddress ; 16 ) ;
 			$~uuid.step =
-				If ( $~nicAddress ; $~uuid.step ; /*else*/ $~uuid.step + 1 )
+				If ( $~uuid.nicAddress ;
+					$~uuid.step ;
+					/*else*/ $~uuid.step + 1
+				)
 		] ;
 			UUIDGetNICAddress ( "" )
 		) ;
@@ -76,7 +84,7 @@ Case (
 	$~uuid.step = 2 or $~uuid.step = -1;
 		Let ( [
 			~error = $~uuid.step = -1 ;
-			~nicAddress = Right ( "000000000000" & $~hexNICAddress ; 12 ) ;
+			~nicAddress = Right ( "000000000000" & $~uuid.hexNICAddress ; 12 ) ;
 			~nicAddress =
 				Middle ( ~nicAddress ; 1 ; 2 )
 				& ":"
@@ -91,10 +99,10 @@ Case (
 				& Middle ( ~nicAddress ; 11 ; 2 ) ;
 
 			// purge variables
-			$~nicAddress = "" ;
-			$~hexNICAddress = "" ;
-			$~base16 = "" ;
-			$~i = "" ;
+			$~uuid.nicAddress = "" ;
+			$~uuid.hexNICAddress = "" ;
+			$~uuid.base16 = "" ;
+			$~uuid.i = "" ;
 			$~uuid.step = ""
 		] ;
 			If ( ~error ; "" ; /* Else */ ~nicAddress )

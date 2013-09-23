@@ -49,8 +49,8 @@ Case (
 		Let ( [
 			$~uuid.i = $~uuid.i + 1 ;
 			~hexDigit = Middle ( rfc4122 ; $~uuid.i ; 1 ) ;
-			$~decimal =
-				$~decimal * 16
+			$~uuid.decimal =
+				$~uuid.decimal * 16
 				+ Position ( "0123456789abcdef" ; ~hexDigit ; 1 ; 1 )
 				- 1 ;
 			$~uuid.step =
@@ -63,8 +63,8 @@ Case (
 	$~uuid.step = 2 ;
 		Let ( [
 			//extract RFC 4122 components
-			~node = Mod ( $~decimal ; 2^48 ) ;
-			~clock_seq_and_reserved = Mod ( Div ( $~decimal ; 2^48 ) ; 2^16 ) ;
+			~node = Mod ( $~uuid.decimal ; 2^48 ) ;
+			~clock_seq_and_reserved = Mod ( Div ( $~uuid.decimal ; 2^48 ) ; 2^16 ) ;
 			~reserved =
 				Case (
 					~clock_seq_and_reserved < 2^15 ; 0 ;
@@ -78,11 +78,11 @@ Case (
 					~reserved = 2 ; Mod ( ~clock_seq_and_reserved ; 2^14 ) ;
 					~reserved ≥ 6 ; Mod ( ~clock_seq_and_reserved ; 2^13 ) ;
 				) ;
-			~time_hi_and_version = Mod ( Div ( $~decimal ; 2^64 ) ; 2^16 ) ;
+			~time_hi_and_version = Mod ( Div ( $~uuid.decimal ; 2^64 ) ; 2^16 ) ;
 			~time_hi = Mod ( ~time_hi_and_version ; 2^12 ) ;
 			~version = Div ( ~time_hi_and_version ; 2^12 ) ;
-			~time_mid = Mod ( Div ( $~decimal ; 2^80 ) ; 2^16 ) ;
-			~time_low = Mod ( Div ( $~decimal ; 2^96 ) ; 2^32 ) ;
+			~time_mid = Mod ( Div ( $~uuid.decimal ; 2^80 ) ; 2^16 ) ;
+			~time_low = Mod ( Div ( $~uuid.decimal ; 2^96 ) ; 2^32 ) ;
 
 			//convert to FileMaker-centric format
 			~timestamp =
@@ -94,7 +94,7 @@ Case (
 			~timestamp = Div ( ~timestamp ; 10000000 ) + 49916304000 ;
 
 			//purge variables
-			$~decimal = "" ;
+			$~uuid.decimal = "" ;
 			$~uuid.i = "" ;
 			$~uuid.step = ""
 		] ;

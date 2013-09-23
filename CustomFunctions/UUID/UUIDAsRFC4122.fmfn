@@ -79,7 +79,7 @@ Case (
 				+ ~node ;
 
 			//set-up conversion from base 10 to base 16
-			$~hex = "" ;
+			$~uuid.hex = "" ;
 			$~uuid.step = 1
 		] ;
 			UUIDAsRFC4122 ( "" )
@@ -89,7 +89,8 @@ Case (
 	$~uuid.step = 1 ;
 		Let ( [
 			~hexDigit = Mod ( $~uuid ; 16 ) ;
-			$~hex = Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~hex ;
+			$~uuid.hex =
+				Middle ( "0123456789abcdef" ; ~hexDigit + 1 ; 1 ) & $~uuid.hex ;
 			$~uuid = Div ( $~uuid ; 16 ) ;
 			$~uuid.step =
 				If ( $~uuid ; $~uuid.step ; /* Else */ $~uuid.step + 1 )
@@ -100,7 +101,7 @@ Case (
 	/* Return result */
 	$~uuid.step = 2 ;
 		Let ( [
-			~hex = $~hex ;
+			~hex = $~uuid.hex ;
 			~hex =
 				Left ( ~hex ; 8 )
 				& "-"
@@ -113,7 +114,7 @@ Case (
 				& Right ( ~hex ; 12 ) ;
 
 			// purge variables
-			$~hex = "" ;
+			$~uuid.hex = "" ;
 			$~uuid.step = "" ;
 			$~uuid = ""
 		] ;

@@ -83,8 +83,8 @@ Case (
 	/* First call to UUIDTimeNIC, check for pre-processed node data */
 	not $~uuid.step ;
 		Let ( [
-				$~node = GetValue ( $$~UUID.DATA ; 4 ) ;
-				$~uuid.step = If ( $~node ; 3 ; /*else*/ 1 )
+				$~uuid.node = GetValue ( $$~UUID.DATA ; 4 ) ;
+				$~uuid.step = If ( $~uuid.node ; 3 ; /*else*/ 1 )
 		] ;
 			UUIDTimeNIC
 		) ;
@@ -92,14 +92,14 @@ Case (
 	/* Get NIC address, if possible */
 	$~uuid.step = 1 ;
 		Let ( [
-			$~nicAddress =
+			$~uuid.nicAddress =
 				Substitute (
 					GetValue ( Get ( SystemNICAddress ) ; 1 ) ;
 					":" ;
 					""
 				) ;
 			$~uuid.i = 0 ;
-			$~uuid.step = If ( $~nicAddress ; $~uuid.step + 1 ; /*else*/ 3 )
+			$~uuid.step = If ( $~uuid.nicAddress ; $~uuid.step + 1 ; /*else*/ 3 )
 		] ;
 			UUIDTimeNIC
 		) ;
@@ -107,11 +107,11 @@ Case (
 	/* Parse NIC address from hexadecimal to a (base 10) number */
 	$~uuid.step = 2 ;
 		Let ( [
-			$~nicDigit = Middle ( $~nicAddress ; 12 - $~uuid.i ; 1 ) ;
-			$~nicDigit =	// convert digit to number
-				Position ( "0123456789abcdef" ; $~nicDigit ; 1 ; 1 ) - 1 ;
-			$~node =	// add digit to node
-				$~nicDigit * ( 16 ^ $~uuid.i ) + $~node ;
+			$~uuid.nicDigit = Middle ( $~uuid.nicAddress ; 12 - $~uuid.i ; 1 ) ;
+			$~uuid.nicDigit =	// convert digit to number
+				Position ( "0123456789abcdef" ; $~uuid.nicDigit ; 1 ; 1 ) - 1 ;
+			$~uuid.node =	// add digit to node
+				$~uuid.nicDigit * ( 16 ^ $~uuid.i ) + $~uuid.node ;
 			$~uuid.step =
 				If ( $~uuid.i < 11 ; $~uuid.step ; /*else*/ $~uuid.step + 1  ) ;
 			$~uuid.i = $~uuid.i + 1
@@ -158,8 +158,8 @@ Case (
 					/* Else */ ~serial + 10 ^ -7
 				) ;
 			~node =
-				If ( $~node ;
-					$~node ;
+				If ( $~uuid.node ;
+					$~uuid.node ;
 				/* Else, new random node */
 					// set multicast bit to avoid colliding with NIC addresses
 					( Floor ( Random * 128 ) *2 + 1 ) * 1099511627776
@@ -171,9 +171,9 @@ Case (
 
 			//purge variables
 			$~uuid.i = "" ;
-			$~nicAddress = "" ;
-			$~nicDigit = "" ;
-			$~node = "" ;
+			$~uuid.nicAddress = "" ;
+			$~uuid.nicDigit = "" ;
+			$~uuid.node = "" ;
 			$~uuid.step = ""
 		] ;
 			// v-r-tttt tttt tttt-sss ssss-ccccc-nnnnn nnnnn nnnnn
