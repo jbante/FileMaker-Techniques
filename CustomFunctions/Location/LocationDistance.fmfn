@@ -1,31 +1,24 @@
-/**
- * =====================================
+/*******************************************************************************
  * LocationDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ * Calculates the distance along a great circle path between two points on the
+ * surface of the Earth.
  *
- * RETURNS:
- *		The approximate distance in meters between two points on the surface of
- *		the Earth.
+ * This function computes an approximation based on a spherical approximation of
+ * the Earth using the Haversine formula. It uses the cosine-based definition
+ * for haversine rather than the sine-based formula for better numerical
+ * stability and better computationally efficiency.
  *
- * PARAMETERS:
- *		latitude1: Latitude of the first point, in degrees
- *		longitude1: Longitude of the first point, in degrees
- *		latitude2: Latitude of the second point, in degrees
- *		longitude2: Longitude of the first point, in degrees
+ * @parameter latitude1: Latitude of the first point
+ * @parameter longitude1: Longitude of the first point
+ * @parameter latitude2: Latitude of the second point
+ * @parameter longitude2: Longitude of the second point
  *
- * DEPENDENCIES: none
+ * @return The distance between the two points, in meters.
  *
- * NOTES:
- *		This function computes an approximation based on the Haversine formula.
- *		It uses the cosine-based definition for haversine rather than the
- *		sine-based formula for better numerical stability.
+ * @history 2012-09-26 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2012-09-26 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Haversine formula:	http://en.wikipedia.org/wiki/Haversine_formula
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Haversine_formula
+ ******************************************************************************/
 
 6378137	// equatorial radius of Earth (WGS 84)
 * Acos (
