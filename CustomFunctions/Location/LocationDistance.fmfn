@@ -6,7 +6,7 @@
  * This function computes an approximation based on a spherical approximation of
  * the Earth using the Haversine formula. It uses the cosine-based definition
  * for haversine rather than the sine-based formula for better numerical
- * stability and better computationally efficiency.
+ * stability and better computational efficiency.
  *
  * @parameter latitude1: Latitude of the first point
  * @parameter longitude1: Longitude of the first point
