@@ -1,0 +1,59 @@
+/*******************************************************************************
+ * LocationAzimuth ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ * Calculates the initial azimuth (bearing) along a great circle path between
+ * two points. This function computes an approximation based on a spherical
+ * model of the Earth.
+ *
+ * @parameter latitude1: Latitude of the first point, in degrees
+ * @parameter longitude1: Longitude of the first point, in degrees
+ * @parameter latitude2: Latitude of the second point, in degrees
+ * @parameter longitude2: Longitude of the second point, in degrees
+ *
+ * @return The starting azimuth of the great circle path from the first point to
+ * the second point, measured in degrees clockwise away from direction due
+ * north, in [0,360).
+ *
+ * @history 2013-11-24 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
+
+Let ( [
+	// precompute values used in formulas more than once
+	~longitudeDifference = Radians ( longitude2 - longitude1 ) ;
+	~latitude1 = Radians ( latitude1 ) ;
+	~longitude1 = Radians ( longitude1 ) ;
+	~latitude2 = Radians ( latitude2 ) ;
+	~longitude2 = Radians ( longitude2 ) ;
+
+	// calculate forward bearing of path at start point
+	~azimuthY =
+		Sin ( ~longitudeDifference )
+		* Cos ( Radians ( latitude2 - latitude1 ) ) ;
+	~azimuthX =
+		Cos ( ~latitude1 )
+			* Sin ( ~latitude2 )
+		- Sin ( ~latitude1 )
+			* Cos ( ~latitude2 )
+			* Cos ( ~longitudeDifference ) ;
+	~azimuth =	// Atan2 ( ~azimuthY ; ~azimuthX ) in range [0,2*Pi)
+		Case (
+			~azimuthX < 0 ;
+				Atan ( ~azimuthY / ~azimuthX ) + Pi ;
+
+			~azimuthX > 0 and ~azimuthY < 0 ;
+				Atan ( ~azimuthY / ~azimuthX ) + 2 * Pi ;
+
+			~azimuthX ≠ 0 ;
+				Atan ( ~azimuthY / ~azimuthX ) ;
+
+			~azimuthY > 0 ;
+				Pi / 2 ;
+
+			~azimuthY < 0 ;
+				3 / 2 * Pi ;
+
+			/* Else, ~azimuthX = ~azimuthY = 0 */
+				0
+		)
+] ;
+	Degrees ( ~azimuth )
+)
