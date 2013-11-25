@@ -1,0 +1,38 @@
+/*******************************************************************************
+ * LocationCardinalDirection ( azimuth ; precision )
+ * Calculates the cardinal direction for a specified azimuth.
+ *
+ * @parameter azimuth: The azimuth to convert to a cardinal direction, in
+ * degrees in the range [0,360)
+ * @parameter precision: The number of characters of precision to use, in
+ * {1,2,3}.
+ *
+ * @return The cardinal direction for the azimuth
+ *
+ * @history 2013-11-25 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Cardinal_direction
+ ******************************************************************************/
+
+Let ( [
+	azimuth = Mod ( azimuth ; 360 ) ;	// normalize input
+	precision = precision - 1 ;	// simplifies Choose logic
+	~sliceAngleSize =	// divide circle into equal slices
+		360 / Choose ( precision ; 4 ; 8 ; 16 ) ;
+	~adjustedAzimuth =	// shift values so north slice doesn't straddle 360°/0°
+		Mod ( azimuth + ~sliceAngleSize / 2 ; 360 ) ;
+	~slice = Floor ( ~adjustedAzimuth / ~sliceAngleSize )
+] ;
+	Choose ( precision ;
+		Choose ( ~slice ;
+			"N" ;	"E" ;	"S" ;	"W"
+		) ;
+		Choose ( ~slice ;
+			"N" ;	"NE" ;	"E" ;	"SE" ;	"S" ;	"SW" ;	"W" ;	"NW"
+		) ;
+		Choose ( ~slice ;
+			"N" ;	"NNE" ;	"NE" ;	"ENE" ;	"E" ;	"ESE" ;	"SE" ;	"SSE" ;
+			"S" ;	"SSW" ;	"SW" ;	"WSW" ;	"W" ;	"WNW" ;	"NW" ;	"NNW"
+		)
+	)
+)
