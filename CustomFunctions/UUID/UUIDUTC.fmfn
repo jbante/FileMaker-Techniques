@@ -1,4 +1,10 @@
-﻿/**
+﻿/*
+ * THIS FUNCTION IS DEPRECATED. FILEMAKER INTRODUCED OFFICIAL SUPPORT FOR THE
+ * GET ( CURRENTTIMEUTCMILLISECONDS ) FUNCTION IN FILEMAKER 13.
+ * USE UUIDTimeDevice INSTEAD.
+ */
+
+/**
  * =====================================
  * UUIDUTC
  *		https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/UUID/UUIDUTCHash.fmfn
