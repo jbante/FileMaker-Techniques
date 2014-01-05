@@ -136,146 +136,114 @@ Case (
 			~bitPair1 =
 				Mod ( Div ( ~tableValue ; 1073741824 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 1073741824 ) ; 4 ) ;
-			~bitPair1 =
-				Choose ( ~bitPair1 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair2 =
 				Mod ( Div ( ~tableValue ; 268435456 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 268435456 ) ; 4 ) ;
-			~bitPair2 =
-				Choose ( ~bitPair2 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair3 =
 				Mod ( Div ( ~tableValue ; 67108864 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 67108864 ) ; 4 ) ;
-			~bitPair3 =
-				Choose ( ~bitPair3 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair4 =
 				Mod ( Div ( ~tableValue ; 16777216 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 16777216 ) ; 4 ) ;
-			~bitPair4 =
-				Choose ( ~bitPair4 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair5 =
 				Mod ( Div ( ~tableValue ; 4194304 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 4194304 ) ; 4 ) ;
-			~bitPair5 =
-				Choose ( ~bitPair5 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair6 =
 				Mod ( Div ( ~tableValue ; 1048576 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 1048576 ) ; 4 ) ;
-			~bitPair6 =
-				Choose ( ~bitPair6 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair7 =
 				Mod ( Div ( ~tableValue ; 262144 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 262144 ) ; 4 ) ;
-			~bitPair7 =
-				Choose ( ~bitPair7 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair8 =
 				Mod ( Div ( ~tableValue ; 65536 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 65536 ) ; 4 ) ;
-			~bitPair8 =
-				Choose ( ~bitPair8 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair9 =
 				Mod ( Div ( ~tableValue ; 16384 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 16384 ) ; 4 ) ;
-			~bitPair9 =
-				Choose ( ~bitPair9 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair10 =
 				Mod ( Div ( ~tableValue ; 4096 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 4096 ) ; 4 ) ;
-			~bitPair10 =
-				Choose ( ~bitPair10 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair11 =
 				Mod ( Div ( ~tableValue ; 1024 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 1024 ) ; 4 ) ;
-			~bitPair11 =
-				Choose ( ~bitPair11 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair12 =
 				Mod ( Div ( ~tableValue ; 256 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 256 ) ; 4 ) ;
-			~bitPair12 =
-				Choose ( ~bitPair12 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair13 =
 				Mod ( Div ( ~tableValue ; 64 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 64 ) ; 4 ) ;
-			~bitPair13 =
-				Choose ( ~bitPair13 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair14 =
 				Mod ( Div ( ~tableValue ; 16 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 16 ) ; 4 ) ;
-			~bitPair14 =
-				Choose ( ~bitPair14 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair15 =
 				Mod ( Div ( ~tableValue ; 4 ) ; 4 ) * 4
 				+ Mod ( Div ( $~crc.crc ; 4 ) ; 4 ) ;
-			~bitPair15 =
-				Choose ( ~bitPair15 ;
-					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
-					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
-				) ;
 			~bitPair16 = Mod ( ~tableValue ; 4 ) * 4 + Mod ( $~crc.crc ; 4 ) ;
-			~bitPair16 =
-				Choose ( ~bitPair16 ;
+			$~crc.crc =	// ~tableValue ^ $~crc.crc
+				1073741824 * Choose ( ~bitPair1 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 268435456 * Choose ( ~bitPair2 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 67108864 * Choose ( ~bitPair3 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 16777216 * Choose ( ~bitPair4 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 4194304 * Choose ( ~bitPair5 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 1048576 * Choose ( ~bitPair6 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 262144 * Choose ( ~bitPair7 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 65536 * Choose ( ~bitPair8 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 16384 * Choose ( ~bitPair9 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 4096 * Choose ( ~bitPair10 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 1024 * Choose ( ~bitPair11 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 256 * Choose ( ~bitPair12 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 64 * Choose ( ~bitPair13 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 16 * Choose ( ~bitPair14 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ 4 * Choose ( ~bitPair16 ;
+					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
+					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
+				)
+				+ Choose ( ~bitPair16 ;
 					0 ; 1 ; 2 ; 3 ; 1 ; 0 ; 3 ; 2 ;
 					2 ; 3 ; 0 ; 1 ; 3 ; 2 ; 1 ; 0
 				) ;
-			$~crc.crc =	// ~tableValue ^ $~crc.crc
-				1073741824 * ~bitPair1
-				+ 268435456 * ~bitPair2
-				+ 67108864 * ~bitPair3
-				+ 16777216 * ~bitPair4
-				+ 4194304 * ~bitPair5
-				+ 1048576 * ~bitPair6
-				+ 262144 * ~bitPair7
-				+ 65536 * ~bitPair8
-				+ 16384 * ~bitPair9
-				+ 4096 * ~bitPair10
-				+ 1024 * ~bitPair11
-				+ 256 * ~bitPair12
-				+ 64 * ~bitPair13
-				+ 16 * ~bitPair14
-				+ 4 * ~bitPair15
-				+ ~bitPair16 ;
 
 			// setup next character
 			$~crc.i = $~crc.i + 1 ;
