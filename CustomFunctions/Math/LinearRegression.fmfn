@@ -1,0 +1,72 @@
+/*******************************************************************************
+ * LinearRegression ( xList ; yList )
+ * Calculates the least squares linear regression on a set of pairs of numbers.
+ *
+ * @parameter xList: A return-delimited list of numbers
+ * @parameter yList: A return-delimited list of numbers
+ *
+ * @return An expression of the form B + Ax, where A and B represent the
+ * coefficients of a linear regression.
+ *
+ * @history 2014-01-13 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Simple_linear_regression
+ * @see http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance
+ ******************************************************************************/
+
+Case (
+	/* Step 0, set-up first iteration */
+	not $~step ;
+		Let ( [
+			$~n = $~n + 1 ;
+			$~x = GetValue ( xList ; $~n ) ;
+			$~y = GetValue ( yList ; $~n ) ;
+			$~step =
+				If ( IsEmpty ( $~x ) or IsEmpty ( $~y ) ; -1 ; /* Else */ 1 )
+		] ;
+			LinearRegression ( xList ; yList )
+		) ;
+
+	/* Step 1, calculate sums */
+	$~step = 1 ;
+		Let ( [
+			$~sumX = $~sumX + $~x ;
+			$~sumXSquared = $~sumXSquared + $~x ^ 2 ;
+			$~sumY = $~sumY + $~y ;
+			$~sumXY = $~sumXY + $~x * $~y ;
+
+			// set-up next pair
+			$~n = $~n + 1 ;
+			$~x = GetValue ( xList ; $~n ) ;
+			$~y = GetValue ( yList ; $~n ) ;
+			$~step =
+				If ( IsEmpty ( $~x ) or IsEmpty ( $~y ) ; 2 ; /* Else */ 1 )
+		] ;
+			LinearRegression ( xList ; yList )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~step = 2 or $~step = -1 ;
+		Let ( [
+			~error = $~step = -1 ;
+
+			~n = $~n - 1 ;
+			~slope =
+				( ~n * $~sumXY - $~sumX * $~sumY )
+				/ ( ~n * $~sumXSquared - $~sumX ^ 2 ) ;
+			~intercept = $~sumY / ~n - ~slope * $~sumX / ~n ;
+			~result = ~intercept & " + " & ~slope & " * x" ;
+
+			// purge variables
+			$~n = "" ;
+			$~step = "" ;
+			$~sumX = "" ;
+			$~sumXSquared = "" ;
+			$~sumXY = "" ;
+			$~sumY = "" ;
+			$~x = "" ;
+			$~y = ""
+		] ;
+			If ( ~error ; "?" ; /* Else */ ~result )
+		)
+)
