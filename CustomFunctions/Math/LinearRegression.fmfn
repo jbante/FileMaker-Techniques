@@ -16,56 +16,56 @@
 
 Case (
 	/* Step 0, set-up first iteration */
-	not $~step ;
+	not $~linReg.step ;
 		Let ( [
-			$~n = $~n + 1 ;
-			$~x = GetValue ( xList ; $~n ) ;
-			$~y = GetValue ( yList ; $~n ) ;
-			$~step =
-				If ( IsEmpty ( $~x ) or IsEmpty ( $~y ) ; -1 ; /* Else */ 1 )
+			$~linReg.n = $~linReg.n + 1 ;
+			$~linReg.x = GetValue ( xList ; $~linReg.n ) ;
+			$~linReg.y = GetValue ( yList ; $~linReg.n ) ;
+			$~linReg.step =
+				If ( IsEmpty ( $~linReg.x ) or IsEmpty ( $~linReg.y ) ; -1 ; /* Else */ 1 )
 		] ;
 			LinearRegression ( xList ; yList )
 		) ;
 
 	/* Step 1, calculate sums */
-	$~step = 1 ;
+	$~linReg.step = 1 ;
 		Let ( [
-			$~sumX = $~sumX + $~x ;
-			$~sumXSquared = $~sumXSquared + $~x ^ 2 ;
-			$~sumY = $~sumY + $~y ;
-			$~sumXY = $~sumXY + $~x * $~y ;
+			$~linReg.sumX = $~linReg.sumX + $~linReg.x ;
+			$~linReg.sumXSquared = $~linReg.sumXSquared + $~linReg.x ^ 2 ;
+			$~linReg.sumY = $~linReg.sumY + $~linReg.y ;
+			$~linReg.sumXY = $~linReg.sumXY + $~linReg.x * $~linReg.y ;
 
 			// set-up next pair
-			$~n = $~n + 1 ;
-			$~x = GetValue ( xList ; $~n ) ;
-			$~y = GetValue ( yList ; $~n ) ;
-			$~step =
-				If ( IsEmpty ( $~x ) or IsEmpty ( $~y ) ; 2 ; /* Else */ 1 )
+			$~linReg.n = $~linReg.n + 1 ;
+			$~linReg.x = GetValue ( xList ; $~linReg.n ) ;
+			$~linReg.y = GetValue ( yList ; $~linReg.n ) ;
+			$~linReg.step =
+				If ( IsEmpty ( $~linReg.x ) or IsEmpty ( $~linReg.y ) ; 2 ; /* Else */ 1 )
 		] ;
 			LinearRegression ( xList ; yList )
 		) ;
 
 	/* Step 2, clean-up and return result */
-	$~step = 2 or $~step = -1 ;
+	$~linReg.step = 2 or $~linReg.step = -1 ;
 		Let ( [
-			~error = $~step = -1 ;
+			~error = $~linReg.step = -1 ;
 
-			~n = $~n - 1 ;
+			~n = $~linReg.n - 1 ;
 			~slope =
-				( ~n * $~sumXY - $~sumX * $~sumY )
-				/ ( ~n * $~sumXSquared - $~sumX ^ 2 ) ;
-			~intercept = $~sumY / ~n - ~slope * $~sumX / ~n ;
+				( ~n * $~linReg.sumXY - $~linReg.sumX * $~linReg.sumY )
+				/ ( ~n * $~linReg.sumXSquared - $~linReg.sumX ^ 2 ) ;
+			~intercept = $~linReg.sumY / ~n - ~slope * $~linReg.sumX / ~n ;
 			~result = ~intercept & " + " & ~slope & " * x" ;
 
 			// purge variables
-			$~n = "" ;
-			$~step = "" ;
-			$~sumX = "" ;
-			$~sumXSquared = "" ;
-			$~sumXY = "" ;
-			$~sumY = "" ;
-			$~x = "" ;
-			$~y = ""
+			$~linReg.n = "" ;
+			$~linReg.step = "" ;
+			$~linReg.sumX = "" ;
+			$~linReg.sumXSquared = "" ;
+			$~linReg.sumXY = "" ;
+			$~linReg.sumY = "" ;
+			$~linReg.x = "" ;
+			$~linReg.y = ""
 		] ;
 			If ( ~error ; "?" ; /* Else */ ~result )
 		)
