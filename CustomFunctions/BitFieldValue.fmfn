@@ -1,0 +1,19 @@
+/*******************************************************************************
+ * BitFieldValue ( value ; bit )
+ * Returns 1 or 0 from a bit flag in a combined bit field value.
+ *
+ * @parameter value: The number containing the encoded bit flags.
+ * @parameter bit: The bit number to extract, with 1 being the least significant
+ * integer bit, i.e., the 2^0 bit, or the 2 ^ ( bit - 1 ) bit in general.
+ *
+ * @return 1 or 0
+ *
+ * @history 2014-02-24 - Jeremy Bante <jeremy_b@beezwax.net> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Bit_field
+ ******************************************************************************/
+
+Mod (
+	Div ( value ; 2 ^ ( bit - 1 ) ) ;
+	2
+)
