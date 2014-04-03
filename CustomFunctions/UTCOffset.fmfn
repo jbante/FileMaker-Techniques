@@ -5,9 +5,9 @@
  * @history 2012-05-18 - Jeremy Bante <http://scr.im/jbante> - Created
  * @history 2013-12-13 - Jeremy Bante <http://scr.im/jbante> - Using new
  * Get ( CurrentTimeUTCMilliseconds ) function in FileMaker 13.
+ * @history 2014-04-03 - Jeremy Bante <http://scr.im/jbante> - Using Floor
+ * instead of Round, as recommended by Jesse Barnum.
  ******************************************************************************/
 
-
-
 Get ( CurrentTimestamp )
-- Round ( Get ( CurrentTimeUTCMilliseconds ) / 1000 ; 0 )
+- Floor ( Get ( CurrentTimeUTCMilliseconds ) / 1000 )
