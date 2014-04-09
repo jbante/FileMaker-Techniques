@@ -1,0 +1,32 @@
+/*******************************************************************************
+ * ValueToggle ( listOfValues ; valueToToggle )
+ * Returns listOfValues with any instances of valueToToggle removed if they
+ * existed, or valueToToggle added if there are no instances.
+ *
+ * @parameter listOfValues: a return-delimited list
+ * @parameter valueToToggle: text
+ *
+ * @return a return-delimited list
+ *
+ * @history 2014-04-09 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
+
+If ( IsEmpty ( FilterValues ( valueToToggle ; listOfValues ) ) ;
+	List ( listOfValues ; valueToToggle ) ;
+/* Else */
+	Let ( [
+		_start = Get ( UUID ) ;
+		_end = Get ( UUID )
+	] ;
+		Substitute (
+			_start & ¶ & listOfValues & ¶ & _end ;
+			[ ¶ ; "¶¶" ] ;
+			[ ¶ & valueToToggle & ¶ ; "" ] ;
+			[ "¶¶" ; ¶ ] ;
+			[ _start & ¶ ; "" ] ;
+			[ ¶ & _end ; "" ] ;
+			[ _start ; "" ] ;
+			[ _end ; "" ]
+		)
+	)
+)
