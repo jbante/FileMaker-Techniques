@@ -1,0 +1,21 @@
+/*******************************************************************************
+ * CheckdigitDammVerify ( digitSequence )
+ * Verifies that a digit sequence ending with a Damm check digit has been
+ * transcribed correctly.
+ *
+ * This custom function implements an algorithm described by H. Michael Damm in
+ * 2004.
+ *
+ * @parameter digitSequence: A sequence of decimal digits
+ *
+ * @return True (1) if digitSequence ends with the correct Damm check digit;
+ * False (0) otherwise.
+ *
+ * @uses CheckdigitDamm ( digitSequence )
+ *
+ * @history 2014-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Damm_algorithm
+ ******************************************************************************/
+
+CheckdigitDamm ( digitSequence ) = 0

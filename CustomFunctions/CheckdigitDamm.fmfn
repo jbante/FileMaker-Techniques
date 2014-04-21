@@ -1,0 +1,67 @@
+/*******************************************************************************
+ * CheckdigitDamm ( digitSequence )
+ * Calculates a checkdigit to append to a digit sequence that can be used to
+ * validate that the digit sequence has been transcribed correctly.
+ *
+ * This custom function implements an algorithm described by H. Michael Damm in
+ * 2004.
+ *
+ * @parameter digitSequence: A sequence of decimal digits
+ *
+ * @return A single decimal digit, designed to be appended to the input
+ *
+ * @history 2014-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Damm_algorithm
+ ******************************************************************************/
+
+Case (
+	/* Step 0, set-up */
+	not $~step ;
+		Let ( [
+			digitSequence = Filter ( digitSequence ; "0123456789" ) ;
+			$~interim = 0 ;
+			$~i = 1 ;
+			$~digit = Middle ( digitSequence ; $~i ; 1 ) ;
+			$~step = If ( IsEmpty ( $~digit ) ; 2 ; /* Else */ 1 )
+		] ;
+			CheckdigitDamm ( digitSequence )
+		) ;
+
+	/* Step 1, perform successive lookups from Damm's quasigroup */
+	$~step = 1 ;
+		Let ( [
+			$~interim =
+				Choose ( $~interim ;
+					Choose ( $~digit ; 0 ; 3 ; 1 ; 7 ; 5 ; 9 ; 8 ; 6 ; 4 ; 2 ) ;
+					Choose ( $~digit ; 7 ; 0 ; 9 ; 2 ; 1 ; 5 ; 4 ; 8 ; 6 ; 3 ) ;
+					Choose ( $~digit ; 4 ; 2 ; 0 ; 6 ; 8 ; 7 ; 1 ; 3 ; 5 ; 9 ) ;
+					Choose ( $~digit ; 1 ; 7 ; 5 ; 0 ; 9 ; 8 ; 3 ; 4 ; 2 ; 6 ) ;
+					Choose ( $~digit ; 6 ; 1 ; 2 ; 3 ; 0 ; 4 ; 5 ; 9 ; 7 ; 8 ) ;
+					Choose ( $~digit ; 3 ; 6 ; 7 ; 4 ; 2 ; 0 ; 9 ; 5 ; 8 ; 1 ) ;
+					Choose ( $~digit ; 5 ; 8 ; 6 ; 9 ; 7 ; 2 ; 0 ; 1 ; 3 ; 4 ) ;
+					Choose ( $~digit ; 8 ; 9 ; 4 ; 5 ; 3 ; 6 ; 2 ; 0 ; 1 ; 7 ) ;
+					Choose ( $~digit ; 9 ; 4 ; 3 ; 8 ; 6 ; 1 ; 7 ; 2 ; 0 ; 5 ) ;
+					Choose ( $~digit ; 2 ; 5 ; 8 ; 1 ; 4 ; 3 ; 6 ; 7 ; 9 ; 0 )
+				) ;
+			$~i = $~i + 1 ;
+			$~digit = Middle ( digitSequence ; $~i ; 1 ) ;
+			$~step = If ( IsEmpty ( $~digit ) ; 2 ; /* Else */ 1 )
+		] ;
+			CheckdigitDamm ( digitSequence )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~step = 2 ;
+		Let ( [
+			~result = $~interim ;
+
+			// purge variables
+			$~digit = "" ;
+			$~i = "" ;
+			$~interim = "" ;
+			$~step = ""
+		] ;
+			~result
+		)
+)
