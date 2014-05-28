@@ -1,28 +1,20 @@
-/**
- * =====================================
+/*******************************************************************************
  * DateFromISO ( isoDate )
  *
- * RETURNS:
- *		A FileMaker-type date parsed from isoDate
+ * @parameter isoDate: A text string representing a date in ISO 8601 format:
+ * YYYY-MM-DD
  *
- * PARAMETERS:
- *		isoDate: A text string representing a date in ISO 8601 format, which is:
- *		YYYY-MM-DD
+ * @return A FileMaker-type date parsed from isoDate
  *
- * DEPENDENCIES: none
+ * @history 2013-01-25 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2013-01-25 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/ISO_8601
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
 
 Let ( [
-	~year = Middle ( isoDate ; 1 ; 4 ) ;
-	~month = Middle ( isoDate ; 6 ; 2 ) ;
-	~day = Middle ( isoDate ; 9 ; 2 )
-];
-	Date ( ~month ; ~day ; ~year )
+	_year = Middle ( isoDate ; 1 ; 4 ) ;
+	_month = Middle ( isoDate ; 6 ; 2 ) ;
+	_day = Middle ( isoDate ; 9 ; 2 )
+] ;
+	Date ( _month ; _day ; _year )
 )

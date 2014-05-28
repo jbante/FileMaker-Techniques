@@ -1,65 +1,57 @@
-/**
- * =====================================
+/*******************************************************************************
  * KeyIsValid ( theKey )
  *
- * RETURNS:
- *		True (1) if theKey is a valid key value based on its Verhoeff check
- *		digit; False (0) otherwise.
+ * @parameter theKey
  *
- * PARAMETERS:
- *		theKey
+ * @return True (1) if theKey is a valid key value based on its Verhoeff check
+ * digit; False (0) otherwise.
  *
- * DEPENDENCIES: none
+ * @history 2011-12-08 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2011-12-08 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Verhoeff Check Digit: http://en.wikipedia.org/wiki/Verhoeff_algorithm
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Verhoeff_algorithm Verhoeff Check Digit
+ ******************************************************************************/
 
 Case (
 	/* Step 0; process checkSum */
-	not $~key.step;
+	not $~key.step ;
 		Let ( [
-			~digit = Right ( theKey ; 1 );
-			~newKey = Left ( theKey ; Length ( theKey ) - 1 );
+			_digit = Right ( theKey ; 1 ) ;
+			_newKey = Left ( theKey ; Length ( theKey ) - 1 ) ;
 
-			$~key.i = $~key.i + 1;
-			~position = Mod ( $~key.i - 1 ; 8 );
-			~permutation =
+			$~key.i = $~key.i + 1 ;
+			_position = Mod ( $~key.i - 1 ; 8 ) ;
+			_permutation =
 				Middle (
-					"01234567891576283094580379614289160435279453126870428657390127938064157046913258";
-					~position * 10 + ~digit + 1;
+					"01234567891576283094580379614289160435279453126870428657390127938064157046913258" ;
+					_position * 10 + _digit + 1 ;
 					1
-				);
+				) ;
 			$~key.checkDigit =
 				Middle (
-					"0123456789123406789523401789563401289567401239567859876043216598710432765982104387659321049876543210";
-					$~key.checkDigit * 10 + ~permutation + 1;
+					"0123456789123406789523401789563401289567401239567859876043216598710432765982104387659321049876543210" ;
+					$~key.checkDigit * 10 + _permutation + 1 ;
 					1
-				);
+				) ;
 
 			$~key.step =
-				If ( IsEmpty ( ~newKey );
-					$~key.step + 1;
+				If ( IsEmpty ( _newKey ) ;
+					$~key.step + 1 ;
 					/* Else */ $~key.step
 				)
-		];
-			KeyIsValid ( ~newKey )
-		);
+		] ;
+			KeyIsValid ( _newKey )
+		) ;
 
 	/* Step 1; clean-up and return result */
-	$~key.step = 1;
+	$~key.step = 1 ;
 		Let ( [
-			~result = not $~key.checkDigit;	// valid if checkSum = 0
+			_result = not $~key.checkDigit;	// valid if checkSum = 0
 
-			// Purge variables
-			$~key.checkDigit = "";
-			$~key.i = "";
+			// purge variables
+			$~key.checkDigit = "" ;
+			$~key.i = "" ;
 			$~key.step = ""
-		];
-			~result
+		] ;
+			_result
 		)
 )

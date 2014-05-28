@@ -1,234 +1,248 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * AuditLog ( modificationTrigger ; primaryKey ; logData ; logFieldNames )
+ * Creates a log of any data changes made to a record.
  *
- * PURPOSE:
- *		Creates a log of any data changes made to a record.
+ * The tab- and return-delimited format is a compromise between machine and
+ * human readability.
  *
- * RETURNS:
- *		A tab- and return-delimited list of all changes made to the current
- *		record to any of the fields specified by fieldNames.
- *
- * PARAMETERS:
- *		modificationTrigger: Any value that will trigger on any record
- *			modification.
- *		primaryKey: The primary key for the record.
- *		logData: The existing log data for the record.
- *		logFieldNames: A return-delimited list of the names of fields to audit
- *			for changes.
- *
- * DEPENDENCIES:
- *		UUIDTimeNIC (May be substituted for another timestamp-based UUID
- *			function)
- *		UUIDGetTimestamp
- *
- * VARIABLES:
- *		$~auditLog.initialize: A flag indicating that the current change is only
- *			initializing the log as a point of comparison, and does not
- *			represent an actual data edit.
- *		$~auditLog.pause: A flag indicating that the current change is part of a
- *			scripted process, and shouldn't be logged until the script is done.
- *
- * EXAMPLE: (in a field auto-enter calculation)
+ * @example (in a field auto-enter calculation)
  *		AuditLog (
- *			modificationTimestamp;	// triggers calculation
- *			id;	// primary key
- *			Self;	// logData
+ *			modificationTimestamp ;	// triggers calculation
+ *			id ;	// primary key
+ *			Self ;	// logData
  *			List ( GetFieldName ( field1 ) ; GetFieldName ( field2 ) )
  *		)
  *
- * NOTES:
- *		The tab- and return-delimited format is a compromise between machine and
- *		human readability.
+ * @parameter modificationTrigger: Any value that will trigger on any record
+ * modification.
+ * @parameter primaryKey: The primary key for the record.
+ * @parameter logData: The existing log data for the record.
+ * @parameter logFieldNames: A return-delimited list of the names of fields to
+ * audit for changes.
  *
- * HISTORY:
- *		CREATED on 2011-06-13 by Jeremy Bante <http://scr.im/jbante>.
- *		INSPIRED by the UltraLog solution by Ray Cologon.
+ * @return A tab- and return-delimited list of all changes made to the current
+ * record to any of the fields specified by fieldNames.
  *
- * REFERENCES:
- *		Ray Cologon's UltraLog: http://www.nightwing.com.au/FileMaker/demosX/demoX01.html
- * =====================================
- */
+ * @uses UUIDTimeNIC (May be substituted for another timestamp-based UUID
+ * function)
+ * @uses UUIDGetTimestamp
+ *
+ * @global $~auditLog.initialize A flag indicating that the current change is
+ * only initializing the log as a point of comparison, and does not represent an
+ * actual data edit.
+ * @global $~auditLog.pause A flag indicating that the current change is part of
+ * a scripted process, and shouldn't be logged until the script is done.
+ *
+ * @history 2011-06-13 - Jeremy Bante <http://scr.im/jbante> - Created, inspired
+ * by the UltraLog solution by Ray Cologon
+ *
+ * @see http://www.nightwing.com.au/FileMaker/demosX/demoX01.html Ray Cologon's UltraLog
+ ******************************************************************************/
 
 Case (
 	/* Logging is paused; do nothing */
-	$~auditLog.pause;
-		logData;
+	$~auditLog.pause ;
+		logData ;
 
 	/* Step 0, check for and build record and session headers */
-	not $~auditLog.step;
+	not $~auditLog.step ;
 	Let ( [
-		~TAB = "	";
+		_TAB = "	" ;
 
 		// data to compare with most recent session and record rows
-		~uuid = UUIDTimeNIC;
-		~now = UUIDGetTimestamp ( ~uuid );
-		~sessionKey = Right ( ~uuid ; 21 );
-		~script = Get ( ScriptName );
-		~field = GetValue ( logFieldNames ; 1 );
-		~field = Substitute ( ~field ; "::" ; "¶" );
-		$~table =
-			If ( ValueCount ( ~field ) > 1;
-				GetValue ( ~field ; 1 )
-			);
+		_uuid = UUIDTimeNIC ;
+		_now = UUIDGetTimestamp ( _uuid ) ;
+		_sessionKey = Right ( _uuid ; 21 ) ;
+		_script = Get ( ScriptName ) ;
+		_field = GetValue ( logFieldNames ; 1 ) ;
+		_field = Substitute ( _field ; "::" ; "¶" ) ;
+		$~auditLog.table =
+			If ( ValueCount ( _field ) > 1 ;
+				GetValue ( _field ; 1 )
+			) ;
 
 		// find most recent session row
-		~sessionPosition = Position ( logData ; ~TAB & "session" & ~TAB ; 1 ; 1 );
-		~sessionValue = ValueCount ( Left ( logData ; ~sessionPosition ) );
-		~session = GetValue ( logData ; ~sessionValue );
+		_sessionPosition =
+			Position ( logData ; _TAB & "session" & _TAB ; 1 ; 1 ) ;
+		_sessionValue = ValueCount ( Left ( logData ; _sessionPosition ) ) ;
+		_session = GetValue ( logData ; _sessionValue ) ;
 
 		// find most recent record row
-		~recordPosition = Position ( logData ; ~TAB & "record" & ~TAB ; 1 ; 1 );
-		~recordValue = ValueCount ( Left ( logData ; ~recordPosition ) );
-		~record = GetValue ( logData ; ~recordValue );
+		_recordPosition =
+			Position ( logData ; _TAB & "record" & _TAB ; 1 ; 1 ) ;
+		_recordValue = ValueCount ( Left ( logData ; _recordPosition ) ) ;
+		_record = GetValue ( logData ; _recordValue ) ;
 
 		// build session and record rows
 		$~session =
 			If (
 				$~auditLog.initialize
-				or ~sessionKey ≠ AuditGetSessionKey ( ~session )
-				or ~script ≠ AuditGetSessionScript ( ~session );
-					~now & ~TAB
-					& If ( $~auditLog.initialize;
-						"initialize";
+				or _sessionKey ≠ AuditGetSessionKey ( _session )
+				or _script ≠ AuditGetSessionScript ( _session ) ;
+					_now
+					& _TAB
+					& If ( $~auditLog.initialize ;
+						"initialize" ;
 						/* Else */ "session"
-					) & ~TAB
-					& TextStyleAdd ( "account:" ; Italic ) & ~TAB
-					& Get ( AccountName ) & ~TAB
-					& If ( not IsEmpty ( ~script ) ;
+					)
+					& _TAB
+					& TextStyleAdd ( "account:" ; Italic )
+					& _TAB
+					& Get ( AccountName )
+					& _TAB
+					& If ( not IsEmpty ( _script ) ;
 						TextStyleAdd ( "script:" ; Italic )
-					) & ~TAB
-					& ~script & ~TAB
-					& TextStyleAdd ( "session:" ; Italic ) & ~TAB
-					& ~sessionKey
-			);
-		$~record=
+					)
+					& _TAB
+					& _script
+					& _TAB
+					& TextStyleAdd ( "session:" ; Italic )
+					& _TAB
+					& _sessionKey
+			) ;
+		$~auditLog.record=
 			If (
 				$~auditLog.initialize
-				or IsEmpty ( ~record );
-					~now & ~TAB
-					& "record" & ~TAB
-					& TextStyleAdd ( "table:" ; Italic ) & ~TAB
-					& $~table & ~TAB
-					& TextStyleAdd ( "id:" ; Italic ) & ~TAB
+				or IsEmpty ( _record ) ;
+					_now
+					& _TAB
+					& "record"
+					& _TAB
+					& TextStyleAdd ( "table:" ; Italic )
+					& _TAB
+					& $~auditLog.table
+					& _TAB
+					& TextStyleAdd ( "id:" ; Italic )
+					& _TAB
 					& primaryKey
-			);
+			) ;
 
 		// set-up for checking field values
-		$~fieldCount = ValueCount ( logFieldNames );
+		$~auditLog.fieldCount = ValueCount ( logFieldNames ) ;
 		$~auditLog.step = 1
-	];
+	] ;
 		AuditLog ( "" ; "" ; logData ; logFieldNames )
-	);
+	) ;
 
 	/* Step 1, audit field changes */
-	$~auditLog.step = 1;
+	$~auditLog.step = 1 ;
 	Let ( [
-		~TAB = "	";
-		$~auditLog.i = $~auditLog.i + 1;
+		_TAB = "	" ;
+		$~auditLog.i = $~auditLog.i + 1 ;
 
-		// Get ~fieldValue
-		~fieldName = GetValue ( logFieldNames ; $~auditLog.i );
-		~fieldValue = GetField ( ~fieldName );
-		~fieldValue = // escape ~TAB delimiter character
+		// Get _fieldValue
+		_fieldName = GetValue ( logFieldNames ; $~auditLog.i ) ;
+		_fieldValue = GetField ( _fieldName ) ;
+		_fieldValue = // escape _TAB delimiter character
 			Substitute (
-				~fieldValue;
-				[ "\\" ; "\\\\" ];
-				[ ~TAB ; "\\t" ]
-			);
-		~fieldName = Substitute ( ~fieldName ; $~table & "::" ; "" );
+				_fieldValue ;
+				[ "\\" ; "\\\\" ] ;
+				[ _TAB ; "\\t" ]
+			) ;
+		_fieldName = Substitute ( _fieldName ; $~auditLog.table & "::" ; "" ) ;
 
-		// Get ~priorValue for comparison
-		~priorStart =
+		// Get _priorValue for comparison
+		_priorStart =
 			Position (
-				logData;
-				~TAB & "field:" & ~TAB & ~fieldName & ~TAB;
-				1;
+				logData ;
+				_TAB & "field:" & _TAB & _fieldName & _TAB ;
+				1 ;
 				1
-			);
-		~priorStart =
-			If ( ~priorStart; // ~fieldName was found in log
-				Position ( logData ; ~TAB ; ~priorStart + 1 ; 3 ) + 1
-			);
-		~priorEnd =
-			If ( ~priorStart; // ~fieldName was found in log
-				Position ( logData ; ~TAB ; ~priorStart + 1 ; 1 )
-			);
-		~priorValue =
-			If ( ~priorStart; // ~fieldName was found in log
+			) ;
+		_priorStart =
+			If ( _priorStart ;	// _fieldName was found in log
+				Position ( logData ; _TAB ; _priorStart + 1 ; 3 ) + 1
+			) ;
+		_priorEnd =
+			If ( _priorStart ;	// _fieldName was found in log
+				Position ( logData ; _TAB ; _priorStart + 1 ; 1 )
+			) ;
+		_priorValue =
+			If ( _priorStart ;	// _fieldName was found in log
 				Evaluate (
 					Middle (
-						logData;
-						~priorStart;
-						~priorEnd - ~priorStart
+						logData ;
+						_priorStart ;
+						_priorEnd - _priorStart
 					)
 				)
-			);
+			) ;
 
-		// Build $~editList
-		~edit =
+		// Build $~auditLog.editList
+		_edit =
 			If (
 				$~auditLog.initialize
-				or not Exact ( ~fieldValue ; ~priorValue );
-					UUIDGetTimestamp ( UUIDTimeNIC ) & ~TAB
-					& If ( $~auditLog.initialize;
-						"initialize";
+				or not Exact ( _fieldValue ; _priorValue ) ;
+					UUIDGetTimestamp ( UUIDTimeNIC )
+					& _TAB
+					& If ( $~auditLog.initialize ;
+						"initialize" ;
 						/* Else */ "edit"
-					) & ~TAB
-					& TextStyleAdd ( "field:" ; Italic ) & ~TAB
-					& ~fieldName & ~TAB
-					& If ( not $~auditLog.initialize;
-						TextStyleAdd ( "to:" ; Italic )
-					) & ~TAB
-					& Quote ( ~fieldValue ) & ~TAB
-					& If ( not $~auditLog.initialize;
-						TextStyleAdd ( "from:" ; Italic ) & ~TAB
-						& Quote ( ~priorValue )
 					)
-			);
-		$~editList = List ( ~edit ; $~editList );
+					& _TAB
+					& TextStyleAdd ( "field:" ; Italic )
+					& _TAB
+					& _fieldName
+					& _TAB
+					& If ( not $~auditLog.initialize ;
+						TextStyleAdd ( "to:" ; Italic )
+					)
+					& _TAB
+					& Quote ( _fieldValue )
+					& _TAB
+					& If ( not $~auditLog.initialize ;
+						TextStyleAdd ( "from:" ; Italic )
+						& _TAB
+						& Quote ( _priorValue )
+					)
+			) ;
+		$~auditLog.editList = List ( _edit ; $~auditLog.editList ) ;
 
-		$~auditLog.step = If ( $~auditLog.i ≥ $~fieldCount ; $~auditLog.step + 1 ; /*Else*/ $~auditLog.step )
-	];
+		$~auditLog.step =
+			If ( $~auditLog.i ≥ $~auditLog.fieldCount ;
+				$~auditLog.step + 1 ;
+				/* Else */ $~auditLog.step
+			)
+	] ;
 		AuditLog ( "" ; "" ; logData ; logFieldNames )
-	);
+	) ;
 
 	/* Step 2, format result */
-	$~auditLog.step = 2;
+	$~auditLog.step = 2 ;
 	Let ( [
-		~editList = $~editList;
-		~editsExist = not IsEmpty ( ~editList );
-		~session = $~session;
-		~sessionExists = not IsEmpty ( ~session );
-		~record = $~record;
-		~color =
-			If ( $~auditLog.initialize;
-				RGB ( 204 ; 204 ; 204 ); // 80% Gray
-				/* Else */ 0 // Black
-			);
+		_editList = $~auditLog.editList ;
+		_editsExist = not IsEmpty ( _editList ) ;
+		_session = $~session ;
+		_sessionExists = not IsEmpty ( _session ) ;
+		_record = $~auditLog.record ;
+		_color =
+			If ( $~auditLog.initialize ;
+				RGB ( 204 ; 204 ; 204 ) ;	// 80% Gray
+				/* Else */ 0	// Black
+			) ;
 
 		// purge variables
-		$~editList = "";	// Null
-		$~fieldCount = "";
-		$~auditLog.i = "";
-		$~record = "";
-		$~session = "";
-		$~auditLog.step = "";
-		$~table = ""
-	];
+		$~auditLog.editList = "" ;
+		$~auditLog.fieldCount = "" ;
+		$~auditLog.i = "" ;
+		$~auditLog.record = "" ;
+		$~session = "" ;
+		$~auditLog.step = "" ;
+		$~auditLog.table = ""
+	] ;
 		List (
-			TextColor ( ~editList ; ~color );
-			TextStyleAdd ( TextColor ( ~session ; ~color ) ; Bold );
-			TextStyleAdd ( ~record ; Bold );
-			If ( ~sessionExists ; "	" );
+			TextColor ( _editList ; _color ) ;
+			TextStyleAdd ( TextColor ( _session ; _color ) ; Bold ) ;
+			TextStyleAdd ( _record ; Bold ) ;
+			If ( _sessionExists ; "	" ) ;
 			If ( not $~auditLog.initialize ; logData )
 		)
-	);
+	) ;
 
 	/* Else, error with $~auditLog.step */
 		Let ( [
-			$~auditLog.step = ""	// Null
-		];
+			$~auditLog.step = ""
+		] ;
 			AuditLog ( "" ; primaryKey ; logData ; logFieldNames )
 		)
 )

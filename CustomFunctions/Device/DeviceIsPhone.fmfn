@@ -1,18 +1,10 @@
-﻿/**
- * ======================================
+﻿/*******************************************************************************
  * DeviceIsPhone
  *
- * RETURNS:
- *		True when the function is called in the context of an iPhone, and false
- *		otherwise.
+ * @return True (1) when the function is called in the context of an iPhone or
+ * iPod Touch, and False (0) otherwise.
  *
- * PARAMETERS: none
- *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2010-08-21 by Jeremy Bante <http://scr.im/jbante>.
- * ======================================
- */
+ * @history 2010-08-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Left ( Get ( ApplicationVersion ) ; 3 ) = "Go "

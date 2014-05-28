@@ -1,71 +1,61 @@
-/**
- * =====================================
+/*******************************************************************************
  * KeyGetRecord ( theKey )
  *
- * RETURNS:
- *		The value of the recordKey encoded in theKey
+ * The tableKey is encoded as a series of bytes in the least significant
+ * positions of the combined key (least significant when the check digit is
+ * removed). The first byte (from right to left) with its most significant bit
+ * set to 1 (where Div ( byte ; 128 ) = 1) is the last byte of the tableKey.
+ * What's left of the number is the recordKey.
  *
- * PARAMETERS:
- *		theKey: A number representing an encoded record-table-check key.
+ * For example, the key 809047696 has an ending check digit of 6, so the
+ * remaining key is 80904679. In binary, this is: 100 11010010 10000010
+ * 01000001. The second least significant byte, 10000010, is the first byte with
+ * a 1 in its most significant bit, so it is the last byte of the tableKey. So
+ * the recordKey is 10011010010 in binary, or 1234 in decimal notation.
  *
- * DEPENDENCIES: none
+ * @parameter theKey: A number representing an encoded record-table-check key
  *
- * EXAMPLE: KeyGetRecord ( Key ( 1234 ; 321 ) ) = 1234
+ * @return The value of the recordKey encoded in theKey
  *
- * NOTES:
- *		The tableKey is encoded as a series of bytes in the least significant
- *		positions of the combined key (least significant when the check digit is
- *		removed). The first byte (from right to left) with its most significant
- *		bit set to 1 (where Div ( byte ; 128 ) = 1) is the last byte of the
- *		tableKey. What's left of the number is the recordKey.
- *
- *		For example, the key 809047696 has an ending check digit of 6, so the
- *		remaining key is 80904679. In binary, this is:
- *		100 11010010 10000010 01000001
- *		The second least significant byte, 10000010, is the first byte with a 1
- *		in its most significant bit, so it is the last byte of the tableKey. So
- *		the recordKey is 10011010010 in binary, or 1234 in decimal notation.
- *
- * HISTORY:
- *		CREATED on 2011-12-09 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-12-09 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Case (
 	/* Step 0, set-up */
-	not $~key.step;
+	not $~key.step ;
 		Let ( [
-			~key = Int ( Abs ( GetAsNumber ( theKey ) ) );	// Scrub key value
-			~key = Left ( ~key ; Length ( ~key ) - 1 );	// Remove check digit
-			$~key.step = If ( IsEmpty ( ~key ) ; -1 /* error */ ; /* Else */ 1 )
-		];
-			KeyGetRecord ( ~key )
-		);
+			_key = Int ( Abs ( GetAsNumber ( theKey ) ) ) ;	// Scrub key value
+			_key =
+				Left ( _key ; Length ( _key ) - 1 ) ;	// Remove check digit
+			$~key.step = If ( IsEmpty ( _key ) ; -1 /* error */ ; /* Else */ 1 )
+		] ;
+			KeyGetRecord ( _key )
+		) ;
 
 	/* Step 1, parse tableKey */
-	$~key.step = 1;
+	$~key.step = 1 ;
 		Let ( [
-			~byte = Mod ( theKey ; 256 );
-			~key = Div ( theKey ; 256 );
+			_byte = Mod ( theKey ; 256 ) ;
+			_key = Div ( theKey ; 256 ) ;
 			$~key.step =
 				Case (
-					Div ( ~byte ; 128 ) ; $~key.step + 1;	// highest bit is 1
-					not ~key ; -1;	// ran out of bytes to process
+					Div ( _byte ; 128 ) ; $~key.step + 1 ;	// highest bit is 1
+					not _key ; -1 ;	// ran out of bytes to process
 					/* Else */ $~key.step
 				)
-		];
-			KeyGetRecord ( ~key )
-		);
+		] ;
+			KeyGetRecord ( _key )
+		) ;
 
 
 	/* Step 2, clean-up and return result */
-	$~key.step = 2 or $~key.step = -1;
+	$~key.step = 2 or $~key.step = -1 ;
 		Let ( [
-			~error = $~key.step = -1;
+			_error = $~key.step = -1 ;
 
-			// Purge variables
+			// purge variables
 			$~key.step = ""
-		];
-			If ( ~error ; "?" ; /* Else */ ~key )
+		] ;
+			If ( _error ; "?" ; /* Else */ _key )
 		)
 )

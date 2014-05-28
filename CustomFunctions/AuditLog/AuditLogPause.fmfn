@@ -1,27 +1,17 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * AuditLogPause
+ * Sets a locally-scoped $script variable that will signal the AuditLog function
+ * to not immediately log changes.
  *
- * PURPOSE:
- *		Sets a locally-scoped $script variable that will signal the AuditLog
- *		function to not immediately log changes.
+ * @return "" (Null)
  *
- * RETURNS: "" (Null)
+ * @global $~auditLog.pause
  *
- * PARAMETERS: none
- *
- * DEPENDENCIES: none
- *
- * VARIABLES:
- *		$~auditLog.pause
- *
- * HISTORY:
- *		CREATED on 2011-05-27 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-05-27 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
 	$~auditLog.pause = True
-];
+] ;
 	""
 )

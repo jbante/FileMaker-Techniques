@@ -1,114 +1,104 @@
-/**
- * =====================================
+/*******************************************************************************
  * ForEach ( valueList ; expression )
+ * ForEach repeatedly applies a calculation to each value in a ¶-delimited list.
+ * For each value in valueList, evaluates expression, substituting the value for
+ * each "~v" in expression. Expressions may also reference the value index (line
+ * number) being evaluated with "~n". This is analogous to Map functionality in
+ * functional programming languages.
  *
- * PURPOSE:
- *		ForEach repeatedly applies a calculation to each value in a ¶-delimited
- *		list. For each value in valueList, evaluates expression, substituting
- *		the value for each "~v" in expression. Expressions may also reference
- *		the value index (line number) being evaluated with "~n". This is
- *		analogous to Map functionality in functional programming languages.
+ * @example
+ *	ForEach (
+ *		List ( "1 One" ; "2 Two" ; "3 Three"  ) ;
+ *		"Left ( ~v ; 1 ) + ~n"
+ *	)	// = "2¶4¶6"
  *
- * RETURNS:
- *		A ¶-delimited list of the results of evaluating expression on valueList.
+ * @parameter valueList: A ¶-delimited list of inputs to expression
+ * @parameter expression: A calculation to evaluate
  *
- * PARAMETERS:
- *		valueList: A ¶-delimited list of inputs to expression
- *		expression: A calculation to evaluate
+ * @return A ¶-delimited list of the results of evaluating expression on
+ * valueList
  *
- * EXAMPLE:
- *		ForEach (
- *			List ( "1 One" ; "2 Two" ; "3 Three"  );
- *			"Left ( ~v ; 1 ) + ~n"
- *		)	// = "2¶4¶6"
+ * @history 2011-11-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-12-23 - Jeremy Bante <http://scr.im/jbante> - include a value
+ * number in calculations.
+ * @history 2012-01-10 - Jeremy Bante <http://scr.im/jbante> - combine recursive
+ * and non-recursive versions of the function, partly inspired by the CustomList
+ * function by Agnès Barouh.
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2012-01-10 by Jeremy Bante to combine recursive and
- *		non-recursive versions of the function, partly inspired by the
- *		CustomList function by Agnès Barouh.
- *		MODIFIED on 2011-12-23 by Jeremy Bante to include a value number in
- *		calculations.
- *		CREATED on 2011-11-11 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Map_(higher-order_function)
- *		http://fmfunctions.com/functions_display_record.php?functionId=118
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Map_(higher-order_function)
+ ******************************************************************************/
 
 Case (
 	/* Step 0, set-up */
-	not $~fe.step;
+	not $~fe.step ;
 		Let ( [
-			$~fe.valueCount = ValueCount ( valueList );
+			$~fe.valueCount = ValueCount ( valueList ) ;
 			$~fe.evaluateLimit =
-				If ( Left ( Get ( ApplicationVersion ) ; 2 ) = "Go";
-					420;
+				If ( Left ( Get ( ApplicationVersion ) ; 2 ) = "Go" ;
+					420 ;
 					/* Else */ 2600
-				);
+				) ;
 
 			// build text of calculation to wrap around each value
-			~start = "Let ( [ $~fe.n = $~fe.n + 1 ; ~n = $~fe.n ; ~v = \"";
-			~end =
+			_start = "Let ( [ $~fe.n = $~fe.n + 1 ; ~n = $~fe.n ; ~v = \"" ;
+			_end =
 				"\" ]; "
 				& Substitute ( expression ; ¶ ; "" )
-				& " ) & \¶ &";
+				& " ) & \¶ &" ;
 
 			$~fe.step = 1
-		];
+		] ;
 			ForEach (
-				"";
-				~start	// wrap text of calculation around each value
-				& Substitute ( valueList;
+				"" ;
+				_start	// wrap text of calculation around each value
+				& Substitute ( valueList ;
 					[ "\\" ; "\\\\" ];	// Quote() each value manually
-					[ "\"" ; "\\\"" ];
-					[ "\¶" ; "\\\¶" ];
-					[ ¶ ; ~end & ¶ & ~start ]
+					[ "\"" ; "\\\"" ] ;
+					[ "\¶" ; "\\\¶" ] ;
+					[ ¶ ; _end & ¶ & _start ]
 				)
-				& ~end
+				& _end
 			)
-		);
+		) ;
 
 	/* Step 1, evaluate calculation in chunks */
-	$~fe.step = 1;
+	$~fe.step = 1 ;
 		Let ( [
-			$~fe.i = $~fe.i + 1;
-			~result =
+			$~fe.i = $~fe.i + 1 ;
+			_result =
 				MiddleValues (
-					expression;
-					( $~fe.i - 1 ) * $~fe.evaluateLimit + 1;
+					expression ;
+					( $~fe.i - 1 ) * $~fe.evaluateLimit + 1 ;
 					$~fe.evaluateLimit
-				);
-			~result = Evaluate ( ~result & "\"\"" );
-			$~fe.resultList = $~fe.resultList & ~result ;
+				) ;
+			_result = Evaluate ( _result & "\"\"" ) ;
+			$~fe.resultList = $~fe.resultList & _result ;
 
 			$~fe.step =	// advance if there are no more chunks to evaluate
-				If ( $~fe.i * $~fe.evaluateLimit < $~fe.valueCount;
-					$~fe.step;
+				If ( $~fe.i * $~fe.evaluateLimit < $~fe.valueCount ;
+					$~fe.step ;
 					/* Else */ $~fe.step + 1
 				)
-		];
+		] ;
 			ForEach ( "" ; expression )
-		);
+		) ;
 
 	/* Step 2, clean-up and return result */
-	$~fe.step = 2;
+	$~fe.step = 2 ;
 		Let ( [
-			~result =
-				Substitute ( $~fe.resultList & "<|<|<END>|>|>";
-					[ "¶<|<|<END>|>|>" ; "" ];
+			_result =
+				Substitute ( $~fe.resultList & "<|<|<END>|>|>" ;
+					[ "¶<|<|<END>|>|>" ; "" ] ;
 					[ "<|<|<END>|>|>" ; "" ]
-				);
+				) ;
 
 			// purge variables
-			$~fe.i = "";
-			$~fe.n = "";
-			$~fe.resultList = "";
-			$~fe.step = "";
+			$~fe.i = "" ;
+			$~fe.n = "" ;
+			$~fe.resultList = "" ;
+			$~fe.step = "" ;
 			$~fe.valueCount = ""
-		];
-			~result
+		] ;
+			_result
 		)
 )

@@ -1,120 +1,106 @@
-/**
- * =====================================
+/*******************************************************************************
  * Key ( recordKey ; tableKey )
+ * Encodes recordKey and tableKey as a single numeric value to create keys so
+ * that:
+ *	- The key is strictly numeric (base 10).
+ *	- The key is schema-wide unique.
+ *	- The key is relatively compact.
+ *	- A key's "type" can be identified (the tableKey is retrievable).
+ *	- The key can be tested for common transcription errors.
  *
- * PURPOSE:
- *		Encodes recordKey and tableKey as a single numeric value to create keys
- *		so that:
- *		- The key is strictly numeric (base 10).
- *		- The key is schema-wide unique.
- *		- The key is relatively compact.
- *		- A key's "type" can be identified (the tableKey is retrievable).
- *		- The key can be tested for common transcription errors.
+ * @parameter recordKey: A number uniquely identifying a record within its table
+ * @parameter tableKey: A number uniquely identifying a table within a schema
  *
- * RETURNS:
- *		A number, including the encoded recordKey and tableKey, plus a check
- *		digit
+ * @return A number
  *
- * PARAMETERS:
- *		recordKey: A number uniquely identifying a record within its table
- *		tableKey: A number uniquely identifying a table within a schema
+ * @history 2011-12-08 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * DEPENDENCIES: none
- *
- * NOTES:
- *		Notes go here
- *
- * HISTORY:
- *		CREATED on 2011-12-08 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Verhoeff Check Digit: http://en.wikipedia.org/wiki/Verhoeff_algorithm
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Verhoeff_algorithm Verhoeff Check Digit
+ ******************************************************************************/
+
 Case (
 	/* Step 0, initialize process */
-	not $~key.step;
+	not $~key.step ;
 		Let ( [
-			~recordKey = Int ( Abs ( GetAsNumber ( recordKey ) ) );
-			~tableKey = Int ( Abs ( GetAsNumber ( tableKey ) ) );
-
+			_recordKey = Int ( Abs ( GetAsNumber ( recordKey ) ) ) ;
+			_tableKey = Int ( Abs ( GetAsNumber ( tableKey ) ) ) ;
 			$~key.step = 1
-		];
-			Key ( ~recordKey ; ~tableKey )
-		);
+		] ;
+			Key ( _recordKey ; _tableKey )
+		) ;
 
 	/* Step 1, encode tableKey */
-	$~key.step = 1;
+	$~key.step = 1 ;
 		Let ( [
-			$~key.i = $~key.i + 1;
-			~byte = Mod ( tableKey ; 128 );
-			~tableKey = Div ( tableKey ; 128 );
+			$~key.i = $~key.i + 1 ;
+			_byte = Mod ( tableKey ; 128 ) ;
+			_tableKey = Div ( tableKey ; 128 ) ;
 
-			~byte =	// highest bit indicates last byte of tableKey
-				If ( not ~tableKey ; 128 )
-				+ ~byte;
-			$~key = ~byte * ( 2 ^ ( 8 * ( $~key.i - 1 ) ) ) + $~key;
+			_byte =	// highest bit indicates last byte of tableKey
+				If ( not _tableKey ; 128 )
+				+ _byte ;
+			$~key = _byte * ( 2 ^ ( 8 * ( $~key.i - 1 ) ) ) + $~key ;
 
 			$~key.step =
-				If ( ~tableKey ; $~key.step ; /* Else */ $~key.step + 1 )
-		];
-			Key ( recordKey ; ~tableKey )
-		);
+				If ( _tableKey ; $~key.step ; /* Else */ $~key.step + 1 )
+		] ;
+			Key ( recordKey ; _tableKey )
+		) ;
 
 	/* Step 2, encode recordKey, and set-up check digit */
-	$~key.step = 2;
+	$~key.step = 2 ;
 		Let ( [
 			$~key =
 				recordKey * ( 2 ^ ( 8 * $~key.i ) )
-				+ $~key;
-			$~key.i = 0;
+				+ $~key ;
+			$~key.i = 0 ;
 			$~key.step = $~key.step + 1
-		];
+		] ;
 			Key ( $~key ; "" )
-		);
+		) ;
 
 	/* Step 3; process check digit */
-	$~key.step = 3;
+	$~key.step = 3 ;
 		Let ( [
-			~digit = Right ( recordKey ; 1 );
-			~newKey = Left ( recordKey ; Length ( recordKey ) - 1 );
+			_digit = Right ( recordKey ; 1 ) ;
+			_newKey = Left ( recordKey ; Length ( recordKey ) - 1 ) ;
 
-			$~key.i = $~key.i + 1;
-			~position = Mod ( $~key.i ; 8 );
-			~permutation =
+			$~key.i = $~key.i + 1 ;
+			_position = Mod ( $~key.i ; 8 ) ;
+			_permutation =
 				Middle (
-					"01234567891576283094580379614289160435279453126870428657390127938064157046913258";
-					~position * 10 + ~digit + 1;
+					"01234567891576283094580379614289160435279453126870428657390127938064157046913258" ;
+					_position * 10 + _digit + 1 ;
 					1
-				);
+				) ;
 			$~key.checkDigit =
 				Middle (
-					"0123456789123406789523401789563401289567401239567859876043216598710432765982104387659321049876543210";
-					$~key.checkDigit * 10 + ~permutation + 1;
+					"0123456789123406789523401789563401289567401239567859876043216598710432765982104387659321049876543210" ;
+					$~key.checkDigit * 10 + _permutation + 1 ;
 					1
-				);
+				) ;
 
 			$~key.step =
-				If ( IsEmpty ( ~newKey );
-					$~key.step + 1;
+				If ( IsEmpty ( _newKey ) ;
+					$~key.step + 1 ;
 					/* Else */ $~key.step
 				)
-		];
-			Key ( ~newKey ; "" )
-		);
+		] ;
+			Key ( _newKey ; "" )
+		) ;
 
 	/* Step 4, clean-up and return result */
-	$~key.step = 4;
+	$~key.step = 4 ;
 		Let ( [
-			~checkDigit = Middle ( "0432156789" ; $~key.checkDigit + 1 ; 1 );
-			~result = $~key & ~checkDigit;
+			_checkDigit = Middle ( "0432156789" ; $~key.checkDigit + 1 ; 1 ) ;
+			_result = $~key & _checkDigit ;
 
-			// Purge variables
-			$~key = "";
-			$~key.checkDigit = "";
-			$~key.i = "";
+			// purge variables
+			$~key = "" ;
+			$~key.checkDigit = "" ;
+			$~key.i = "" ;
 			$~key.step = ""
-		];
-			~result
+		] ;
+			_result
 		)
 )

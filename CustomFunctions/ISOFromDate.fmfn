@@ -1,23 +1,14 @@
-/**
- * =====================================
+/*******************************************************************************
  * ISOFromDate ( theDate )
  *
- * RETURNS:
- *		theDate rendered in ISO 8601 format, which is:
- *		YYYY-MM-DD
+ * @parameter theDate: The FileMaker date to coerce to ISO 8601 format
  *
- * PARAMETERS:
- *		theDate: The FileMaker date to coerce to ISO 8601 format
+ * @return theDate rendered in ISO 8601 format: YYYY-MM-DD
  *
- * DEPENDENCIES: none
+ * @history 2011-09-22 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2011-09-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/ISO_8601
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
 
 Right ( "0000" & Year ( theDate ) ; 4 )
 & "-"

@@ -1,27 +1,19 @@
-/**
- * =====================================
+/*******************************************************************************
  * ISOFromTimestamp ( theTimestamp )
  *
- * RETURNS:
- *		theTimestamp rendered in ISO 8601 format, which is:
- *		YYYY-MM-DD hh:mm:ss (24-hour time)
+ * @parameter theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
  *
- * PARAMETERS:
- *		theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
+ * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DD hh:mm:ss
+ * (24-hour time)
  *
- * DEPENDENCIES: none
+ * @history 2011-05-17 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2011-05-17 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/ISO_8601
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
 
 Let ( [
-	~seconds = Seconds ( theTimestamp )
-];
+	_seconds = Seconds ( theTimestamp )
+] ;
 	Right ( "0000" & Year ( theTimestamp ) ; 4 )
 	& "-"
 	& Right ( "00" & Month ( theTimestamp ) ; 2 )
@@ -32,6 +24,6 @@ Let ( [
 	& ":"
 	& Right ( "00" & Minute ( theTimestamp ) ; 2 )
 	& ":"
-	& If ( ~seconds < 10 ; "0" )	// timestamp may contain fractional seconds
-	& ~seconds
+	& If ( _seconds < 10 ; "0" )	// timestamp may contain fractional seconds
+	& _seconds
 )

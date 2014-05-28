@@ -1,22 +1,13 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * ArrayQuoteList ( valueList )
- *
- * PURPOSE:
  * Quotes the values in a ¶-delimited value list individually.
  *
- * RETURNS:
- * The quoted values from valueList, in the original order
+ * @parameter valueList: A ¶-delimited list of values to quote
  *
- * PARAMETERS:
- * valueList: A ¶-delimited list of values to quote
+ * @return The quoted values from valueList, in the original order
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- * CREATED on 2011-01-25 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-01-25 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Case (
 	/*Step 1, initialize variables*/
@@ -33,7 +24,7 @@ Case (
 	/*Step 1, clean-up and return value*/
 	$~step = 1;
 	Let ( [
-		~quotedValues = $~quotedValues;
+		_quotedValues = $~quotedValues;
 
 		//purge variables
 		$~i = "";
@@ -41,6 +32,6 @@ Case (
 		$~quotedValues = "";
 		$~value = ""
 	];
-		~quotedValues
+		_quotedValues
 	)
 )

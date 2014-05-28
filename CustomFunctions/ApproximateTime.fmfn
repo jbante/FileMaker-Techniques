@@ -1,49 +1,48 @@
-/**
- * =====================================
+/*******************************************************************************
  * ApproximateTime ( theTime )
+ * Short description
  *
- * RETURNS:
- *		theTime expressed as an interval length in only its most significant
- *		order of magnitude (hours, minutes, or seconds)
+ * Long description
  *
- * PARAMETERS:
- *		theTime
+ * @assumptions
+ * Called from "Layout Name" (TableName)
  *
- * DEPENDENCIES: none
+ * @parameter theTime: a time
  *
- * HISTORY:
- *		CREATED on 2011-06-05 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @return theTime expressed as an interval length in only its most significant
+ * order of magnitude (hours, minutes, or seconds)
+ *
+ * @history 2011-06-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
-	~seconds = Round ( GetAsNumber ( GetAsTime ( theTime ) ) ; 0 );
-	~minutes = ~seconds / 60
+	_seconds = Round ( GetAsNumber ( GetAsTime ( theTime ) ) ; 0 );
+	_minutes = _seconds / 60
 ];
 	Case (
-		~minutes > 120;	// Hours timescale
+		_minutes > 120;	// Hours timescale
 			"~"
-			& Round ( ~minutes / 60 ; 0 )
+			& Round ( _minutes / 60 ; 0 )
 			& " hours";
 
-		~minutes > 60;	// Hours timescale
+		_minutes > 60;	// Hours timescale
 			"~"
-			& Round ( ~minutes / 60 ; 1 )
+			& Round ( _minutes / 60 ; 1 )
 			& " hours";
 
-		~seconds > 120;	// Minutes timescale
+		_seconds > 120;	// Minutes timescale
 			"~"
-			& Round ( ~seconds / 60 ; 0 )
+			& Round ( _seconds / 60 ; 0 )
 			& " minutes";
 
-		~seconds > 60;	// Minutes timescale
+		_seconds > 60;	// Minutes timescale
 			"~"
-			& Round ( ~seconds / 60 ; 1 )
+			& Round ( _seconds / 60 ; 1 )
 			& " minutes";
 
 		/* Else, Seconds timescale */
 			"~"
-			& ~seconds
+			& _seconds
 			& " seconds"
 	)
 )

@@ -1,33 +1,25 @@
-/**
- * =====================================
+/*******************************************************************************
  * #GetField ( field )
+ * Returns the $localVariable with name matching the field passed as a
+ * parameter. For example, #GetField ( Table:: fieldName ) would return the
+ * contents of $fieldName. This may be useful for field auto-enter calculations.
  *
- * PURPOSE:
- *		Returns the $localVariable with name matching the field passed as a
- *		parameter. For example, #GetField ( fieldName ) would return the
- *		contents of $fieldName. This may be useful for field auto-enter
- *		calculations.
+ * @parameter field: The field (not the field name) to get a variable value for
  *
- * RETURNS:
- *		The contents of the $localVariable with the same name as the passed
- *		field.
+ * @return The contents of the $localVariable with the same name as the passed
+ * field.
  *
- * PARAMETERS:
- *		field: The field (not the field name) to get a variable value for
+ * @history 2011-05-22 - Jeremy Bante <http://scr.im/jbante> - Created, based on
+ * a function by Matt Petrowsky.
  *
- * DEPENDENCIES: none
  *
- * HISTORY:
- *		CREATED on 2011-05-22 by Jeremy Bante <http://scr.im/jbante>.
- *		INSPIRED by a function by Matt Petrowsky.
- * =====================================
- */
+ ******************************************************************************/
 
 Let ( [
-	~name = GetFieldName ( field );
-	~name = Substitute ( ~name ; "::" ; "¶" );
-	~name = GetValue ( ~name ; ValueCount ( ~name ) );
-	~name = Substitute ( ~name ; " " ; "" )
+	_name = GetFieldName ( field );
+	_name = Substitute ( _name ; "::" ; "¶" );
+	_name = GetValue ( _name ; ValueCount ( _name ) );
+	_name = Substitute ( _name ; " " ; "" )
 ];
-	Evaluate ( "$" & ~name )
+	Evaluate ( "$" & _name )
 )

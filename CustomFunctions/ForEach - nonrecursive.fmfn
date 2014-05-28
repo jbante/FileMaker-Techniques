@@ -1,72 +1,63 @@
-/**
- * =====================================
- * ForEach ( valueList ; expression )
+/*******************************************************************************
+ *ForEach ( valueList ; expression )
+ * ForEach repeatedly applies a calculation to each value in a ¶-delimited list.
+ * For each value in valueList, evaluates expression, substituting the value for
+ * each "~v" in expression. Expressions may also reference the value index (line
+ * number) being evaluated with "~n". This is analogous to Map functionality in
+ * functional programming languages.
  *
- * PURPOSE:
- *		ForEach repeatedly applies a calculation to each value in a ¶-delimited
- *		list. For each value in valueList, evaluates expression, substituting
- *		the value for each "~v" in expression. Expressions may also reference
- *		the value index (line number) being evaluated with "~n". This is
- *		analogous to Map functionality in functional programming languages.
+ * @example
+ *	ForEach (
+ *		List ( "1 One" ; "2 Two" ; "3 Three"  ) ;
+ *		"Left ( ~v ; 1 ) + ~n"
+ *	)	// = "2¶4¶6"
  *
- * RETURNS:
- *		A ¶-delimited list of the results of evaluating expression on valueList.
+ * @parameter valueList: A ¶-delimited list of inputs to expression
+ * @parameter expression: A calculation to evaluate
  *
- * PARAMETERS:
- *		valueList: A ¶-delimited list of inputs to expression
- *		expression: A calculation to evaluate
+ * @return A ¶-delimited list of the results of evaluating expression on
+ * valueList
  *
- * EXAMPLE:
- *		ForEach (
- *			List ( "1 One" ; "2 Two" ; "3 Three"  );
- *			"Left ( ~v ; 1 ) + ~n"
- *		)	// = "2¶4¶6"
+ * @history 2011-11-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-12-23 - Jeremy Bante <http://scr.im/jbante> - include a value
+ * number in calculations.
+ * @history 2012-01-10 - Jeremy Bante <http://scr.im/jbante> - combine recursive
+ * and non-recursive versions of the function, partly inspired by the CustomList
+ * function by Agnès Barouh.
+ * @history 2012-02-13 - Jeremy Bante <http://scr.im/jbante> - enable nested
+ * calls.
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2012-02-13 by Jeremy Bante to enable nested calls.
- *		MODIFIED on 2012-01-10 by Jeremy Bante to combine recursive and
- *		non-recursive versions of the function, partly inspired by the
- *		CustomList function by Agnès Barouh.
- *		MODIFIED on 2011-12-23 by Jeremy Bante to include a value number in
- *		calculations.
- *		CREATED on 2011-11-11 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Map_(higher-order_function)
- *		http://fmfunctions.com/functions_display_record.php?functionId=118
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Map_(higher-order_function)
+ ******************************************************************************/
 
 Let ( [
-	$~fe.i = $~fe.i + 1;
-	~i = $~fe.i;
+	$~fe.i = $~fe.i + 1 ;
+	_i = $~fe.i ;
 
 	// build text of calculation to wrap around each value
-	~start =
+	_start =
 		"Let ( [ $~fe.n["
-		& ~i
+		& _i
 		& "] = $~fe.n["
-		& ~i
+		& _i
 		& "] + 1 ; ~n = $~fe.n["
-		& ~i
-		& "] ; ~v = \"";
-	~end =
+		& _i
+		& "] ; ~v = \"" ;
+	_end =
 		"\" ]; "
 		& Substitute ( expression ; ¶ ; "" )
-		& " )";
-	~middle = ~end & "¶& \¶ & " & ~start
-];
+		& " )" ;
+	~middle = _end & "¶& \¶ & " & _start
+] ;
 	Evaluate (
-		~start	// wrap text of calculation around each value
-		& Substitute ( valueList;
-			[ "\\" ; "\\\\" ];	// Quote() each value manually
-			[ "\"" ; "\\\"" ];
-			[ "\¶" ; "\\\¶" ];
+		_start	// wrap text of calculation around each value
+		& Substitute ( valueList ;
+			[ "\\" ; "\\\\" ] ;	// Quote() each value manually
+			[ "\"" ; "\\\"" ] ;
+			[ "\¶" ; "\\\¶" ] ;
 			[ ¶ ; ~middle ]
 		)
-		& ~end
+		& _end
 	)
-	& Let ( $~fe.n[~i] = "" ; "" )
+	& Let ( $~fe.n[_i] = "" ; "" )
 )

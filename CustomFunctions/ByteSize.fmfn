@@ -1,50 +1,44 @@
-/**
- * =====================================
+/*******************************************************************************
  * ByteSize ( bytes ; precision )
+ * Converts a number of bytes into a unit appropriate for the order of
+ * magnitude.
  *
- * RETURNS:
- *		The same quantity of bytes expressed in a unit of appropriate magnitude.
+ * SI (metric) and binary units for *bytes are different for different orders of
+ * magnitude. This function was designed with the assumption that a given
+ * solution will only use one or the other, which can be controlled by setting
+ * the _isMetric Let variable in the function. If both are needed in the same
+ * file, make separate copies of this function, one for each system of units.
+ * Alternately, add isMetric as a function argument.
  *
- * PARAMETERS:
- *		bytes: The number of bytes.
- *		precision: The precision for the final result, treated the same as the
- *		Round function.
+ * @parameter bytes: The number of bytes
+ * @parameter precision: The precision for the final result, treated the same as
+ * the Round function
  *
- * DEPENDENCIES: none
+ * @return The same quantity of bytes expressed in a unit of appropriate
+ * magnitude.
  *
- * NOTES:
- *		SI (metric) and binary units for *bytes are different for different
- *		orders of magnitude. This function was designed with the assumption that
- *		a given solution will only use one or the other, which can be controlled
- *		by setting the ~isMetric Let variable in the function. If both are
- *		needed in the same file, make separate copies of this function, one for
- *		each system of units. Alternately, add isMetric as a function argument.
+ * @history 2012-06-01 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2012-06-01 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Byte
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Byte
+ ******************************************************************************/
 
 Let ( [
-	~isMetric = False;
+	_isMetric = False ;
 
-	~ratio = If ( ~isMetric ; 1000 ; /* Else */ 1024 );
-	~magnitude = Floor ( Ln ( bytes ) / Ln ( ~ratio ) );
-	~magnitude = Min ( ~magnitude ; 8 )	// don't exceed known magnitude units
-];
-	Round ( bytes / ~ratio ^ ~magnitude ; precision )	// convert magnitude
-	& Choose ( ~magnitude;	// postfix for magnitude appropriate unit
-		" B";	// byte
-		" kB";	// kilo
-		" MB";	// mega
-		" GB";	// giga
-		" TB";	// tera
-		" PB";	// peta
-		" EB";	// exa
-		" ZB";	// zetta
+	_ratio = If ( _isMetric ; 1000 ; /* Else */ 1024 ) ;
+	_magnitude = Floor ( Ln ( bytes ) / Ln ( _ratio ) ) ;
+	_magnitude = Min ( _magnitude ; 8 )	// don't exceed known magnitude units
+] ;
+	Round ( bytes / _ratio ^ _magnitude ; precision )	// convert magnitude
+	& Choose ( _magnitude ;	// postfix for magnitude appropriate unit
+		" B" ;	// byte
+		" kB" ;	// kilo
+		" MB" ;	// mega
+		" GB" ;	// giga
+		" TB" ;	// tera
+		" PB" ;	// peta
+		" EB" ;	// exa
+		" ZB" ;	// zetta
 		" YB"	// yotta
 	)
 )

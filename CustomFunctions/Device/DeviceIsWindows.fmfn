@@ -1,18 +1,10 @@
-﻿/**
- * ======================================
+﻿/*******************************************************************************
  * DeviceIsWindows
  *
- * RETURNS:
- *		True when the function is called in the context of Windows, and false
- *		otherwise.
+ * @return True (1) when the function is called in the context of Windows, and
+ * False (0) otherwise.
  *
- * PARAMETERS : none
- *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2011-05-23 by Jeremy Bante <http://scr.im/jbante>.
- * ======================================
- */
+ * @history 2011-05-23 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Get ( SystemPlatform ) = 2

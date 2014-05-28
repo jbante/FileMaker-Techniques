@@ -1,35 +1,28 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * FieldRecordRange ( fieldName ; start ; end )
  *
- * RETURNS:
- *		A ¶-delimited value list of all values of fieldName from a range
- *		between start and end.
+ * @parameter fieldName: The name of the field to retrieve values from
+ * @parameter start: The beginning of the range
+ * @parameter end: The end of the range
  *
- * PARAMETERS:
- *		fieldName: The name of the field to retrieve values from
- *		start: The beginning of the range
- *		end: The end of the range
+ * @return A ¶-delimited value list of all values of fieldName from a range
+ * between start and end.
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2011-03-18 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-03-18 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
-	~start = Min ( start ; end );
-	~start = Max ( 1 ; start );
-	~end = Max ( 1 ; start ; end );
-	$~values =
-		If ( not IsEmpty ( $~values ) ; $~values & "¶" )
-		& GetNthRecord ( fieldName ; ~start )
-];
-	If ( ~start ≠ ~end; // There are more values to retrieve
-		GetRecordRange ( fieldName ; ~start + 1 ; ~end );
-	/*Else*/
-		$~values
-		& Let ( $~values = "" ; "" ) // Purge variable
+	_start = Min ( start ; end ) ;
+	_start = Max ( 1 ; start ) ;
+	_end = Max ( 1 ; start ; end ) ;
+	$~frr.values =
+		If ( not IsEmpty ( $~frr.values ) ; $~frr.values & "¶" )
+		& GetNthRecord ( fieldName ; _start )
+] ;
+	If ( _start ≠ _end; // There are more values to retrieve
+		GetRecordRange ( fieldName ; _start + 1 ; _end ) ;
+	/* Else */
+		$~frr.values
+		& Let ( $~frr.values = "" ; "" )	// Purge variable
 	)
 )

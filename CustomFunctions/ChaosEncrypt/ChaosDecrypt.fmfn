@@ -1,150 +1,154 @@
-/**
- * =====================================
+/*******************************************************************************
  * ChaosDecrypt ( cipherText ; key )
- *
- * WARNING:
- * Different versions of the ChaosEncrypt and ChaosDecrypt functions are
- * unlikely to be compatible.
- *
- * PURPOSE:
  * Uses chaotic permutations of the key to create an decrypted version of
  * cipherText that was created by the ChaosEncrypt() function. This function
  * uses a psuedo-chaotic stream cipher algorithm adapted to the constraints of
  * FileMaker custom functions.
  *
- * PARAMETERS:
- * cipherText: The text string to decrypt
- * key: The key to used to encrypt cipherText
+ * WARNING:
+ * Different versions of the ChaosEncrypt and ChaosDecrypt functions are
+ * unlikely to be compatible.
  *
- * RETURNS:
- * A decrypted version of cipherText.
- *
- * NOTES:
  * This function has not been subjected to rigorous cryptanalysis, and the
  * author does not warranty the security of encrypted text.
  *
  * This is a recursive custom function, and hence is limited in the maximum
  * combined length of text and key that it can decrypt.
  *
- * HISTORY:
- * MODIFIED on 2011-01-23 by Jeremy Bante to account for composite
- * characters.
- * MODIFIED on 2011-01-14 by Jeremy Bante to use a different map and
- * systematically perturbed orbits.
- * MODIFIED on 2011-01-09 by Jeremy Bante to use a different chaotic
- * map that results in greater diffusion and faster calculation.
- * MODIFIED on 2011-01-05 by Jeremy Bante to use a different chaotic
- * map when transforming the key.
- * CREATED on 2011-01-04 by Jeremy Bante <http://scr.im/jbante>.
+ * Long description
  *
- * REFERENCES:
- * ChaosDecrypt function: http://www.briandunning.com/cf/1259
- * ChaosEncrypt function: http://www.briandunning.com/cf/1258
- * ChaosHash function: http://www.briandunning.com/cf/1261
- * =====================================
- */
+ * @assumptions
+ * Called from "Layout Name" (TableName)
+ *
+ * @parameter cipherText: The text string to decrypt
+ * @parameter key: The key to used to decrypt cipherText
+ *
+ * @return A decrypted version of cipherText.
+ *
+ * @uses OtherCustomFunction
+ * @used-by YetAnotherCustomFunction
+ *
+ * @global $$~chaos.FUNCTION.DATA Used to accomplish X
+ *
+ * @history 2011-01-04 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-01-05 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * chaotic map when transforming the key
+ * @history 2011-01-09 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * chaotic map that results in greater diffusion and faster calculation.
+ * @history 2011-01-14 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * map and systematically perturbed orbits.
+ * @history 2011-01-23 - Jeremy Bante <http://scr.im/jbante> - accounting for
+ * composite characters.
+ ******************************************************************************/
 
 Case (
-	/*First call to function; initialize variables*/
-	not $~step;
+	/* First call to function; initialize variables */
+	not $~chaos.step ;
 	Let ( [
-		$~keyLength = Length ( key );
-		$~priorByte = 32749; //greatest prime < 2^15
-		$~step = 1
-	];
+		$~chaos.keyLength = Length ( key ) ;
+		$~chaos.priorByte = 32749 ;	// greatest prime < 2^15
+		$~chaos.step = 1
+	] ;
 		ChaosDecrypt ( cipherText ; key )
-	);
+	) ;
 
-	/*Step 1, convert key to numbers and scramble first round*/
-	$~step = 1;
+	/* Step 1, convert key to numbers and scramble first round */
+	$~chaos.step = 1 ;
 	Let ( [
-		//extract next byte from key, accounting for composite characters
-		~keyByte = Code ( Left ( key ; 1 ) );
-		~extraByte = Left ( ~keyByte ; Length ( ~keyByte ) - 5 );
-		~keyByte = Mod ( Right ( ~keyByte ; 5 ) + $~priorByte ; 65535 );
+		// extract next byte from key, accounting for composite characters
+		_keyByte = Code ( Left ( key ; 1 ) ) ;
+		_extraByte = Left ( _keyByte ; Length ( _keyByte ) - 5 ) ;
+		_keyByte = Mod ( Right ( _keyByte ; 5 ) + $~chaos.priorByte ; 65535 ) ;
 
-		//iterate ~keyByte through the map 8x, perturb 4th orbits
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		// iterate _keyByte through the map 8x, perturb 4th orbits
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1; 65535 ) ;
 
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1 ; 65535 ) + 1 ;
 
-		//add new value to list
-		$~key = List ( ~keyByte ; $~key );
-		$~priorByte = ~keyByte;
+		// add new value to list
+		$~chaos.key = List ( _keyByte ; $~chaos.key ) ;
+		$~chaos.priorByte = _keyByte ;
 
-		//continue until whole key is processed
-		~keyLength = Length ( key );
-		$~step = If ( ~keyLength > 1 ; $~step ; /*else*/ $~step + 1 )
-	];
+		// continue until whole key is processed
+		_keyLength = Length ( key ) ;
+		$~chaos.step =
+			If ( _keyLength > 1 ; $~chaos.step ; /* Else */ $~chaos.step + 1 )
+	] ;
 		ChaosDecrypt (
-			cipherText;
-			Char ( ~extraByte ) & Right ( key ; ~keyLength - 1 )
+			cipherText ;
+			Char ( _extraByte ) & Right ( key ; _keyLength - 1 )
 		)
-	);
+	) ;
 
-	/*Step 2, apply key to text*/
-	$~step = 2;
+	/* Step 2, apply key to text */
+	$~chaos.step = 2 ;
 	Let ( [
-		~keyByte = Mod ( GetValue ( $~key ; 1 ) + $~priorByte ; 65535 );
+		_keyByte =
+			Mod ( GetValue ( $~chaos.key ; 1 ) + $~chaos.priorByte ; 65535 ) ;
 
-		//iterate ~keyByte through the map 8x, perturb 4th orbits
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		// iterate _keyByte through the map 8x, perturb 4th orbits
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1; 65535 ) ;
 
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1 ; 65535 ) + 1 ;
 
-		//extract next byte from cipherText, accounting for composite characters
-		~cipherByte = Code ( Left ( cipherText ; 1 ) );
-		~extraByte = Left ( ~cipherByte ; Length ( ~cipherByte ) - 5 );
-		~cipherByte = Right ( ~cipherByte ; 5 );
+		// extract next byte from cipherText, accounting for composite chars
+		_cipherByte = Code ( Left ( cipherText ; 1 ) ) ;
+		_extraByte = Left ( _cipherByte ; Length ( _cipherByte ) - 5 ) ;
+		_cipherByte = Right ( _cipherByte ; 5 ) ;
 
-		//apply key to text
-		//additive complement under 2^16 is analogous to XOR in binary encryption
-		~plainByte = 65535 - Mod ( ~cipherByte + ~keyByte ; 65535 );
-		$~plainText = $~plainText & Char ( ~plainByte );
+		// apply key to text
+		// additive complement under 2^16 is analogous to
+		// XOR in binary encryption
+		_plainByte = 65535 - Mod ( _cipherByte + _keyByte ; 65535 ) ;
+		$~chaos.plainText = $~chaos.plainText & Char ( _plainByte ) ;
 
-		//rotate the key
-		$~priorByte = ~cipherByte;
-		$~key =
+		// rotate the key
+		$~chaos.priorByte = _cipherByte ;
+		$~chaos.key =
 			Substitute (
-				List ( RightValues ( $~key ; $~keyLength - 1 ) ; ~keyByte );
-				"¶¶";
+				List (
+					RightValues ( $~chaos.key ; $~chaos.keyLength - 1 ) ;
+					_keyByte
+				) ;
+				"¶¶" ;
 				"¶"
-			);
+			) ;
 
-		//continue until whole text is encrypted
-		~textLength = Length ( cipherText );
-		$~step = If ( ~textLength > 1 ; $~step ; /*else*/ $~step + 1 )
-	];
+		// continue until whole text is encrypted
+		_textLength = Length ( cipherText ) ;
+		$~chaos.step =
+			If ( _textLength > 1 ; $~chaos.step ; /* Else */ $~chaos.step + 1 )
+	] ;
 		ChaosDecrypt (
-			Char ( ~extraByte ) & Right ( cipherText ; ~textLength - 1 );
+			Char ( _extraByte ) & Right ( cipherText ; _textLength - 1 ) ;
 			""
 		)
-	);
+	) ;
 
-	/*Step 3, clean-up and return result*/
-	$~step = 3;
+	/* Step 3, clean-up and return result */
+	$~chaos.step = 3 ;
 	Let ( [
-		~plainText = $~plainText;
+		_plainText = $~chaos.plainText ;
 
-		//purge variables
-		$~key = "";
-		$~keyLength = "";
-		$~plainText = "";
-		$~priorByte = "";
-		$~step = ""
-	];
-		~plainText
+		// purge variables
+		$~chaos.key = "" ;
+		$~chaos.keyLength = "" ;
+		$~chaos.plainText = "" ;
+		$~chaos.priorByte = "" ;
+		$~chaos.step = ""
+	] ;
+		_plainText
 	)
 )

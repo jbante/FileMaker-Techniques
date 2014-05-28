@@ -1,93 +1,70 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * ArrayValue ( array ; index )
- * http://www.briandunning.com/cf/1278
- *
- * PURPOSE:
  * Retrieves the contents of a cell from an arbitrary-dimensional array.
  *
- * RETURNS:
- * The contents of the specified array cell. If the contents cannot be
+ * @parameter array: The array from which to extract a value
+ * @parameter index: The index for the cell from which to extract a value. To
+ * address values from multi-dimentional arrays, separate the index for each
+ * dimension with ¶, or list the indices with the List function.
+ *
+ * @return The contents of the specified array cell. If the contents cannot be
  * retrieved (for example, if the cell does not exist) the function returns
  * Null.
  *
- * PARAMETERS:
- * array: The array from which to extract a value
- * index: The index for the cell from which to extract a value. To address
- * values from multi-dimentional arrays, separate the index for each dimension
- * with ¶, or list the indices with the List function.
- *
- * DEPENDENCIES: none
- *
- * NOTE:
- * This function expects the passed array to be formatted as a quoted value
- * list, where separate values are on separate lines (¶-delimited), and the
- * values have been quoted, such as by the Quote function, so that values can be
- * retrieved with the Evaluate function.
- *
- * EXAMPLE:
- * ArrayValue ( $array ; List ( Get ( RecordNumber ) ; 4 ) )
- *
- * HISTORY:
- * CREATED on 2011-02-11 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- * ArrayValue: http://www.briandunning.com/cf/1278
- * ArraySetValue: http://www.briandunning.com/cf/1279
- * =====================================
- */
+ * @history 2011-02-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
-	~index = GetAsNumber ( GetValue ( index ; 1 ) );
-	~indexCount = ValueCount ( index );
-	~value = Evaluate ( GetValue ( array ; ~index ) )
-];
+	_index = GetAsNumber ( GetValue ( index ; 1 ) ) ;
+	_indexCount = ValueCount ( index ) ;
+	_value = Evaluate ( GetValue ( array ; _index ) )
+] ;
 	Case (
-		~indexCount = 1
-		or IsEmpty ( ~value );
-			~value;
+		_indexCount = 1
+		or IsEmpty ( _value ) ;
+			_value ;
 
-		/*else*/
-			ArrayValue ( ~value ; RightValues ( index ; ~indexCount - 1 ) )
+		/* Else */
+			ArrayValue ( _value ; RightValues ( index ; _indexCount - 1 ) )
 	)
 )
 
 /*
 //Unit Test
 Let ( [
-	~value11 = Random;
-	~value12 = Random;
-	~value21 = Random;
-	~value22 = Random;
-	~row1 = List ( Quote ( ~value11 ) ; Quote ( ~value12 ) );
-	~row2 = List ( Quote ( ~value21 ) ; Quote ( ~value22 ) );
-	~array = List ( Quote ( ~row1 ) ; Quote ( ~row2 ) );
+	_value11 = Random ;
+	_value12 = Random ;
+	_value21 = Random ;
+	_value22 = Random ;
+	_row1 = List ( Quote ( _value11 ) ; Quote ( _value12 ) ) ;
+	_row2 = List ( Quote ( _value21 ) ; Quote ( _value22 ) ) ;
+	~array = List ( Quote ( _row1 ) ; Quote ( _row2 ) ) ;
 
-	~test1 = "ArrayValue ( ~row1 ; 1 )";
-	~expected1 = ~value11;
-	~result1 = ArrayValue ( ~row1 ; 1 );
-	~grade1 = If ( ~result1 = ~expected1 ; "Pass" ; /*else*/ "Fail" );
+	_test1 = "ArrayValue ( _row1 ; 1 )" ;
+	_expected1 = _value11 ;
+	_result1 = ArrayValue ( _row1 ; 1 ) ;
+	_grade1 = If ( _result1 = _expected1 ; "Pass" ; /* Else */ "Fail" ) ;
 
-	~test2 = "ArrayValue ( ~row2 ; 2 )";
-	~expected2 = ~value22;
-	~result2 = ArrayValue ( ~row2 ; 2 );
-	~grade2 = If ( ~result2 = ~expected2 ; "Pass" ; /*else*/ "Fail" );
+	_test2 = "ArrayValue ( _row2 ; 2 )" ;
+	_expected2 = _value22 ;
+	_result2 = ArrayValue ( _row2 ; 2 ) ;
+	_grade2 = If ( _result2 = _expected2 ; "Pass" ; /* Else */ "Fail" ) ;
 
-	~test3 = "ArrayValue ( ~array ; List ( 1 ; 2 ) )";
-	~expected3 = ~value12;
-	~result3 = ArrayValue ( ~array ; List ( 1 ; 2 ) );
-	~grade3 = If ( ~result3 = ~expected3 ; "Pass" ; /*else*/ "Fail" );
+	_test3 = "ArrayValue ( ~array ; List ( 1 ; 2 ) )" ;
+	_expected3 = _value12 ;
+	_result3 = ArrayValue ( ~array ; List ( 1 ; 2 ) ) ;
+	_grade3 = If ( _result3 = _expected3 ; "Pass" ; /* Else */ "Fail" ) ;
 
-	~test4 = "ArrayValue ( ~array ; List ( 2 ; 1 ) )";
-	~expected4 = ~value21;
-	~result4 = ArrayValue ( ~array ; List ( 2 ; 1 ) );
-	~grade4 = If ( ~result4 = ~expected4 ; "Pass" ; /*else*/ "Fail" )
-];
+	_test4 = "ArrayValue ( ~array ; List ( 2 ; 1 ) )" ;
+	_expected4 = _value21 ;
+	_result4 = ArrayValue ( ~array ; List ( 2 ; 1 ) ) ;
+	_grade4 = If ( _result4 = _expected4 ; "Pass" ; /* Else */ "Fail" )
+] ;
 	List (
-		~test1 & " = " & ~result1 & " //" & ~grade1;
-		~test2 & " = " & ~result2 & " //" & ~grade2;
-		~test3 & " = " & ~result3 & " //" & ~grade3;
-		~test4 & " = " & ~result4 & " //" & ~grade4
+		_test1 & " = " & _result1 & " //" & _grade1 ;
+		_test2 & " = " & _result2 & " //" & _grade2 ;
+		_test3 & " = " & _result3 & " //" & _grade3 ;
+		_test4 & " = " & _result4 & " //" & _grade4
 	)
 )
 */

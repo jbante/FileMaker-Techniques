@@ -1,160 +1,155 @@
-/**
- * =====================================
+/*******************************************************************************
  * ChaosHash ( text ; hashLength )
+ * Creates a hash of the text parameter via a pseudo-chaotic process adapted to
+ * the constraints of FileMaker custom functions.
  *
  * WARNING:
  * Different versions of this function are unlikely to calculate the same
  * results.
  *
- * PURPOSE:
- * Creates a hash of the text parameter via a pseudo-chaotic process adapted to
- * the constraints of FileMaker custom functions.
- *
- * PARAMETERS:
- * text: The text string to encrypt
- * key: The key to use to encrypt text
- *
- * RETURNS:
- * An encrypted version of text.
- *
- * NOTES:
  * This function has not been subjected to rigorous cryptanalysis, and the
  * author does not warranty the security or collision resistance of results.
  *
  * This is a recursive custom function, and hence is limited in the maximum
  * length of text that it can process.
  *
- * HISTORY:
- * MODIFIED on 2011-01-23 by Jeremy Bante to account for composite
- * characters
- * MODIFIED on 2011-01-14 by Jeremy Bante to use a different map and
- * systematically perturbed orbits.
- * MODIFIED on 2011-01-09 by Jeremy Bante to use a different chaotic
- * map that results in greater diffusion and faster calculation.
- * CREATED on 2011-01-05 by Jeremy Bante <http://scr.im/jbante>.
+ * @parameter text: The text string to encrypt
+ * @parameter key: The key to use to encrypt text
  *
- * REFERENCES:
- * ChaosDecrypt function: http://www.briandunning.com/cf/1259
- * ChaosEncrypt function: http://www.briandunning.com/cf/1258
- * ChaosHash function: http://www.briandunning.com/cf/1261
- * =====================================
- */
+ * @return An encrypted version of text
+ *
+ * @history 2011-01-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-01-09 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * chaotic map that results in greater diffusion and faster calculation.
+ * @history 2011-01-14 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * map and systematically perturbed orbits.
+ * @history 2011-01-23 - Jeremy Bante <http://scr.im/jbante> - accounting for
+ * composite characters.
+ ******************************************************************************/
 
 Case (
-	/*First call to function, initialize variables*/
-	not $~step;
+	/* First call to function, initialize variables */
+	not $~chaos.step ;
 	Let ( [
-		$~alternator = 0;
-		$~i = 1;
-		$~j = 1;
-		$~k = 1;
-		$~priorByte = 32749; //greatest prime < 2^15
-		$~textLength = Length ( text );
-		$~step = 1
-	];
+		$~chaos.alternator = 0 ;
+		$~chaos.i = 1 ;
+		$~chaos.j = 1 ;
+		$~chaos.k = 1 ;
+		$~chaos.priorByte = 32749 ;	// greatest prime < 2^15
+		$~chaos.textLength = Length ( text ) ;
+		$~chaos.step = 1
+	] ;
 		ChaosHash ( text ; hashLength )
-	);
+	) ;
 
-	/*Step 1, Parse text into cipher key*/
-	$~step = 1;
+	/* Step 1, Parse text into cipher key */
+	$~chaos.step = 1 ;
 	Let ( [
-		//Convert text to numbers, accounting for composite characters
-		~textByte =
-			If ( $~textLength ≥ $~i;
-				Code ( Middle ( text ; $~i ; 1 ) );
-				/*else*/ $~alternator //augment $~text as needed
-			);
-		~extraByte = Left ( ~textByte ; Length ( ~textByte ) - 5 );
-		~textByte = Right ( ~textByte ; 5 );
-		$~textLength =
-			If ( $~textLength ≥ $~i;
-				$~textLength;
-				/*else*/ $~textLength + 1
-			);
-		$~alternator =
-			If ( $~textLength ≥ $~i;
-				$~alternator;
-				/*else*/ not $~alternator
-			);
-		$~text = List ( $~text ; ~textByte );
+		// Convert text to numbers, accounting for composite characters
+		_textByte =
+			If ( $~chaos.textLength ≥ $~chaos.i ;
+				Code ( Middle ( text ; $~chaos.i ; 1 ) ) ;
+				/* Else */ $~chaos.alternator	//augment $~chaos.text as needed
+			) ;
+		_extraByte = Left ( _textByte ; Length ( _textByte ) - 5 ) ;
+		_textByte = Right ( _textByte ; 5 ) ;
+		$~chaos.textLength =
+			If ( $~chaos.textLength ≥ $~chaos.i ;
+				$~chaos.textLength ;
+				/* Else */ $~chaos.textLength + 1
+			) ;
+		$~chaos.alternator =
+			If ( $~chaos.textLength ≥ $~chaos.i ;
+				$~chaos.alternator ;
+				/* Else */ not $~chaos.alternator
+			) ;
+		$~chaos.text = List ( $~chaos.text ; _textByte ) ;
 
-		~keyByte = Mod ( ~textByte + $~priorByte ; 65535 );
+		_keyByte = Mod ( _textByte + $~chaos.priorByte ; 65535 ) ;
 
-		//iterate ~keyByte through the map 8x, perturb 4th orbits
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		// iterate _keyByte through the map 8x, perturb 4th orbits
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1; 65535 ) ;
 
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1 ; 65535 ) + 1 ;
 
-		//add new key value to list
-		$~key = List ( ~keyByte ; $~key );
-		$~priorByte = ~keyByte;
+		// add new key value to list
+		$~chaos.key = List ( _keyByte ; $~chaos.key ) ;
+		$~chaos.priorByte = _keyByte ;
 
-		//continue until whole $~text is processed
-		$~step =
-			If ( $~textLength > $~i or $~textLength < hashLength;
-				$~step;
-				/*else*/ $~step + 1
-			);
-		$~i = $~i + 1
-	];
-		ChaosHash ( Char ( ~extraByte ) & text ; hashLength )
-	);
+		// continue until whole $~chaos.text is processed
+		$~chaos.step =
+			If ( $~chaos.textLength > $~chaos.i
+				or $~chaos.textLength < hashLength ;
+				$~chaos.step ;
+				/* Else */ $~chaos.step + 1
+			) ;
+		$~chaos.i = $~chaos.i + 1
+	] ;
+		ChaosHash ( Char ( _extraByte ) & text ; hashLength )
+	) ;
 
-	/*Step 2, Apply $~key to $~text*/
-	$~step = 2;
+	/* Step 2, Apply $~chaos.key to $~chaos.text */
+	$~chaos.step = 2 ;
 	Let ( [
-		~keyByte = Mod ( GetValue ( $~key ; 1 ) + $~priorByte ; 65535 );
+		_keyByte =
+			Mod ( GetValue ( $~chaos.key ; 1 ) + $~chaos.priorByte ; 65535 ) ;
 
-		//iterate ~keyByte through the map 8x, perturb 4th orbits
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1; 65535 );
+		// iterate _keyByte through the map 8x, perturb 4th orbits
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1; 65535 ) ;
 
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) ; 65535 );
-		~keyByte = Mod ( 4099 * ( 65535 - ~keyByte ) + 1 ; 65535 ) + 1;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) ; 65535 ) ;
+		_keyByte = Mod ( 4099 * ( 65535 - _keyByte ) + 1 ; 65535 ) + 1 ;
 
-		//apply key to text
-		//additive complement under 2^16 is analogous to XOR in binary encryption
-		~textByte = MiddleValues ( $~text ; $~j ; 1 );
-		~textByte = 65535 - Mod ( ~textByte + ~keyByte ; 65535 );
-		$~hash = $~hash & Char ( ~textByte );
+		// apply key to text
+		// additive complement under 2^16 is analogous to
+		// XOR in binary encryption
+		_textByte = MiddleValues ( $~chaos.text ; $~chaos.j ; 1 ) ;
+		_textByte = 65535 - Mod ( _textByte + _keyByte ; 65535 ) ;
+		$~chaos.hash = $~chaos.hash & Char ( _textByte ) ;
 
-		//rotate the key
-		$~priorByte = ~textByte;
-		$~key = List ( RightValues ( $~key ; $~i - 2 ) ; ~keyByte );
+		// rotate the key
+		$~chaos.priorByte = _textByte ;
+		$~chaos.key =
+			List ( RightValues ( $~chaos.key ; $~chaos.i - 2 ) ; _keyByte ) ;
 
-		//continue until whole text is encrypted
-		$~step = If ( hashLength > $~j ; $~step ; /*else*/ $~step + 1 );
-		$~j = $~j + 1
-	];
+		// continue until whole text is encrypted
+		$~chaos.step =
+			If ( hashLength > $~chaos.j ;
+				$~chaos.step ;
+				/* Else */ $~chaos.step + 1
+			) ;
+		$~chaos.j = $~chaos.j + 1
+	] ;
 		ChaosHash ( "" ; hashLength )
-	);
+	) ;
 
-	/*Step 3, Clean-up, and return result*/
-	$~step = 3;
+	/* Step 3, Clean-up, and return result */
+	$~chaos.step = 3 ;
 	Let ( [
-		~hash = $~hash;
+		_hash = $~chaos.hash ;
 
-		//purge variables
-		$~alternator = "";
-		$~i = "";
-		$~j = "";
-		$~hash = "";
-		$~key = "";
-		$~priorByte = "";
-		$~step = "";
-		$~text = "";
-		$~textLength = ""
-	];
-		~hash
-	);
+		// purge variables
+		$~chaos.alternator = "" ;
+		$~chaos.i = "" ;
+		$~chaos.j = "" ;
+		$~chaos.hash = "" ;
+		$~chaos.key = "" ;
+		$~chaos.priorByte = "" ;
+		$~chaos.step = "" ;
+		$~chaos.text = "" ;
+		$~chaos.textLength = ""
+	] ;
+		_hash
+	) ;
 )
