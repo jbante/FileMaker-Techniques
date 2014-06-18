@@ -20,7 +20,7 @@
  * @see http://en.wikipedia.org/wiki/Haversine_formula
  ******************************************************************************/
 
-6378137	// equatorial radius of Earth (WGS 84)
+6374447	// average radius of Earth in meters
 * Acos (
 	Cos ( Radians ( latitude2 - latitude1 ) )
 	- Cos ( Radians ( latitude1 ) )

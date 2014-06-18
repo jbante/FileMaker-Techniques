@@ -1,5 +1,5 @@
 /*******************************************************************************
- *ForEach ( valueList ; expression )
+ * ForEach ( valueList ; expression )
  * ForEach repeatedly applies a calculation to each value in a ¶-delimited list.
  * For each value in valueList, evaluates expression, substituting the value for
  * each "~v" in expression. Expressions may also reference the value index (line

@@ -1,118 +1,109 @@
-/**
- *******************************************************************************
+/*******************************************************************************
  * LocationDistanceValues ( startLatitude ; startLongitude ; endLatitude ; endLongitude )
  *
- * RETURNS:
- *		A return-delimited list of data about the path between two points on the
- *		surface of the Earth:
- *		- distance in meters between the two points
- *		- initial bearing starting from the start point towards the end point
- *		- final forward bearing at the end point
+ * This function calculates based on a spherical approximation of the surface of
+ * the Earth.
  *
- * PARAMETERS:
- *		startLatitude: Latitude of the first point, in degrees
- *		startLongitude: Longitude of the first point, in degrees
- *		endLatitude: Latitude of the second point, in degrees
- *		endLongitude: Longitude of the first point, in degrees
+ * @parameter startLatitude: Latitude of the first point, in degrees
+ * @parameter startLongitude: Longitude of the first point, in degrees
+ * @parameter endLatitude: Latitude of the second point, in degrees
+ * @parameter endLongitude: Longitude of the first point, in degrees
  *
- * DEPENDENCIES: none
+ * @return A return-delimited list of data about the path between two points on
+ * the surface of the Earth:
+ *		1. distance in meters between the two points
+ *		2. initial bearing starting from the start point towards the end point
+ *		3. final forward bearing at the end point
  *
- * NOTES:
- *		This function calculates based on a spherical approximation of the
- *		surface of the Earth.
+ * @history 2013-09-02 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2013-09-02 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Haversine formula:	http://en.wikipedia.org/wiki/Haversine_formula
- *******************************************************************************
- */
+ * @see http://en.wikipedia.org/wiki/Haversine_formula
+ ******************************************************************************/
 
 Let ( [
 	// precompute values used in formulas more than once
-	~longitudeDifference = Radians ( endLongitude - startLongitude ) ;
-	~cosLatitudeDifference = Cos ( Radians ( endLatitude - startLatitude ) ) ;
-	~cosLongitudeDifference = Cos ( ~longitudeDifference ) ;
-	~startLatitude = Radians ( startLatitude ) ;
-	~startLongitude = Radians ( startLongitude ) ;
-	~endLatitude = Radians ( endLatitude ) ;
-	~endLongitude = Radians ( endLongitude ) ;
-	~cosStartLatitude = Cos ( ~startLatitude ) ;
-	~cosEndLatitude = Cos ( ~endLatitude ) ;
-	~sinStartLatitude = Sin ( ~startLatitude ) ;
-	~sinEndLatitude = Sin ( ~endLatitude ) ;
+	_longitudeDifference = Radians ( endLongitude - startLongitude ) ;
+	_cosLatitudeDifference = Cos ( Radians ( endLatitude - startLatitude ) ) ;
+	_cosLongitudeDifference = Cos ( _longitudeDifference ) ;
+	_startLatitude = Radians ( startLatitude ) ;
+	_startLongitude = Radians ( startLongitude ) ;
+	_endLatitude = Radians ( endLatitude ) ;
+	_endLongitude = Radians ( endLongitude ) ;
+	_cosStartLatitude = Cos ( _startLatitude ) ;
+	_cosEndLatitude = Cos ( _endLatitude ) ;
+	_sinStartLatitude = Sin ( _startLatitude ) ;
+	_sinEndLatitude = Sin ( _endLatitude ) ;
 
-	~distance =
-		6378137	// equatorial radius of Earth (WGS 84)
+	_distance =
+		6374447	// average radius in meters
 		* Acos (
-			~cosLatitudeDifference
-			- ~cosStartLatitude
-			* ~cosEndLatitude
-			* ( 1 - ~cosLongitudeDifference )
+			_cosLatitudeDifference
+			- _cosStartLatitude
+			* _cosEndLatitude
+			* ( 1 - _cosLongitudeDifference )
 		) ;
 
 	// calculate forward bearing of path at start point
-	~bearingY = Sin ( ~longitudeDifference ) * ~cosLatitudeDifference ;
-	~bearingX =
-		~cosStartLatitude * ~sinEndLatitude
-		- ~sinStartLatitude * ~cosEndLatitude * ~cosLongitudeDifference ;
-	~startBearing =	// Atan2 ( ~bearingY ; ~bearingX ) in range [0,2*Pi)
+	_bearingY = Sin ( _longitudeDifference ) * _cosLatitudeDifference ;
+	_bearingX =
+		_cosStartLatitude * _sinEndLatitude
+		- _sinStartLatitude * _cosEndLatitude * _cosLongitudeDifference ;
+	_startBearing =	// Atan2 ( _bearingY ; _bearingX ) in range [0,2*Pi)
 		Case (
-			~bearingX < 0 ;
-				Atan ( ~bearingY / ~bearingX ) + Pi ;
+			_bearingX < 0 ;
+				Atan ( _bearingY / _bearingX ) + Pi ;
 
-			~bearingX > 0 and ~bearingY < 0 ;
-				Atan ( ~bearingY / ~bearingX ) + 2 * Pi ;
+			_bearingX > 0 and _bearingY < 0 ;
+				Atan ( _bearingY / _bearingX ) + 2 * Pi ;
 
-			~bearingX ≠ 0 ;
-				Atan ( ~bearingY / ~bearingX ) ;
+			_bearingX ≠ 0 ;
+				Atan ( _bearingY / _bearingX ) ;
 
-			~bearingY > 0 ;
+			_bearingY > 0 ;
 				Pi / 2 ;
 
-			~bearingY < 0 ;
+			_bearingY < 0 ;
 				3 / 2 * Pi ;
 
-			/* Else, ~bearingX = ~bearingY = 0 */
+			/* Else, _bearingX = _bearingY = 0 */
 				0
 		) ;
 
 	// calculate forward bearing of path at end point
 	// evaluate as bearing from end point to start point, then reverse direction
-	~longitudeDifference = 0 - ~longitudeDifference ;
-	~bearingY =
-		Sin ( ~longitudeDifference )
-		* Cos ( ~startLatitude - ~endLatitude ) ;
-	~bearingX =
-		~cosEndLatitude * ~sinStartLatitude
-		- ~sinEndLatitude * ~cosStartLatitude * Cos ( ~longitudeDifference ) ;
-	~endBearing =	// Atan2 ( ~bearingY ; ~bearingX ) in range [0,2*Pi)
+	_longitudeDifference = 0 - _longitudeDifference ;
+	_bearingY =
+		Sin ( _longitudeDifference )
+		* Cos ( _startLatitude - _endLatitude ) ;
+	_bearingX =
+		_cosEndLatitude * _sinStartLatitude
+		- _sinEndLatitude * _cosStartLatitude * Cos ( _longitudeDifference ) ;
+	_endBearing =	// Atan2 ( _bearingY ; _bearingX ) in range [0,2*Pi)
 		Case (
-			~bearingX < 0 ;
-				Atan ( ~bearingY / ~bearingX ) + Pi ;
+			_bearingX < 0 ;
+				Atan ( _bearingY / _bearingX ) + Pi ;
 
-			~bearingX > 0 and ~bearingY < 0 ;
-				Atan ( ~bearingY / ~bearingX ) + 2 * Pi ;
+			_bearingX > 0 and _bearingY < 0 ;
+				Atan ( _bearingY / _bearingX ) + 2 * Pi ;
 
-			~bearingX ≠ 0 ;
-				Atan ( ~bearingY / ~bearingX ) ;
+			_bearingX ≠ 0 ;
+				Atan ( _bearingY / _bearingX ) ;
 
-			~bearingY > 0 ;
+			_bearingY > 0 ;
 				Pi / 2 ;
 
-			~bearingY < 0 ;
+			_bearingY < 0 ;
 				3 / 2 * Pi ;
 
-			/* Else, ~bearingX = ~bearingY = 0 */
+			/* Else, _bearingX = _bearingY = 0 */
 				0
 		) ;
-	~endBearing =	// reverse direction for forward azimuth
-		Mod ( Degrees ( ~endBearing ) + 180 ; 360 )
+	_endBearing =	// reverse direction for forward azimuth
+		Mod ( Degrees ( _endBearing ) + 180 ; 360 )
 ] ;
-	~distance
+	_distance
 	& ¶
-	& Degrees ( ~startBearing )
+	& Degrees ( _startBearing )
 	& ¶
-	& ~endBearing
+	& _endBearing
 )

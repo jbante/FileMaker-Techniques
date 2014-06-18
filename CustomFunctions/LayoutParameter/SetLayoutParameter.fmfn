@@ -1,32 +1,22 @@
-/**
- * =====================================
+/*******************************************************************************
  * SetLayoutParameter ( parameter )
+ * Sets a parameter string set for the current layout. This function is designed
+ * to be used in conjunction with the LayoutParameter function as an alternative
+ * to script parameters and results for scripts operating on the same layout\
+ * without calling each other directly.
  *
- * PURPOSE:
- *		Sets a parameter string set for the current layout. This function is designed
- *		to be used in conjunction with the LayoutParameter function as an alternative to
- *		script parameters and results for scripts operating on the same layout without
- *		calling each other directly.
+ * @parameter parameter: The parameter to set for the layout
  *
- * RETURNS:
- *		The parameter passed to the function
+ * @return The parameter passed to the function
  *
- * PARAMETERS:
- *		parameter: The parameter to set for the layout
+ * @global $$~LAYOUT_PARAMETER[i]
  *
- * DEPENDENCIES: none
- *
- * VARIABLES:
- *		$$~LAYOUT_PARAMETER[i]
- *
- * HISTORY:
- *		CREATED on 2012-09-21 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2012-09-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
-	~id_Layout = GetValue ( LayoutIDs ( "" ) ; Get ( LayoutNumber ) );
-	$$~LAYOUT_PARAMETER[~id_Layout] = parameter
+	_id_Layout = GetValue ( LayoutIDs ( "" ) ; Get ( LayoutNumber ) );
+	$$~LAYOUT_PARAMETER[_id_Layout] = parameter
 ];
 	parameter
 )

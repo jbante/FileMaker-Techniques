@@ -1,3 +1,18 @@
+/*******************************************************************************
+ * KeyOption ( modifierKeys )
+ *
+ * @parameter modifierKeys: The modifierKey output to test for from the
+ * Get ( ActiveModifierKeys ) or Get ( TriggerModifierKeys ) functions.
+ *
+ * @return True (1) if the option key is indicated by the modifierKeys value, False (0) otherwise
+ *
+ * @history 2011-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-04-02 - Jeremy Bante <http://scr.im/jbante> - Accepting the
+ * modifierKeys parameter.
+ ******************************************************************************/
+
+
+
 /**
  * =====================================
  * KeyOption ( modifierKeys )
