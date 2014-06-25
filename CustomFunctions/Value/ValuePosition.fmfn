@@ -1,40 +1,35 @@
-/**
- * @ToDo:	Check that function can find second occurrence of neighboring values
- * @ToDo:	Get function to do -occurrence (backwards) searches.
- *
+/*******************************************************************************
  * ValuePosition ( valueList ; searchValue ; start ; occurrence )
+ * Implements a version of FileMaker's built-in Position function to operate on
+ * values in return-delimited lists instead of characters in text strings.
  *
- * RETURNS:
- *		The value number of searchValue in valueList
+ * @parameter valueList: A return-delimited list of values to search in
+ * @parameter searchValue: A value to search for
+ * @parameter start: The value within valueList to begin searching at
+ * @parameter occurrence: The occurrence of the value to find
  *
- * PARAMETERS:
- *		valueList: A ¶-delimited list of values to search in
- *		searchValue: A value to search for
- *		start: The value within valueList to begin searching at
- *		occurrence: The occurrence of the value to find
+ * @return The value number of searchValue in valueList
  *
- * HISTORY:
- *		CREATED on 2011-05-22 by Jeremy Bante <http://scr.im/jbante>.
- */
+ * @history 2011-05-22 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-06-24 - Jeremy Bante <http://scr.im/jbante> - Full feature
+ * parity with built-in Position function
+ ******************************************************************************/
 
 Let ( [
-	~valueCount = ValueCount ( valueList );
-	~valueList = "¶" & valueList & "¶";
-	~startList = LeftValues ( ~valueList ; start + 1 );
-	~startPosition = PatternCount ( ~startList ; "¶" );
-	~startPosition = Min ( ~startPosition ; ~valueCount ) - 1;
-
-
-	~searchValue = "¶" & searchValue & "¶";
-	~position =
+	_valueList = ¶ & Substitute ( valueList ; ¶ ; "¶¶" ) & ¶ ;
+	_startPosition = Position ( _valueList ; ¶ ; 1 ; start * 2 - 1 ) ;
+	_position =
 		Position (
-			~valueList;
-			~searchValue;
-			~startPosition;
+			_valueList ;
+			¶ & searchValue & ¶ ;
+			_startPosition ;
 			occurrence
-		);
-	~valueList = Left ( ~valueList ; ~position );
-	~value = PatternCount ( ~valueList ; "¶" )
-];
-	~value
+		) ;
+	_prefixList = Left ( _valueList ; _position )
+
+] ;
+	If ( _position = 0 ;	// value was not found
+		0 ;
+		/* Else */ ( PatternCount ( _prefixList ; ¶ ) - 1 ) / 2 + 1
+	)
 )
