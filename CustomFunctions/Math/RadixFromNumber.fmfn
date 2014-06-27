@@ -45,7 +45,7 @@ Case (
 					/* Else */ 1
 				)
 		];
-			GetNumberAsRadix ( "" ; characterSet )
+			RadixFromNumber ( "" ; characterSet )
 		);
 
 	/* Step 1, encode integer portion of number */
@@ -63,7 +63,7 @@ Case (
 					/* Else */ 3	// skip to end
 				)
 		];
-			GetNumberAsRadix ( "" ; characterSet )
+			RadixFromNumber ( "" ; characterSet )
 		);
 
 	/* Step 2, encode fractional portion of number */
@@ -82,7 +82,7 @@ Case (
 					/* Else */ $~radix.step + 1
 				)
 		];
-			GetNumberAsRadix ( "" ; characterSet )
+			RadixFromNumber ( "" ; characterSet )
 		);
 
 	/* Step 3, clean-up and return result */

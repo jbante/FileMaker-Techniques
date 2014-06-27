@@ -45,7 +45,7 @@ Case (
 					/* Else */ 1
 				)
 		];
-			GetRadixAsNumber ( ~numberText ; characterSet )
+			NumberFromRadix ( ~numberText ; characterSet )
 		);
 
 	/* Step 1, convert digits */
@@ -66,7 +66,7 @@ Case (
 					/* Else */ $~radix.step + 1
 				)
 		];
-			GetRadixAsNumber ( ~numberText ; characterSet )
+			NumberFromRadix ( ~numberText ; characterSet )
 		);
 
 	/* Step 2, clean-up and return result */
