@@ -1,0 +1,18 @@
+﻿/*******************************************************************************
+ * TriggersAreDisabled
+ * Checks a global variable to identify whether or not script triggers should be
+ * allowed to run. This function is best used in concert with the
+ * TriggersDisable, TriggersEnable, and TriggersReset functions.
+ *
+ * @return True (1) if triggers should be suppressed; False (0) otherwise
+ *
+ * @global $$~DISABLETRIGGERS (deprecated)
+ * @global $$~TRIGGERS_DISABLE
+ *
+ * @history 2014-07-02 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
+ ******************************************************************************/
+
+$$~TRIGGERS_DISABLE
+or $$~DISABLETRIGGERS

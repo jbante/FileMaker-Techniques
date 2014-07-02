@@ -4,7 +4,8 @@
  * triggers. This function must be called from the context of a script;
  * otherwise, it will not suppress triggers, and it will return False. In order
  * to be suppressed, a script called via trigger should use the
- * TriggersAreActive function to decide whether or not to run.
+ * TriggersAreActive or TriggersAreDisabled function to decide whether or not to
+ * run.
  *
  * @return True (1) if called from the context of a script, and therefore
  * triggers have been suppressed; False (0) otherwise.
