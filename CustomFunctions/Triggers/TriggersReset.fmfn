@@ -1,43 +1,32 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * TriggersReset
- * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Triggers/TriggersReset.fmfn
+ * Sets global variables to indicate that script triggers should be allowed to
+ * run, regardless of any persisting instructions to the contrary from any
+ * script.
  *
- * PURPOSE:
- *		TriggersReset sets global variables to indicate that script triggers
- *		should be allowed to run, regardless of any persisting instructions to
- *		the contrary from any script. This may be useful to recover from a
- *		situation where a script forgot to call TriggersEnable at the end of
- *		operation. In order to be suppressed, a script called via trigger should
- *		use the TriggersAreActive function to decide whether or not to run.
+ * This may be useful to recover from a situation where a script forgot to call
+ * TriggersEnable at the end of operation. In order to be suppressed, a script
+ * called via trigger should use the TriggersAreActive function to decide
+ * whether or not to run.
  *
- * RETURNS: "" (null)
+ * @global $$~DISABLETRIGGERS (deprecated)
+ * @global $$~TRIGGERS_DISABLE
+ * @global $$~TRIGGERS_SCRIPTS
+ * @global $~triggers_disableKey
  *
- * PARAMETERS: none
+ * @history 2010-12-12 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2010-12-13 - Jeremy Bante <http://scr.im/jbante> - Using names
+ * suggested at FileMakerStandards.org.
+ * @history 2011-02-09 - Jeremy Bante <http://scr.im/jbante> - Adopting
+ * different variable names.
+ * @history 2013-03-25 - Jeremy Bante <http://scr.im/jbante> - Making the
+ * function robust to sub-scripts that disabled triggers without re-enabling
+ * them.
+ * @history 2013-04-08 - Jeremy Bante <http://scr.im/jbante> - Adding older
+ * variable names for backwards compatibility.
  *
- * REFERENCED VARIABLES:
- *		$$~DISABLETRIGGERS (deprecated)
- *		$$~TRIGGERS_DISABLE
- *		$$~TRIGGERS_SCRIPTS
- *		$~triggers_disableKey
- *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2013-04-08 by Jeremy Bante <http://scr.im/jbante> for
- *		backwards compatibility with older variable names.
- *		MODIFIED on 2013-03-25 by Jeremy Bante <http://scr.im/jbante> to be more
- *		robust to certain programming errors.
- *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
- *		variables.
- *		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
- *		filemakerstandards.org.
- *		CREATED on 2010-12-12 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
- * =====================================
- */
+ * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
+ ******************************************************************************/
 
 Let ( [
 	$$~TRIGGERS_SCRIPTS		= "" ;

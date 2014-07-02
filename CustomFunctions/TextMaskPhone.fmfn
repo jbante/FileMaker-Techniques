@@ -1,34 +1,29 @@
-/**
- * =====================================
+/*******************************************************************************
  * TextMaskPhone ( phoneNumber )
+ * Formats a string of text as a North America phone number.
  *
- * RETURNS:
- *		phoneNumber formatted as a north american telephone number.
+ * @parameter phoneNumber: The phone number to format
  *
- * PARAMETERS:
- *		phoneNumber: The phone number to format
+ * @return The formatted phone number text
  *
- * DEPENDENCIES:
- *		TextMask ( text ; prototype )
+ * @uses TextMask ( text ; prototype )
  *
- * HISTORY:
- *		CREATED on 2012-12-05 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2012-12-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Let ( [
-	~alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	~text = Filter ( Upper ( phoneNumber ) ; ~alphanumeric );
-	~length = Length ( ~text )
+	_alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+	_text = Filter ( Upper ( phoneNumber ) ; _alphanumeric );
+	_length = Length ( _text )
 ];
 	Case (
-		Left ( ~text ; 1 ) = "1";
-			TextMask ( ~text ; "#-###-###-#### ext. *" );
+		Left ( _text ; 1 ) = "1";
+			TextMask ( _text ; "#-###-###-#### ext. *" );
 
-		Length ( ~text ) > 7;
-			TextMask ( ~text ; "###-###-#### ext. *" );
+		Length ( _text ) > 7;
+			TextMask ( _text ; "###-###-#### ext. *" );
 
 		/* Else */
-			TextMask ( ~text ; "###-####" )
+			TextMask ( _text ; "###-####" )
 	)
 )

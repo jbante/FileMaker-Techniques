@@ -1,43 +1,24 @@
-﻿/**
- * =====================================
+﻿/*******************************************************************************
  * TriggersAreActive
- * https://github.com/jbante/FileMaker-Techniques/blob/master/CustomFunctions/Triggers/TriggersAreActive.fmfn
+ * Checks a global variable to identify whether or not script triggers should be
+ * allowed to run. This function is best used in concert with the
+ * TriggersDisable, TriggersEnable, and TriggersReset functions.
  *
- * PURPOSE:
- *		TriggersAreActive checks a global variable to identify whether or not
- *		script triggers should be allowed to run. This function is best used in
- *		concert with the TriggersDisable, TriggersEnable, and TriggersReset
- *		functions.
+ * @return False (0) if triggers should be suppressed; True (1) otherwise
  *
- * RETURNS:
- *		False (0) if triggers should be suppressed; True (1) otherwise.
+ * @global $$~DISABLETRIGGERS (deprecated)
+ * @global $$~TRIGGERS_DISABLE
  *
- * PARAMETERS: none
+ * @history 2010-12-12 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2010-12-13 - Jeremy Bante <http://scr.im/jbante> - Using name
+ * suggested in FileMakerStandards.org discussion.
+ * @history 2011-02-09 - Jeremy Bante <http://scr.im/jbante> - Adopting
+ * different variable names.
+ * @history 2013-04-08 - Jeremy Bante <http://scr.im/jbante> - Adding backwards
+ * compatibility with older variable names.
  *
- * REFERENCED VARIABLES:
- *		$$~DISABLETRIGGERS (deprecated)
- *		$$~TRIGGERS_DISABLE
- *
- * DEPENDENCIES: none
- *
- * EXAMPLE (triggered script):
- *		If [not TriggersAreActive]
- *			Exit Script [True	// allow triggering event to proceed]
- *		End If
- *
- * HISTORY:
- *		MODIFIED on 2013-04-08 by Jeremy Bante <http://scr.im/jbante> for
- *		backwards compatibility with older variable names.
- *		MODIFIED on 2011-02-09 by Jeremy Bante to use differently-named
- *		variables.
- *		MODIFIED on 2010-12-13 by Jeremy Bante to use names suggested at
- *		filemakerstandards.org.
- *		CREATED on 2010-12-12 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		Supressible Triggered Scripts Best Practice: http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
- * =====================================
- */
+ * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
+ ******************************************************************************/
 
 not (
 	$$~TRIGGERS_DISABLE

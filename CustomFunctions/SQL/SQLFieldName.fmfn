@@ -1,24 +1,20 @@
-/**
- * =====================================
+/*******************************************************************************
  * SQLFieldName ( field )
+ * Creates a SQL-safe field reference that will not have to be manually updated
+ * if the field name changes.
  *
- * RETURNS:
- *		The field name formatted as a fully qualified SQL column name.
+ * @parameter field: A reference to a field (not the text of the field name)
  *
- * PARAMETERS:
- *		field: A reference to a field (not the text of the field name)
+ * @return The field name formatted as a SQL column name
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2013-05-08 by Jeremy Bante <http://scr.im/jbante> to not
- *		accept *Alias parameters and not include table name in result.
- *		MODIFIED on 2013-01-26 by Jeremy Bante <http://scr.im/jbante> to accept
- *		the tableAlias and fieldAlias parameters.
- *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
- *		Based on functions by Todd Geist and Dan Smith.
- * =====================================
- */
+ * @history Based on functions by Todd Geist and Dan Smith.
+ * @history 2012-12-18 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2013-01-26 - Jeremy Bante <http://scr.im/jbante> - Accepting
+ * tableAlias and fieldAlias parameters.
+ * @history 2013-05-08 - Jeremy Bante <http://scr.im/jbante> - Not accepting
+ * *Alias parameters and not include table name in result, since that is better
+ * suited to the calculation outside this function.
+ ******************************************************************************/
 
 Quote (
 	GetValue (
