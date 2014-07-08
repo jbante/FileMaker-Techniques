@@ -1,0 +1,18 @@
+/*******************************************************************************
+ * ByteOrderMarkPrefix ( targetLength )
+ * Creates a string of byte order marks Char ( 65279 ) of the specified length.
+ * This is useful for techniques that force a non-alphabetical sort order on
+ * value lists.
+ *
+ * @parameter targetLength: The number of byte order mark characters to return
+ *
+ * @return A string of byte order marks Char ( 65279 )
+ *
+ * @uses RepeatTextToLength ( textToRepeat ; targetLength )
+ *
+ * @history 2014-07-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://www.soliantconsulting.com/blog/2012/09/extending-filemaker-pro’s-value-list-sort-capabilities-using-char-function
+ ******************************************************************************/
+
+RepeatTextToLength ( Char ( 65279 ) ; targetLength )

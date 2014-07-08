@@ -1,0 +1,28 @@
+/*******************************************************************************
+ * RepeatTextToLength ( textToRepeat ; targetLength )
+ * Creates a string of text consisting of a given piece of text repeated as many
+ * times as necessary to achieve the specified length.
+ *
+ * @parameter textToRepeat
+ * @parameter targetLength
+ *
+ * @return text
+ *
+ * @history 2014-07-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
+
+Let ( [
+	_currentLength = Length ( textToRepeat )
+] ;
+	Case (
+		_currentLength < Ceiling ( targetLength / 2 ) ;
+			RepeatTextToLength ( textToRepeat & textToRepeat ; targetLength ) ;
+
+		_currentLength < targetLength ;
+			textToRepeat
+			& Left ( textToRepeat ; targetLength - _currentLength ) ;
+
+		/* Else, textToRepeat is longer than targetLength */
+			Left ( textToRepeat ; targetLength )
+	)
+)
