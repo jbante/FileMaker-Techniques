@@ -1,0 +1,172 @@
+/*******************************************************************************
+ * LocationEndPoint ( startLatitude ; startLongitude ; azimuth ; distanceInMeters )
+ * Calculates the latitude and longitude for the end location of a path on the
+ * surface of the Earth based on the starting location, direction, and distance.
+ *
+ * @parameter startLatitude: Latitude of the start point, in degrees
+ * @parameter startLongitude: Longitude of the start point, in degrees
+ * @parameter azimuth: The direction at the start of the path, in degrees
+ * clockwise (east) from directly north in [0,360]
+ * @parameter distanceInMeters: The length of the path, in meters
+ *
+ * @return A return-delimited list of data about the destination point of the
+ * path:
+ *		1. latitude of the destination point
+ *		2. longitude of the destination point
+ *		3. forward azimuth of the path at the destination
+ *
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
+ * @see http://en.wikipedia.org/wiki/World_Geodetic_System
+ ******************************************************************************/
+
+If ( azimuth > 180 ;
+	// the calculation assumes west direction, so reverse inputs and result
+	Let ( [
+		_values =
+			LocationEndPoint (
+				0 - startLatitude ;
+				0 - startLongitude ;
+				azimuth - 180 ;
+				distanceInMeters
+			)
+	] ;
+		List (
+			0 - GetValue ( _values ; 1 ) ;
+			0 - GetValue ( _values ; 2 ) ;
+			Mod ( GetValue ( _values ; 3 ) + 180 ; 360 ) ;
+			GetValue ( _values ; 4 )
+		)
+	) ;
+
+/* Else */
+	Let ( [
+		_equatorialRadius = 6378137 ;	// meters
+		_flattening = .0033528106647475 ;	// 1 / 298.257223563
+		_h = .0033697483711382 ;	// .5 * ( 1 / ( 1 - _flattening ) ^ 2 - 1 )
+		_azimuth = Radians ( azimuth ) ;
+
+		_parametricStartLatitude =
+			Atan ( ( 1 - _flattening ) * Tan ( Radians ( startLatitude ) ) ) ;
+		_sin_parametricStartLatitude = Sin ( _parametricStartLatitude ) ;
+		_cos_parametricStartLatitude = Cos ( _parametricStartLatitude ) ;
+		_cos_peakLatitude = _cos_parametricStartLatitude * Sin ( _azimuth ) ;
+		_n = _cos_parametricStartLatitude * Cos ( _azimuth ) ;
+		_c1 = _flattening * _cos_peakLatitude ;
+		_c2 = .25 * _flattening * ( 1 - _cos_peakLatitude ^ 2 ) ;
+		_dd = ( 1 - _c2 ) * ( 1 - _c2 - _c1 * _cos_peakLatitude ) ;
+		_p = _c2 * ( 1 + .5 * _c1 * _cos_peakLatitude ) / _dd ;
+		_sigma1 =
+			Acos (
+				_sin_parametricStartLatitude
+				/ Sin ( Acos ( _cos_peakLatitude ) )
+			) ;
+		_d = distanceInMeters / ( _equatorialRadius * _dd ) ;
+		_cos_d = Cos ( _d ) ;
+		_sin_d = Sin ( _d ) ;
+		_u = 2 * ( _sigma1 - _d ) ;
+		_cos_u = Cos ( _u ) ;
+		_w = 1 - 2 * _p * _cos_u ;
+		_v = _cos_u * _cos_d - Sin ( _u ) * _sin_d ;
+		_y = 2 * _p * _v * _w * _sin_d ;
+		_x = _c2 ^ 2 * _sin_d * _cos_d * ( 2 * _v ^ 2 - 1 ) ;
+		_deltaSigma = _d + _x - _y ;
+		_sin_deltaSigma = Sin ( _deltaSigma ) ;
+		_cos_deltaSigma = Cos ( _deltaSigma ) ;
+		_endAzimuthX =
+			_n * _cos_deltaSigma
+			- _sin_parametricStartLatitude * _sin_deltaSigma ;
+		_endAzimuth =	// Atan2 ( _cos_peakLatitude ; _endAzimuthX )
+			Case (
+				_endAzimuthX > 0 ;
+					Atan ( _cos_peakLatitude / _endAzimuthX ) ;
+
+				_cos_peakLatitude ≥ 0 and _endAzimuthX < 0 ;
+					Atan ( _cos_peakLatitude / _endAzimuthX ) + Pi ;
+
+				_cos_peakLatitude < 0 and _endAzimuthX < 0 ;
+					Atan ( _cos_peakLatitude / _endAzimuthX ) - Pi ;
+
+				_cos_peakLatitude > 0 and _endAzimuthX = 0 ;
+					Pi / 2 ;
+
+				_cos_peakLatitude < 0 and _endAzimuthX = 0 ;
+					0 - Pi / 2 ;
+
+				/* Else, undefined */
+					"?"
+			) ;
+		_endAzimuth =	// convert to back azimuth expected by formula
+			Mod ( _endAzimuth + Pi ; 2 * Pi ) ;
+		_endLatitudeY =
+			0
+			- (
+				_sin_parametricStartLatitude * _cos_deltaSigma
+				+ _n * _sin_deltaSigma
+			)
+			* Sin ( _endAzimuth ) ;
+		_endLatitudeX = ( ( 1 - _flattening ) * _cos_peakLatitude ) ;
+		_endLatitude =	// Atan2 ( _endLatitudeY ; _endLatitudeX )
+			Case (
+				_endLatitudeX > 0 ;
+					Atan ( _endLatitudeY / _endLatitudeX ) ;
+
+				_endLatitudeY ≥ 0 and _endLatitudeX < 0 ;
+					Atan ( _endLatitudeY / _endLatitudeX ) + Pi ;
+
+				_endLatitudeY < 0 and _endLatitudeX < 0 ;
+					Atan ( _endLatitudeY / _endLatitudeX ) - Pi ;
+
+				_endLatitudeY > 0 and _endLatitudeX = 0 ;
+					Pi / 2 ;
+
+				_endLatitudeY < 0 and _endLatitudeX = 0 ;
+					0 - Pi / 2 ;
+
+				/* Else, variant edge case calculation */
+					( .5 * Pi + _sigma1 - _deltaSigma ) / ( 1 - _flattening )
+			) ;
+		_deltaEtaX =
+			_cos_parametricStartLatitude * _cos_deltaSigma
+			- _sin_parametricStartLatitude
+			* _sin_deltaSigma
+			* Cos ( _azimuth ) ;
+		_deltaEtaY = _sin_deltaSigma * Sin ( _azimuth ) ;
+		_deltaEta =	// Atan2 ( _deltaEtaY ; _deltaEtaX )
+			Case (
+				_deltaEtaX > 0 ;
+					Atan ( _deltaEtaY / _deltaEtaX ) ;
+
+				_deltaEtaY ≥ 0 and _deltaEtaX < 0 ;
+					Atan ( _deltaEtaY / _deltaEtaX ) + Pi ;
+
+				_deltaEtaY < 0 and _deltaEtaX < 0 ;
+					Atan ( _deltaEtaY / _deltaEtaX ) - Pi ;
+
+				_deltaEtaY > 0 and _deltaEtaX = 0 ;
+					Pi / 2 ;
+
+				_deltaEtaY < 0 and _deltaEtaX = 0 ;
+					0 - Pi / 2 ;
+
+				/* Else, undefined */
+					"?"
+			) ;
+		_hh =
+			_c1 * ( 1 - _c2 ) * _deltaSigma
+			- _c1 * _c2 * _sin_deltaSigma * Cos ( 2 * _sigma1 - _deltaSigma ) ;
+		_endLongitude =
+			Mod ( Radians ( startLongitude ) + _deltaEta - _hh + Pi ; 2 * Pi )
+			- Pi ;
+		_endAzimuth =	// convert back to forward azimuth
+			Mod ( _endAzimuth + Pi ; 2 * Pi )
+	] ;
+		List (
+			Degrees ( _endLatitude ) ;
+			Degrees ( _endLongitude ) ;
+			Degrees ( _endAzimuth )
+		)
+
+	)
+)
