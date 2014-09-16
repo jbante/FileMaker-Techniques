@@ -57,11 +57,10 @@ If ( azimuth > 180 ;
 		_c2 = .25 * _flattening * ( 1 - _cos_peakLatitude ^ 2 ) ;
 		_dd = ( 1 - _c2 ) * ( 1 - _c2 - _c1 * _cos_peakLatitude ) ;
 		_p = _c2 * ( 1 + .5 * _c1 * _cos_peakLatitude ) / _dd ;
-		_sigma1 =
-			Acos (
-				_sin_parametricStartLatitude
-				/ Sin ( Acos ( _cos_peakLatitude ) )
-			) ;
+		_cos_sigma1 =
+			_sin_parametricStartLatitude / Sin ( Acos ( _cos_peakLatitude ) ) ;
+		_cos_sigma1 = Max ( Min ( _cos_sigma1 ; 1 ) ; -1 ) ;
+		_sigma1 = Acos ( _cos_sigma1 ) ;
 		_d = distanceInMeters / ( _equatorialRadius * _dd ) ;
 		_cos_d = Cos ( _d ) ;
 		_sin_d = Sin ( _d ) ;
