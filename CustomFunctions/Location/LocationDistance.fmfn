@@ -1,12 +1,7 @@
 /*******************************************************************************
  * LocationDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
- * Calculates the distance along a great circle path between two points on the
- * surface of the Earth.
- *
- * This function computes an approximation based on a spherical approximation of
- * the Earth using the Haversine formula. It uses the cosine-based definition
- * for haversine rather than the sine-based formula for better numerical
- * stability and better computational efficiency.
+ * Calculates the distance between two points on the surface of the Earth. This
+ * function assumes that coordinates are in the WGS84 coordinate system.
  *
  * @parameter latitude1: Latitude of the first point
  * @parameter longitude1: Longitude of the first point
@@ -16,14 +11,63 @@
  * @return The distance between the two points, in meters.
  *
  * @history 2012-09-26 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
+ * instead of a sphere to improve accuracy.
  *
- * @see http://en.wikipedia.org/wiki/Haversine_formula
+ * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
+ * @see http://en.wikipedia.org/wiki/World_Geodetic_System
  ******************************************************************************/
 
-6374447	// average radius of Earth in meters
-* Acos (
-	Cos ( Radians ( latitude2 - latitude1 ) )
-	- Cos ( Radians ( latitude1 ) )
-	* Cos ( Radians ( latitude2 ) )
-	* ( 1 - Cos ( Radians ( longitude2 - longitude1 ) ) )
+Let ( [
+	_equatorialRadius = 6378137 ;	// meters
+	_flattening = .0033528106647475 ;	// 1 / 298.257223563
+
+	_parametricStartLatitude =
+		Atan (
+			( 1 - _flattening ) * Tan ( Radians ( latitude1 ) )
+		) ;
+	_parametricEndLatitude =
+		Atan ( ( 1 - _flattening ) * Tan ( Radians ( latitude2 ) ) ) ;
+	_latitudeMean =
+		( _parametricStartLatitude + _parametricEndLatitude ) / 2 ;
+	_sin_latitudeMean = Sin ( _latitudeMean ) ;
+	_halfLatitudeDifference =
+		( _parametricEndLatitude - _parametricStartLatitude ) / 2 ;
+	_sin_halfLatitudeDifference = Sin ( _halfLatitudeDifference ) ;
+	_cos_halfLatitudeDifference = Cos ( _halfLatitudeDifference ) ;
+	_l =
+		_sin_halfLatitudeDifference ^ 2
+		+ ( _cos_halfLatitudeDifference ^ 2 - _sin_latitudeMean ^ 2 )
+		* Sin ( Radians ( longitude2 - longitude1 ) / 2 ) ^ 2 ;
+	_cos_d = 1 - 2 * _l ;
+	_d = Acos ( _cos_d ) ;
+	_sin_d = Sin ( _d ) ;
+	_uu =
+		2 * _sin_latitudeMean ^ 2
+		* _cos_halfLatitudeDifference ^ 2 / ( 1 - _l ) ;
+	_vv =
+		2
+		* _sin_halfLatitudeDifference ^ 2
+		* Cos ( _latitudeMean ) ^ 2
+		/ _l ;
+	_x = _uu + _vv ;
+	_t = _d / _sin_d ;
+	_e = 2 * _cos_d ;
+	_y = _uu - _vv ;
+	_dd = 4 * _t ^ 2 ;
+	_a = _dd * _e ;
+	_c = _t - .5 * ( _a - _e ) ;
+	_delta1_d = .25 * _flattening * ( _t * _x - _y ) ;
+	_delta2_d =
+		( _flattening ^ 2 / 64 )
+		* (
+			_x * ( _a + _c * _x )
+			- _y * ( 2 * _dd + _e * _y )
+			+ _dd * _x * _y
+		) ;
+	_distance =
+		_equatorialRadius * _sin_d * ( _t - _delta1_d + _delta2_d )
+] ;
+	_distance
 )

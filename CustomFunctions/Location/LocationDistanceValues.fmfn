@@ -1,8 +1,9 @@
 /*******************************************************************************
  * LocationDistanceValues ( startLatitude ; startLongitude ; endLatitude ; endLongitude )
  *
- * This function calculates based on a spherical approximation of the surface of
- * the Earth.
+ * Calculates the distance and bearing (azimuth, direction) between two points
+ * on the surface of the Earth. This function assumes that coordinates are in
+ * the WGS84 coordinate system.
  *
  * @parameter startLatitude: Latitude of the first point, in degrees
  * @parameter startLongitude: Longitude of the first point, in degrees
@@ -16,94 +17,123 @@
  *		3. final forward bearing at the end point
  *
  * @history 2013-09-02 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
+ * instead of a sphere to improve accuracy.
  *
- * @see http://en.wikipedia.org/wiki/Haversine_formula
+ * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
+ * @see http://en.wikipedia.org/wiki/World_Geodetic_System
  ******************************************************************************/
 
-Let ( [
-	// precompute values used in formulas more than once
-	_longitudeDifference = Radians ( endLongitude - startLongitude ) ;
-	_cosLatitudeDifference = Cos ( Radians ( endLatitude - startLatitude ) ) ;
-	_cosLongitudeDifference = Cos ( _longitudeDifference ) ;
-	_startLatitude = Radians ( startLatitude ) ;
-	_startLongitude = Radians ( startLongitude ) ;
-	_endLatitude = Radians ( endLatitude ) ;
-	_endLongitude = Radians ( endLongitude ) ;
-	_cosStartLatitude = Cos ( _startLatitude ) ;
-	_cosEndLatitude = Cos ( _endLatitude ) ;
-	_sinStartLatitude = Sin ( _startLatitude ) ;
-	_sinEndLatitude = Sin ( _endLatitude ) ;
+Case (
+	startLongitude > endLongitude ;
+	// Calculation assumes endLongitude is greater than startLongitude,
+	// so reverse inputs, then reverse result back
+	Let ( [
+		_values =
+			LocationDistanceValues (
+				endLatitude ; endLongitude ;
+				startLatitude ; startLongitude
+			) ;
+		_distance = GetValue ( _values ; 1 ) ;
+		_endAzimuth = Mod ( GetValue ( _values ; 2 ) + 180 ; 360 ) ;
+		_startAzimuth = Mod ( GetValue ( _values ; 3 ) + 180 ; 360 )
+	] ;
+		List ( _distance ; _startAzimuth ; _endAzimuth )
+	) ;
 
-	_distance =
-		6374447	// average radius in meters
-		* Acos (
-			_cosLatitudeDifference
-			- _cosStartLatitude
-			* _cosEndLatitude
-			* ( 1 - _cosLongitudeDifference )
-		) ;
+	/* Else */
+		Let ( [
+			_equatorialRadius = 6378137 ;	// meters
+			_flattening = .0033528106647475 ;	// 1 / 298.257223563
 
-	// calculate forward bearing of path at start point
-	_bearingY = Sin ( _longitudeDifference ) * _cosLatitudeDifference ;
-	_bearingX =
-		_cosStartLatitude * _sinEndLatitude
-		- _sinStartLatitude * _cosEndLatitude * _cosLongitudeDifference ;
-	_startBearing =	// Atan2 ( _bearingY ; _bearingX ) in range [0,2*Pi)
-		Case (
-			_bearingX < 0 ;
-				Atan ( _bearingY / _bearingX ) + Pi ;
-
-			_bearingX > 0 and _bearingY < 0 ;
-				Atan ( _bearingY / _bearingX ) + 2 * Pi ;
-
-			_bearingX ≠ 0 ;
-				Atan ( _bearingY / _bearingX ) ;
-
-			_bearingY > 0 ;
-				Pi / 2 ;
-
-			_bearingY < 0 ;
-				3 / 2 * Pi ;
-
-			/* Else, _bearingX = _bearingY = 0 */
+			_parametricStartLatitude =
+				Atan (
+					( 1 - _flattening ) * Tan ( Radians ( startLatitude ) )
+				) ;
+			_parametricEndLatitude =
+				Atan ( ( 1 - _flattening ) * Tan ( Radians ( endLatitude ) ) ) ;
+			_latitudeMean =
+				( _parametricStartLatitude + _parametricEndLatitude ) / 2 ;
+			_sin_latitudeMean = Sin ( _latitudeMean ) ;
+			_cos_latitudeMean = Cos ( _latitudeMean ) ;
+			_halfLatitudeDifference =
+				( _parametricEndLatitude - _parametricStartLatitude ) / 2 ;
+			_sin_halfLatitudeDifference = Sin ( _halfLatitudeDifference ) ;
+			_cos_halfLatitudeDifference = Cos ( _halfLatitudeDifference ) ;
+			_longitudeDifference = Radians ( endLongitude - startLongitude ) ;
+			_halfLongitudeDifference = _longitudeDifference / 2 ;
+			_h = _cos_halfLatitudeDifference ^ 2 - _sin_latitudeMean ^ 2 ;
+			_l =
+				_sin_halfLatitudeDifference ^ 2
+				+ _h * Sin ( _halfLongitudeDifference ) ^ 2 ;
+			_cos_d = 1 - 2 * _l ;
+			_d = Acos ( _cos_d ) ;
+			_sin_d = Sin ( _d ) ;
+			_uu =
+				2 * _sin_latitudeMean ^ 2
+				* _cos_halfLatitudeDifference ^ 2 / ( 1 - _l ) ;
+			_vv =
+				2
+				* _sin_halfLatitudeDifference ^ 2
+				* _cos_latitudeMean ^ 2
+				/ _l ;
+			_x = _uu + _vv ;
+			_t = _d / _sin_d ;
+			_e = 2 * _cos_d ;
+			_y = _uu - _vv ;
+			_dd = 4 * _t ^ 2 ;
+			_b = 2 * _dd ;
+			_a = _dd * _e ;
+			_c = _t - .5 * ( _a - _e ) ;
+			_delta1_d = .25 * _flattening * ( _t * _x - _y ) ;
+			_delta2_d =
+				( _flattening ^ 2 / 64 )
+				* (
+					_x * ( _a + _c * _x )
+					- _y * ( _b + _e * _y )
+					+ _dd * _x * _y
+				) ;
+			_distance =
+				_equatorialRadius * _sin_d * ( _t - _delta1_d + _delta2_d ) ;
+			_f = 2 * _y - _e * ( 4 - _x ) ;
+			_m = 32 * _t - ( 20 * _t - _a ) * _x - ( _b + 4 ) * _y ;
+			_g = _flattening * .5 * _t + _flattening ^ 2 / 64 * _m ;
+			_q = 0 - ( _f * _g * Tan ( _longitudeDifference ) ) / 4 ;
+			_halfLongitudeDifference_prime =
+				.5 * ( _longitudeDifference + _q ) ;
+			_tan_halfLongitudeDifference_prime =
+				Tan ( _halfLongitudeDifference_prime ) ;
+			_c1 =
 				0
-		) ;
-
-	// calculate forward bearing of path at end point
-	// evaluate as bearing from end point to start point, then reverse direction
-	_longitudeDifference = 0 - _longitudeDifference ;
-	_bearingY =
-		Sin ( _longitudeDifference )
-		* Cos ( _startLatitude - _endLatitude ) ;
-	_bearingX =
-		_cosEndLatitude * _sinStartLatitude
-		- _sinEndLatitude * _cosStartLatitude * Cos ( _longitudeDifference ) ;
-	_endBearing =	// Atan2 ( _bearingY ; _bearingX ) in range [0,2*Pi)
-		Case (
-			_bearingX < 0 ;
-				Atan ( _bearingY / _bearingX ) + Pi ;
-
-			_bearingX > 0 and _bearingY < 0 ;
-				Atan ( _bearingY / _bearingX ) + 2 * Pi ;
-
-			_bearingX ≠ 0 ;
-				Atan ( _bearingY / _bearingX ) ;
-
-			_bearingY > 0 ;
-				Pi / 2 ;
-
-			_bearingY < 0 ;
-				3 / 2 * Pi ;
-
-			/* Else, _bearingX = _bearingY = 0 */
-				0
-		) ;
-	_endBearing =	// reverse direction for forward azimuth
-		Mod ( Degrees ( _endBearing ) + 180 ; 360 )
-] ;
-	_distance
-	& ¶
-	& Degrees ( _startBearing )
-	& ¶
-	& _endBearing
+				- _sin_halfLatitudeDifference
+				/ ( _cos_latitudeMean * _tan_halfLongitudeDifference_prime ) ;
+			_c2 =
+				_cos_halfLatitudeDifference
+				/ ( _sin_latitudeMean * _tan_halfLongitudeDifference_prime ) ;
+			_u = Atan ( Abs ( _c1 ) ) ;
+			_v = Atan ( Abs ( _c2 ) ) ;
+			_alpha1 = _v - _u ;
+			_alpha2 = _v + _u ;
+			_startAzimuth =
+				Case (
+					_c1 < 0 and _c2 ≥ 0 ;	_alpha1 ;
+					_c1 ≥ 0 and _c2 ≥ 0 ;	_alpha2 ;
+					_c1 < 0 and _c2 < 0 ;	Pi - _alpha2 ;
+					_c1 ≥ 0 and _c2 < 0 ;	Pi - _alpha1
+				) ;
+			_endAzimuth =
+				Case (
+					_c1 < 0 and _c2 ≥ 0 ;	Pi - _alpha2 ;
+					_c1 ≥ 0 and _c2 ≥ 0 ;	Pi - _alpha1 ;
+					_c1 < 0 and _c2 < 0 ;	_alpha1 ;
+					_c1 ≥ 0 and _c2 < 0 ;	_alpha2
+				)
+		] ;
+			List (
+				_distance ;
+				Degrees ( _startAzimuth ) ;
+				Degrees ( _endAzimuth )
+			)
+		)
 )
