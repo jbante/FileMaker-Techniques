@@ -18,8 +18,7 @@
  ******************************************************************************/
 
 Let ( [
-	_start =
-		Position ( text ; startPattern ; startPosition ; occurrence ) ;
+	_start = Position ( text ; startPattern ; startPosition ; occurrence ) ;
 	_endOfStart = _start + Length ( startPattern ) ;
 	_end = Position ( text ; endPattern ; _endOfStart ; 1 )
 ] ;
