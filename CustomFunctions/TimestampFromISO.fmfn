@@ -2,7 +2,7 @@
  * TimestampFromISO ( isoTimestamp )
  * Converts a timestamp from ISO 8601 format to a FileMaker timestamp.
  *
- * @parameter parameter1: isoTimestamp: A text string representing a timestamp
+ * @parameter isoTimestamp: A text string representing a timestamp
  * in ISO 8601 format, which is: YYYY-MM-DD hh:mm:ss (24-hour time)
  *
  * @return A FileMaker timestamp
