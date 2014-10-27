@@ -1,56 +1,41 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomStandardNormal
+ * Returns a sample value from a normal ("Gaussian") distribution with mean 0
+ * and standard deviation 1.
  *
- * PURPOSE:
- * 		When called repeatedly, RandomStandardNormal creates values consistent
- *		with a normally distributed random variable with mean of 0 and standard
- *		deviation of 1.
+ * @return a number
  *
- * RETURNS:
- *		A number representing a random variate from the standard normal
- *		distribution.
+ * @global $$~STANDARDNORMAL
  *
- * PARAMETERS: none
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-02-22 - Jeremy Bante <http://scr.im/jbante> - Saving extra
+ * value from Marsaglia polar method for later use.
  *
- * VARIABLES:
- *		$$~STANDARDNORMAL: Saves the extra value from the sampling method for
- *		future reference as a performance improvement.
- *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2011-02-22 by Jeremy Bante to store the Marsaglia polar
- *		method's extra value for later use.
- *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Normal_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Normal_distribution
+ ******************************************************************************/
 
-If ( not IsEmpty ( $$~STANDARDNORMAL );
+If ( not IsEmpty ( $$~STANDARDNORMAL ) ;
 	// Use extra value from previous call to this function
 	$$~STANDARDNORMAL
-	& Let ( $$~STANDARDNORMAL = "" ; "" );
+	& Let ( $$~STANDARDNORMAL = "" ; "" ) ;
 
 	// Else, find new value with Marsaglia polar sampling method
 	Let( [
-		~x = Random * 2 - 1;	// begin with random points
-		~y = Random * 2 - 1;
-		~radiusSquared = ~x ^ 2 + ~y ^ 2
-	];
+		_x = Random * 2 - 1 ;	// begin with random points
+		_y = Random * 2 - 1 ;
+		_radiusSquared = _x ^ 2 + _y ^ 2
+	] ;
 
 		Case (
-			~radiusSquared < 1;	// (~x, ~y) is inside the unit circle
-				~x
-				* sqrt ( -2 * ln ( ~radiusSquared ) / ~radiusSquared )
+			_radiusSquared < 1 ;	// (_x, _y) is inside the unit circle
+				_x
+				* sqrt ( -2 * ln ( _radiusSquared ) / _radiusSquared )
 				& Let (
 					$$~STANDARDNORMAL =	// save extra value
-						~y
-						* sqrt ( -2 * ln ( ~radiusSquared ) / ~radiusSquared );
+						_y
+						* sqrt ( -2 * ln ( _radiusSquared ) / _radiusSquared ) ;
 					""
-				);
+				) ;
 
 			// Else, reject guess and sample again
 				RandomStandardNormal

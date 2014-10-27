@@ -1,60 +1,49 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomBinomial ( probability ; trials )
+ * When called repeatedly, RandomBinomial returns values consistent with a
+ * binomial random variable with probability of "event success" and number of
+ * trials specified by the parameters.
  *
- * PURPOSE:
- *		When called repeatedly, RandomBinomial returns values consistent with a
- *		binomial random variable with probability of "event success" and number
- *		of trials specified by the parameters.
+ * @parameter probability: a number, 0 ≤ probability ≤ 1
+ * @parameter trials: a positive integer
  *
- * RETURNS:
- *		A number between 0 (zero) and trials representing a random variate from
- *		a binomial distribution with the specified parameters.
+ * @return A number between 0 and trials
  *
- * PARAMETERS:
- *		probability: A number, 0 ≤ probability ≤ 1
- *		trials: A positive integer
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Binomial_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Binomial_distribution
+ ******************************************************************************/
 
 Let ( [
-	~trials = Abs ( Int ( trials ) );
-	~guess = Round ( Random * ~trials ; 0 );
+	_trials = Abs ( Int ( trials ) ) ;
+	_guess = Round ( Random * _trials ; 0 ) ;
 
 	// mode of Binomial distribution
-	~mode1 = Ceiling ( ~trials * probability );
-	~mode2 = Floor ( ~trials * probability );
+	_mode1 = Ceiling ( _trials * probability ) ;
+	_mode2 = Floor ( _trials * probability ) ;
 
 	// max probability of Binomial distribution
-	~mode1Mass =
-		( probability ^ ~mode1 )
-		* ( ( 1 - probability ) ^ ( ~trials - ~mode1 ) );
-	~mode2Mass =
-		( probability ^ ~mode2 )
-		* ( ( 1 - probability ) ^ ( ~trials - ~mode2 ) );
+	_mode1Mass =
+		( probability ^ _mode1 )
+		* ( ( 1 - probability ) ^ ( _trials - _mode1 ) ) ;
+	_mode2Mass =
+		( probability ^ _mode2 )
+		* ( ( 1 - probability ) ^ ( _trials - _mode2 ) ) ;
 
-	~scaleFactor = 1 / Max ( ~mode1Mass ; ~mode2Mass );
-	~rejectionThreshold =	// probability mass at ~guess
-		( probability ^ ~guess )
-		* ( ( 1 - probability ) ^ ( ~trials - ~guess ) )
-		* ~scaleFactor	// maps function to [0,1] for max acceptance rate
-];
+	_scaleFactor = 1 / Max ( _mode1Mass ; _mode2Mass ) ;
+	_rejectionThreshold =	// probability mass at _guess
+		( probability ^ _guess )
+		* ( ( 1 - probability ) ^ ( _trials - _guess ) )
+		* _scaleFactor	// maps function to [0,1] for max acceptance rate
+] ;
 	Case (
-		0 > probability or 1 < probability;	// parameter out of bounds
-			"?";
+		0 > probability or 1 < probability ;	// parameter out of bounds
+			"?" ;
 
-		Random ≤ ~rejectionThreshold;
-			~guess;
+		Random ≤ _rejectionThreshold ;
+			_guess ;
 
-		// Else, reject ~guess and sample again
-			RandomBinomial ( probability ; ~trials )
+		// Else, reject _guess and sample again
+			RandomBinomial ( probability ; _trials )
 	)
 )

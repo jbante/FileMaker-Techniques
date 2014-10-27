@@ -1,18 +1,15 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomValue ( valueList )
+ * Selects a random value from a return-delimited list.
  *
- * RETURNS:
- *		A randomly selected (equiprobable) value from valueList
+ * @parameter valueList: A return-delimited list
  *
- * PARAMETERS:
- *		valueList: A ¶-delimited list of values
+ * @return text
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2011-10-07 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-10-07 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
-GetValue ( valueList ; Ceiling ( ( 1 - Random ) * ValueCount ( valueList ) ) )
+GetValue (
+	valueList ;
+	Ceiling ( ( 1 - Random ) * ValueCount ( valueList ) )
+)

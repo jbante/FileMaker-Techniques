@@ -1,31 +1,25 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomTextWithCharacterSet ( textLength ; characterSet )
+ * Creates a random string of text using the given character set.
  *
- * RETURNS:
- *		A random text string of length textLength. The returned string can include
- *		characters from the specified characterSet.
+ * @parameter textLength: The length of the desired result
+ * @parameter characterSet: A string containing all possible characters to
+ * include in the result
  *
- * PARAMETERS:
- *		textLength: The length of the desired result
- *		characterSet: A string containing all possible characters to include in the result
+ * @return text
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2012-11-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
-If ( textLength ≤ 0 or IsEmpty ( characterSet );
-	"";
+If ( textLength ≤ 0 or IsEmpty ( characterSet ) ;
+	"" ;
 /* Else */
 	Let ( [
-		~setLength = Length ( characterSet );
-		~position = Ceiling ( ( 1 - Random ) * ~setLength );
-		~character = Middle ( characterSet ; ~position ; 1 )
-	];
-		~character
+		_setLength = Length ( characterSet ) ;
+		_position = Ceiling ( ( 1 - Random ) * _setLength ) ;
+		_character = Middle ( characterSet ; _position ; 1 )
+	] ;
+		_character
 		& RandomTextWithCharacterSet ( textLength - 1 ; characterSet )
 	)
 )

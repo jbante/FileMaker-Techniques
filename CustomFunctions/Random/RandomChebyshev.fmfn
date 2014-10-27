@@ -1,31 +1,24 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomChebyshev ( mean ; standardDeviation )
+ * Random numbers dispersed as widely as possible for the given mean and
+ * standard deviation according to Chebyshev's inequality.
  *
- * RETURNS:
- *		Random numbers dispersed as widely as possible for the given mean and
- *		standard deviation according to Chebyshev's inequality.
+ * @parameter mean
+ * @parameter standardDeviation
  *
- * PARAMETERS:
- *		mean
- *		standardDeviation
+ * @return a number
  *
- * DEPENDENCIES: none
+ * @history 2013-02-27 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2013-02-27 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Chebyshev's_inequality
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Chebyshev's_inequality
+ ******************************************************************************/
 
 Let ( [
-	~quantile = 1 - Random ;	// 0 < ~quantile ≤ 1
-	~deviation = Sqrt ( 1 / ~quantile ) * standardDeviation	// z score * stdDev
+	_quantile = 1 - Random ;	// 0 < _quantile ≤ 1
+	_deviation = Sqrt ( 1 / _quantile ) * standardDeviation	// z score * stdDev
 ] ;
 	If ( Random < .5 ;	// distribute symmetrically around mean
-		mean + ~deviation ;
-		/* Else */ mean - ~deviation
+		mean + _deviation ;
+		/* Else */ mean - _deviation
 	)
 )

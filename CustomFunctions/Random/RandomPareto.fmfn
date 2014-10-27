@@ -1,30 +1,18 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomPareto ( scale ; shape )
+ * Returns sample values from a Pareto distribution.
  *
- * PURPOSE:
- *		When called repeatedly, RandomPareto creates values consistent with a
- *		Pareto random variable with the given parameters.
+ * @parameter scale: a number, 0 < scale
+ * @parameter shape: a number, 0 < shape
  *
- * RETURNS:
- *		A number representing a random variate from a Pareto distribution with
- *		the specified parameters.
+ * @return a number
  *
- * PARAMETERS:
- *		scale: A number, 0 < scale
- *		shape: A number, 0 < shape
+ * @history 2011-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2011-02-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Pareto_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Pareto_distribution
+ ******************************************************************************/
 
-If ( 0 ≥ scale or 0 ≥ shape;	// parameter is out of range
-	"?";
+If ( 0 ≥ scale or 0 ≥ shape ;	// parameter is out of range
+	"?" ;
 	/* Else */ scale / ( Random ^ ( 1 / shape ) )
 )

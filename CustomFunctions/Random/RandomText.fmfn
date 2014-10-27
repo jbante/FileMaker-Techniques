@@ -1,40 +1,30 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomText ( textLength ; minCharCode ; maxCharCode )
+ * Generates a random text string of length textLength. The returned string can
+ * include characters from the range between minCharCode and maxCharCode, up to
+ * the entire character set supported by FileMaker, excluding ASCII control
+ * characters (code 0 through 31, and 127).
  *
- * RETURNS:
- *		A random text string of length textLength. The returned string can
- *		include characters from the range between minCharCode and maxCharCode,
- *		up to the entire character set supported by FileMaker, excluding ASCII
- *		control characters (code 0 through 32, and 127).
+ * @parameter textLength: The length of the desired result
+ * @parameter minCharCode: The Unicode character code at the minimum of the
+ * range of acceptable values. Defaults to 32 when passed a smaller or empty
+ * value.
+ * @parameter maxCharCode: The Unicode character code at the maximum of the
+ * range of acceptable values. Defaults to 65535 when passed a larger or empty
+ * value.
  *
- * PARAMETERS:
- *		textLength: The length of the desired result
- *		minCharCode: The Unicode character code at the minimum of the range of
- *		acceptable values. Defaults to 32 when passed a smaller or empty value.
- *		maxCharCode: The Unicode character code at the maximum of the range of
- *		acceptable values. Defaults to 65535 when passed a larger or empty
- *		value.
+ * @return A string of text
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/jbante> to reject
- *		problem characters for diacritical marks and accept some control
- *		characters.
- *		MODIFIED on 2012-11-28 by Jeremy Bante <http://scr.im/jbante> to not
- *		return characters between Unicode 55295 and 57348, which are sometimes
- *		mishandled by FileMaker.
- *		MODIFIED on 2012-11-10 by Jeremy Bante <http://scr.im/jbante> to fix a
- *		bug where the character range could be incorrect if one parameter is
- *		empty and the other is not.
- *		CREATED on 2012-11-08 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/ASCII
- *		http://en.wikipedia.org/wiki/UTF-8
- * =====================================
- */
+ * @history 2012-11-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-11-10 - Jeremy Bante <http://scr.im/jbante> - Fixing a bug
+ * where the character range could be incorrect if one parameter is empty and
+ * the other is not.
+ * @history 2012-11-28 - Jeremy Bante <http://scr.im/jbante> - Not returning
+ * characters between 55295 and 57348, which are sometimes mishandled by
+ * FileMaker.
+ * @history 2014-10-26 - Jeremy Bante <http://scr.im/jbante> - Rejecting problem
+ * characters for diacritical marks and accepting some control characters.
+ ******************************************************************************/
 
 Case (
 	textLength < 1 ;
@@ -45,7 +35,7 @@ Case (
 			textLength ;
 			Max ( minCharCode ; 0 ) ;
 			Min ( maxCharCode ; 65535 )
-		);
+		) ;
 
 	maxCharCode < minCharCode ;
 		RandomText ( textLength ; maxCharCode ; minCharCode ) ;
@@ -54,25 +44,25 @@ Case (
 		Let ( [
 			minCharCode = Max ( minCharCode ; 0 ) ;
 			maxCharCode = Min ( maxCharCode ; 65535 ) ;
-			~code =
+			_code =
 				Round (
 					Random * ( maxCharCode - minCharCode ) + minCharCode ;
 					0
 				) ;
-			~character = Char ( ~code ) ;
-			~reject =	// check that character is well-behaved
-				~code < 9	// reject most control characters
-				or ( ~code > 13 and ~code < 32 )
-				or ~code = 127	// delete character
+			_character = Char ( _code ) ;
+			_reject =	// check that character is well-behaved
+				_code < 9	// reject most control characters
+				or ( _code > 13 and _code < 32 )
+				or _code = 127	// delete character
 				// some characters attach themselves to the preceding character
-				or Length ( Code ( Left ( "$" & ~character ; 1 ) ) ) > 5
+				or Length ( Code ( Left ( "$" & _character ; 1 ) ) ) > 5
 				// some characters get converted to other characters
-				or Code ( Evaluate ( Quote ( ~character ) ) ) ≠ ~code
-		];
-			If ( ~reject ;
+				or Code ( Evaluate ( Quote ( _character ) ) ) ≠ _code
+		] ;
+			If ( _reject ;
 				RandomText ( textLength ; minCharCode ; maxCharCode ) ;
 			/* Else */
-				~character
+				_character
 				& RandomText ( textLength - 1 ; minCharCode ; maxCharCode )
 			)
 		)

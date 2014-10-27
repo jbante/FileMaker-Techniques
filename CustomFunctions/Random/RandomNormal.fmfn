@@ -1,31 +1,17 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomNormal ( mean ; standardDeviation )
+ * Returns sample values from a normal ("Gaussian") distribution.
  *
- * PURPOSE:
- *		When called repeatedly, RandomNormal returns values consistent with a
- *		normally distributed random variable with mean and standard deviation
- *		given by the parameters.
+ * @parameter mean
+ * @parameter standardDeviation
  *
- * RETURNS:
- *		A number representing a random variate from a normal distribution with
- *		the specified parameters.
+ * @return a number
  *
- * PARAMETERS:
- *		mean: The mean for the distribution
- *		standardDeviation: The standard deviation for the distribution
+ * @uses RandomStandardNormal
  *
- * DEPENDENCIES:
- *		RandomStandardNormal
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		MODIFIED on 2011-02-22 by Jeremy Bante to store the Marsaglia polar
- *		method's extra value for later use.
- *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Normal_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Normal_distribution
+ ******************************************************************************/
 
 standardDeviation * RandomStandardNormal + mean

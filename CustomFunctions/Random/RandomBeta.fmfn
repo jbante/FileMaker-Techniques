@@ -1,50 +1,36 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomBeta ( alpha ; beta )
+ * Returns random values from a beta distribution.
  *
- * PURPOSE:
- *		When called repeatedly, RandomBeta creates values consistent with a
- *		beta-distributed random variable with shape parameters alpha and beta.
+ * @parameter alpha: a number, alpha > 0
+ * @parameter beta: a number, beta > 0
  *
- * RETURNS:
- *		A number between 0 (zero) and 1 representing a random variate from a
- *		beta distribution with the specified parameters.
+ * @return A number between 0 and 1
  *
- * PARAMETERS:
- *		alpha: A number, alpha > 0
- *		beta: A number, beta > 0
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2010-02-22 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Beta_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Beta_distribution
+ ******************************************************************************/
 
 Let ( [
-	~guess = Random;
-
-	~mode = ( alpha - 1 ) / ( alpha + beta - 2 );
-	~densityAtMode =
-		( ~mode ^ ( alpha - 1 ) )
-		* ( ( 1 - ~mode ) ^ ( beta - 1 ) );
-
-	~rejectionThreshold =	// probability density at ~guess
-		( ~guess ^ ( alpha - 1 ) )
-		* ( ( 1 - ~guess ) ^ ( beta - 1 ) )
-		* ~densityAtMode //maps function to [0,1] for max acceptance rate
-];
+	_guess = Random ;
+	_mode = ( alpha - 1 ) / ( alpha + beta - 2 ) ;
+	_densityAtMode =
+		( _mode ^ ( alpha - 1 ) )
+		* ( ( 1 - _mode ) ^ ( beta - 1 ) ) ;
+	_rejectionThreshold =	// probability density at _guess
+		( _guess ^ ( alpha - 1 ) )
+		* ( ( 1 - _guess ) ^ ( beta - 1 ) )
+		* _densityAtMode // maps function to [0,1] for max acceptance rate
+] ;
 	Case (
-		alpha ≤ 0 or beta ≤ 0;	// parameters out of range
-			"?";
+		alpha ≤ 0 or beta ≤ 0 ;	// parameters out of range
+			"?" ;
 
-		Random ≤ ~rejectionThreshold;
-			~guess;
+		Random ≤ _rejectionThreshold ;
+			_guess ;
 
-		// Else, reject ~guess and sample again
+		// Else, reject _guess and sample again
 			RandomBeta ( alpha ; beta )
 	)
 )

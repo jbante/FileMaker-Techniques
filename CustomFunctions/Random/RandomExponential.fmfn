@@ -1,29 +1,17 @@
-/**
- * =====================================
+/*******************************************************************************
  * RandomExponential ( mean )
+ * Returns sample values from an exponential distribution
  *
- * RETURNS:
- *		A number representing a random variate from an exponential distribution
- *		with the specified parameter.
+ * @parameter mean: a number, mean > 0
  *
- * PARAMETERS:
- *		mean: mean > 0
+ * @return a number
  *
- * DEPENDENCIES: none
+ * @history 2011-10-04 - Jeremy Bante <http://scr.im/jbante> - Created
  *
- * HISTORY:
- *		CREATED on 2011-10-04 by Jeremy Bante <http://scr.im/jbante>.
- *
- * REFERENCES:
- *		http://en.wikipedia.org/wiki/Exponential_distribution
- * =====================================
- */
+ * @see http://en.wikipedia.org/wiki/Exponential_distribution
+ ******************************************************************************/
 
-Let ( [
-	~random = Random
-];
-	Case (
-		mean ≤ 0 ; "?";	// parameter is out of range
-		/* Else */ ( 0 - mean ) * Ln ( 1 - Random )
-	)
+Case (
+	mean ≤ 0 ; "?" ;	// parameter is out of range
+	/* Else */ ( 0 - mean ) * Ln ( 1 - Random )
 )
