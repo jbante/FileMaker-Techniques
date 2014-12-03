@@ -9,21 +9,20 @@
  * @uses TextMask ( text ; prototype )
  *
  * @history 2012-12-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-12-03 - Jeremy Bante <http://scr.im/jbante> - Updating
+ * formatting and reorganizing logic
  ******************************************************************************/
 
 Let ( [
-	_alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-	_text = Filter ( Upper ( phoneNumber ) ; _alphanumeric );
+	_alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+	_text = Filter ( Upper ( phoneNumber ) ; _alphanumeric ) ;
 	_length = Length ( _text )
-];
-	Case (
-		Left ( _text ; 1 ) = "1";
-			TextMask ( _text ; "#-###-###-#### ext. *" );
-
-		Length ( _text ) > 7;
-			TextMask ( _text ; "###-###-#### ext. *" );
-
-		/* Else */
-			TextMask ( _text ; "###-####" )
-	)
+	_mask =
+		Case (
+			Left ( _text ; 1 ) = "1" ;	"#-###-###-#### ext. *" ;
+			Length ( _text ) > 7 ;	"###-###-#### ext. *" ;
+			/* Else */	"###-####"
+		)
+] ;
+	TextMask ( _text ; _mask )
 )
