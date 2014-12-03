@@ -16,7 +16,6 @@
 Let ( [
 	_alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
 	_text = Filter ( Upper ( phoneNumber ) ; _alphanumeric ) ;
-	_length = Length ( _text )
 	_mask =
 		Case (
 			Left ( _text ; 1 ) = "1" ;	"#-###-###-#### ext. *" ;
