@@ -1,0 +1,22 @@
+/*******************************************************************************
+ * ShuffleText ( text )
+ * Arranges the characters of text in random order.
+ *
+ * @parameter text
+ *
+ * @return text
+ *
+ * @history 2014-12-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
+
+Let ( [
+	_length = Length ( text ) ;
+	_selection = If ( _length > 1 ; Ceiling ( ( 1 - Random ) * _length ) ; 1 ) ;
+	_leftText = Left ( text ; _selection - 1 ) ;
+	_rightText = Right ( text ; _length - _selection )
+] ;
+	Middle ( text ; _selection ; 1 )
+	& If ( _length > 1 ;
+		ShuffleText ( _leftText & _rightText )
+	)
+)
