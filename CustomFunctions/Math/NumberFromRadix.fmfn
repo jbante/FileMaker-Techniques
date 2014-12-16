@@ -1,91 +1,89 @@
-/**
- * =====================================
+/*******************************************************************************
  * NumberFromRadix ( numberText ; characterSet )
+ * Converts numberText from the base specified by the given characterSet to a
+ * FileMaker (decimal) number. Results from converting fractional portions of
+ * numbers may be approximate rather than exact.
  *
- * PURPOSE:
- *		Converts numberText from the base specified by the given characterSet to
- *		a FileMaker (decimal) number. Results from converting fractional
- *		portions of numbers may be approximate rather than exact.
+ * @parameter numberText: a number represented as text in the specified base
+ * @parameter characterSet: an ordered tuple of characters specifying the base
  *
- * RETURNS:
- *		The numeric (base 10) value of numberText
+ * @return a number
  *
- * PARAMETERS:
- *		numberText: A text string representing a number in the specified base.
- *		characterSet: The ordered set of characters to use to decode the number.
- *
- * HISTORY:
- *		CREATED on 2012-03-12 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2012-03-12 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Case (
 	/* Step 0, set-up */
-	not $~radix.step;
+	not $_radix.step ;
 		Let ( [
-			$~radix.base = Length ( characterSet );
-			~numberText = Filter ( numberText ; "." & characterSet );
+			$_radix.base = Length ( characterSet ) ;
+			_numberText = Filter ( numberText ; "." & characterSet ) ;
 
-			$~radix.isNegative = Left ( numberText ; 1 ) = "-";	// PRE filter value
-			~length = Length ( ~numberText );	// POST filter value
-			~dotPosition = Position ( ~numberText ; "." ; 1 ; 1 );
-			$~radix.power = // initialize to highest power of numberText
-				If ( ~dotPosition ; ~dotPosition - 2 ; /* Else */ ~length - 1 );
-			$~radix.powerMin =
-				If ( ~dotPosition;
-					$~radix.power - ~length + 2;
+			$_radix.isNegative = Left ( numberText ; 1 ) = "-" ;
+			_length = Length ( _numberText ) ;
+			_dotPosition = Position ( _numberText ; "." ; 1 ; 1 ) ;
+			$_radix.power = // initialize to highest power of numberText
+				If ( _dotPosition ;
+					_dotPosition - 2 ;
+					/* Else */ _length - 1
+				) ;
+			$_radix.powerMin =
+				If ( _dotPosition;
+					$_radix.power - _length + 2 ;
 					/* Else */ 0
-				);
-			$~radix.round =	// constrain result to analogous significant digits
-				Ceiling ( Ln ( $~radix.base ^ Abs ( $~radix.powerMin ) ) / Ln ( 10 ) );
+				) ;
+			$_radix.round =	// constrain result to analogous significant digits
+				Ceiling (
+					Ln ( $_radix.base ^ Abs ( $_radix.powerMin ) ) / Ln ( 10 )
+				) ;
 
-			$~radix.step =
-				If ( IsEmpty ( ~numberText ) or $~radix.base < 2;
-					-1;	// error, skip to end
+			$_radix.step =
+				If ( IsEmpty ( _numberText ) or $_radix.base < 2 ;
+					-1 ;	// error, skip to end
 					/* Else */ 1
 				)
-		];
-			NumberFromRadix ( ~numberText ; characterSet )
-		);
+		] ;
+			NumberFromRadix ( _numberText ; characterSet )
+		) ;
 
 	/* Step 1, convert digits */
-	$~radix.step = 1;
+	$_radix.step = 1 ;
 		Let ( [
-			~digit = Left ( numberText ; 1 );
-			~digit = Position ( characterSet ; ~digit ; 1 ; 1 ) - 1;
-			~isDot = ~digit = -1;
-			~numberText = Right ( numberText ; Length ( numberText ) - 1 );
+			_digit = Left ( numberText ; 1 ) ;
+			_digit = Position ( characterSet ; _digit ; 1 ; 1 ) - 1 ;
+			_isDot = _digit = -1 ;
+			_numberText = Right ( numberText ; Length ( numberText ) - 1 ) ;
 
-			$~radix.decimal =
-				$~radix.decimal +
-				If ( not ~isDot ; ~digit * ( $~radix.base ^ $~radix.power ) );
-			$~radix.power = $~radix.power - ( not ~isDot );	// decrement by 1
-			$~radix.step =
-				If ( $~radix.power ≥ $~radix.powerMin;
-					$~radix.step;
-					/* Else */ $~radix.step + 1
+			$_radix.decimal =
+				$_radix.decimal +
+				If ( not _isDot ; _digit * ( $_radix.base ^ $_radix.power ) ) ;
+			$_radix.power = $_radix.power - If ( not _isDot ; 1 ; 0 ) ;
+			$_radix.step =
+				If ( $_radix.power ≥ $_radix.powerMin ;
+					$_radix.step ;
+					/* Else */ $_radix.step + 1
 				)
-		];
-			NumberFromRadix ( ~numberText ; characterSet )
-		);
+		] ;
+			NumberFromRadix ( _numberText ; characterSet )
+		) ;
 
 	/* Step 2, clean-up and return result */
-	$~radix.step = 2 or $~radix.step = -1;
+	$_radix.step = 2 or $_radix.step = -1 ;
 		Let ( [
-			~error = $~radix.step = -1;
-			~result =
-				If ( $~radix.isNegative ; "-" )
-				& Round ( $~radix.decimal ; $~radix.round );
+			_error = $_radix.step = -1 ;
+			_result =
+				If ( $_radix.isNegative ; "-" )
+				& Round ( $_radix.decimal ; $_radix.round ) ;
 
 			// Purge variables
-			$~radix.base = "";
-			$~radix.decimal = "";
-			$~radix.isNegative = "";
-			$~radix.power = "";
-			$~radix.powerMin = "";
-			$~radix.round = "";
-			$~radix.step = ""
-		];
-			If ( ~error ; "?" ; /* Else */ ~result )
+			$_radix.base = "" ;
+			$_radix.decimal = "" ;
+			$_radix.isNegative = "" ;
+			$_radix.power = "" ;
+			$_radix.powerMin = "" ;
+			$_radix.round = "" ;
+			$_radix.step = ""
+		] ;
+			If ( _error ; "?" ; /* Else */ _result )
 		)
 )

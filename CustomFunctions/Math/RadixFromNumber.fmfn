@@ -1,114 +1,105 @@
-/**
- * =====================================
+/*******************************************************************************
  * RadixFromNumber ( number ; characterSet )
+ * Encodes numbers in an arbitrary $_radix.base specified by characterSet.
+ * Results from converting fractional portions of numbers may be approximate
+ * rather than exact.
  *
- * PURPOSE:
- *		Encodes numbers in an arbitrary $~radix.base specified by characterSet. Results
- *		from converting fractional portions of numbers may be approximate rather
- *		than exact.
+ * @parameter number: The (decimal) number to encode
+ * @parameter characterSet: an ordered tuple of characters specifying the base
  *
- * RETURNS:
- *		A string representing the number in the specified radix.
+ * @return text
  *
- * PARAMETERS:
- *		number: The FileMaker (decimal) number to encode
- *		characterSet: The ordered set of characters to use to encode the number.
- *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2012-03-12 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2012-03-12 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
 
 Case (
 	/* Step 0, set-up */
-	not $~radix.step;
+	not $_radix.step ;
 		Let ( [
-			~number = Abs ( GetAsNumber ( number ) );
-			$~radix.base = Length ( characterSet );
+			_number = Abs ( GetAsNumber ( number ) ) ;
+			$_radix.base = Length ( characterSet ) ;
 
-			$~radix.isNegative = number < 0;
-			$~radix.integer = Int ( ~number );
-			$~radix.fraction = Mod ( ~number ; 1 );
+			$_radix.isNegative = number < 0 ;
+			$_radix.integer = Int ( _number ) ;
+			$_radix.fraction = Mod ( _number ; 1 ) ;
 
 			// Constrain encoding of fraction to analogous significant digits
-			$~radix.fractionBound =
+			$_radix.fractionBound =
 				Ceiling (
-					Ln ( 10 ^ ( Length ( $~radix.fraction ) - 1 ) )
-					/ Ln ( $~radix.base )
-				);
+					Ln ( 10 ^ ( Length ( $_radix.fraction ) - 1 ) )
+					/ Ln ( $_radix.base )
+				) ;
 
-			$~radix.step =
-				If ( $~radix.base < 2;
-					-1;	// error, skip to end
+			$_radix.step =
+				If ( $_radix.base < 2 ;
+					-1 ;	// error, skip to end
 					/* Else */ 1
 				)
-		];
+		] ;
 			RadixFromNumber ( "" ; characterSet )
-		);
+		) ;
 
 	/* Step 1, encode integer portion of number */
-	$~radix.step = 1;
+	$_radix.step = 1 ;
 		Let ( [
-			~digit = Mod ( $~radix.integer ; $~radix.base );
-			~digit = Middle ( characterSet ; ~digit + 1 ; 1 );
-			$~radix.integer = Div ( $~radix.integer ; $~radix.base );
-			$~radix.integerResult = ~digit & $~radix.integerResult;
+			_digit = Mod ( $_radix.integer ; $_radix.base ) ;
+			_digit = Middle ( characterSet ; _digit + 1 ; 1 ) ;
+			$_radix.integer = Div ( $_radix.integer ; $_radix.base ) ;
+			$_radix.integerResult = _digit & $_radix.integerResult ;
 
-			$~radix.step =
+			$_radix.step =
 				Case (
-					$~radix.integer ; $~radix.step;	// not done encoding integer
-					$~radix.fraction ; $~radix.step + 1;
+					$_radix.integer ; $_radix.step ;
+					$_radix.fraction ; $_radix.step + 1 ;
 					/* Else */ 3	// skip to end
 				)
-		];
+		] ;
 			RadixFromNumber ( "" ; characterSet )
-		);
+		) ;
 
 	/* Step 2, encode fractional portion of number */
-	$~radix.step = 2;
+	$_radix.step = 2 ;
 		Let ( [
-			$~radix.i = $~radix.i - 1;
-			~digit = Div ( $~radix.fraction ; $~radix.base ^ $~radix.i );
-			~digit = Middle ( characterSet ; ~digit + 1 ; 1 );
-			$~radix.fraction =
-				Mod ( $~radix.fraction ; $~radix.base ^ $~radix.i );
-			$~radix.fractionResult = $~radix.fractionResult & ~digit;
+			$_radix.i = $_radix.i - 1 ;
+			_digit = Div ( $_radix.fraction ; $_radix.base ^ $_radix.i ) ;
+			_digit = Middle ( characterSet ; _digit + 1 ; 1 ) ;
+			$_radix.fraction =
+				Mod ( $_radix.fraction ; $_radix.base ^ $_radix.i ) ;
+			$_radix.fractionResult = $_radix.fractionResult & _digit ;
 
-			$~radix.step =
-				If ( $~radix.fraction and -$~radix.i < $~radix.fractionBound;
-					$~radix.step;	// not done encoding fraction
-					/* Else */ $~radix.step + 1
+			$_radix.step =
+				If ( $_radix.fraction and -$_radix.i < $_radix.fractionBound ;
+					$_radix.step ;	// not done encoding fraction
+					/* Else */ $_radix.step + 1
 				)
-		];
+		] ;
 			RadixFromNumber ( "" ; characterSet )
-		);
+		) ;
 
 	/* Step 3, clean-up and return result */
-	$~radix.step = 3 or $~radix.step = -1;
+	$_radix.step = 3 or $_radix.step = -1 ;
 		Let ( [
-			~error = $~radix.step = -1;
-			~result =
-				If ( $~radix.isNegative ; "-" )
-				& If ( not IsEmpty ( $~radix.integerResult );
-					$~radix.integerResult
+			_error = $_radix.step = -1 ;
+			_result =
+				If ( $_radix.isNegative ; "-" )
+				& If ( not IsEmpty ( $_radix.integerResult ) ;
+					$_radix.integerResult
 				)
-				& If ( not IsEmpty ( $~radix.fractionResult );
-					"." & $~radix.fractionResult
-				);
+				& If ( not IsEmpty ( $_radix.fractionResult ) ;
+					"." & $_radix.fractionResult
+				) ;
 
 			// Purge variables
-			$~radix.base = "";
-			$~radix.fraction = "";
-			$~radix.fractionBound = "";
-			$~radix.fractionResult = "";
-			$~radix.i = "";
-			$~radix.integer = "";
-			$~radix.integerResult = "";
-			$~radix.isNegative = "";
-			$~radix.step = ""
-		];
-			If ( ~error ; "?" ; /* Else */ ~result )
+			$_radix.base = "" ;
+			$_radix.fraction = "" ;
+			$_radix.fractionBound = "" ;
+			$_radix.fractionResult = "" ;
+			$_radix.i = "" ;
+			$_radix.integer = "" ;
+			$_radix.integerResult = "" ;
+			$_radix.isNegative = "" ;
+			$_radix.step = ""
+		] ;
+			If ( _error ; "?" ; /* Else */ _result )
 		)
 )
