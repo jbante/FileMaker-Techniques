@@ -1,0 +1,17 @@
+/*******************************************************************************
+ * ListContainsValue ( referenceList ; searchValue )
+ * Determines whether or not searchValue exists in referenceList.
+ *
+ * @parameter referenceList: a return-delimited list
+ * @parameter searchValue: text
+ *
+ * @return True (1) or False (0)
+ *
+ * @history 2012-08-15 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-09-14 - Jeremy Bante <http://scr.im/jbante> - Improving speed
+ * with Position method.
+ * @history 2015-01-13 - Jeremy Bante <http://scr.im/jbante> - Improving speed
+ * with FilterValues method.
+ ******************************************************************************/
+
+not IsEmpty ( FilterValues ( searchValue ; referenceList ) )
