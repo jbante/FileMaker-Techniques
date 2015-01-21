@@ -1,38 +1,30 @@
-/**
- * =====================================
+/*******************************************************************************
  * SortAsymptote ( ordinal )
- *		http://www.briandunning.com/cf/1280
+ * Limits the range of ordinal to fit within (-1,1). This can be useful when
+ * creating nested custom sort orders, where sub-sort fields have a numeric sort
+ * order, but must also respect the sort order of other fields with higher
+ * priority, so that sub-sort fields with the same value in higher-priority
+ * fields cluster together. In these cases, this function can be used to
+ * restrict the sub-sort order to be smaller than the order of magnitude for the
+ * higher priority sort order.
  *
- * PURPOSE:
- *		Limits the range of ordinal to fit within (-1,1). This can be useful
- *		when creating nested custom sort orders, where "child" records have a
- *		numeric sort order, but must also respect the sort order of "parent"
- *		records, so that child records with the same parent record cluster
- *		together. In these cases, this function can be used to restrict the
- *		child sort order to be smaller than the order of magnitude for the
- *		parent sort order.
+ * If a < b, then SortAsymptote ( a ) < SortAsymptote ( b ).
+ * If a > 0, then SortAsymptote ( a ) > 0.
  *
- * RETURNS:
- *		A number, -1 < number < 1.
- *		If a < b, then SortAsymptote ( a ) < SortAsymptote ( b ).
- *		If a > 0, then SortAsymptote ( a ) > 0.
+ * @example Table::highPrioritySortField + SortAsymptote ( Table::subSortField )
  *
- * PARAMETERS:
- *		ordinal: The number used for within-group sorting
+ * @parameter ordinal: A number
  *
- * DEPENDENCIES: none
+ * @return A number such that -1 < SortAsymptote ( ordinal ) < 1
  *
- * Example:
- *		Parent::sort + SortAsymptote ( Child::sort ) //= Child::sortCalc
- *
- * HISTORY:
- * CREATED on 2011-02-15 by Jeremy Bante <http://scr.im/jbante>.
- * =====================================
- */
+ * @history 2011-02-15 - Jeremy Bante <http://scr.im/jbante> - Created.
+ * @history 2015-01-20 - Jeremy Bante <http://scr.im/jbante> - Simplifying
+ * calculation and updating formatting.
+ ******************************************************************************/
 
 Let ( [
-	~ordinal = Ln ( Abs ( ordinal ) + 1 ); //Flatten the range
-	~sort = ~ordinal / ( 1 + ~ordinal ) //Confine to asymptote
-];
-	If ( ordinal < 0 ; 0 - ~sort ; /*else*/ ~sort )
+	_ordinal = Ln ( Abs ( ordinal ) + 1 ) ;	// Flatten the range
+	_sort = _ordinal / ( 1 + _ordinal )	// Confine to asymptote
+] ;
+	_sort * Sign ( ordinal )
 )
