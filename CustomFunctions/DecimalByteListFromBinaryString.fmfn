@@ -1,0 +1,31 @@
+/*******************************************************************************
+ * DecimalByteListFromBinaryString ( binary )
+ * Converts a string of 1s and 0s to a return-delimited list of decimal byes.
+ *
+ * @parameter binary: A text string of 0s and 1s
+ *
+ * @return A return-delimited list of numbers between 0 and 255.
+ *
+ * @history 2015-02-24 - Jeremy Bante <http://scr.im/jbante> - Created
+ ******************************************************************************/
+
+Let ( [
+	$~byteList.i = $~byteList.i + 1 ;
+	_byte = Middle ( binary ; $~byteList.i * 8 - 7 ; 8 ) ;
+	_endOfList = IsEmpty ( _byte ) ;
+	_decimal =
+		Left ( _byte ; 1 ) * 128
+		+ Middle ( _byte ; 2 ; 1 ) * 64
+		+ Middle ( _byte ; 3 ; 1 ) * 32
+		+ Middle ( _byte ; 4 ; 1 ) * 16
+		+ Middle ( _byte ; 5 ; 1 ) * 8
+		+ Middle ( _byte ; 6 ; 1 ) * 4
+		+ Middle ( _byte ; 7 ; 1 ) * 2
+		+ Middle ( _byte ; 8 ; 1 )
+] ;
+	If ( not _endOfList ;
+		List ( _decimal ; DecimalByteListFromBinaryString ( binary ) ) ;
+	/* Else */
+		Let ( [ $~byteList.i = "" ] ; "" )
+	)
+)
