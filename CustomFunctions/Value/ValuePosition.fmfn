@@ -12,7 +12,11 @@
  *
  * @history 2011-05-22 - Jeremy Bante <http://scr.im/jbante> - Created
  * @history 2014-06-24 - Jeremy Bante <http://scr.im/jbante> - Full feature
- * parity with built-in Position function
+ * parity with built-in Position function.
+ * @history 2015-03-18 - Jeremy Bante <http://scr.im/jbante> - Improving
+ * performance when the value is not found by only using Left on the valueList
+ * when the value is found (based on an example by Will Baker’s mustache
+ * (https://beezwax.net/beez/100)).
  ******************************************************************************/
 
 Let ( [
@@ -24,12 +28,11 @@ Let ( [
 			¶ & searchValue & ¶ ;
 			_startPosition ;
 			occurrence
-		) ;
-	_prefixList = Left ( _valueList ; _position )
-
+		)
 ] ;
 	If ( _position = 0 ;	// value was not found
 		0 ;
-		/* Else */ ( PatternCount ( _prefixList ; ¶ ) - 1 ) / 2 + 1
+	/* Else */
+		( PatternCount ( Left ( _valueList ; _position ) ; ¶ ) - 1 ) / 2 + 1
 	)
 )
