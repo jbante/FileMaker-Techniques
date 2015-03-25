@@ -16,7 +16,6 @@
  ******************************************************************************/
 
 Let ( [
-	isoTimestamp = "2015-03-25T14:59:10+0700" ;
 	_year = Middle ( isoTimestamp ; 1 ; 4 ) ;
 	_month = Middle ( isoTimestamp ; 6 ; 2 ) ;
 	_day = Middle ( isoTimestamp ; 9 ; 2 ) ;
