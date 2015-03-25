@@ -1,6 +1,7 @@
 /*******************************************************************************
  * TimestampFromISO ( isoTimestamp )
  * Converts a timestamp from ISO 8601 format to a FileMaker timestamp.
+ * The result will be for local time, rather than UTC.
  *
  * @parameter isoTimestamp: A text string representing a timestamp
  * in ISO 8601 format, which is: YYYY-MM-DD hh:mm:ss (24-hour time)
@@ -8,17 +9,30 @@
  * @return A FileMaker timestamp
  *
  * @history 2012-07-27 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2015-03-25 - Jeremy Bante <http://scr.im/jbante> - Accounting for
+ * UTC offsets.
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
 Let ( [
+	isoTimestamp = "2015-03-25T14:59:10+0700" ;
 	_year = Middle ( isoTimestamp ; 1 ; 4 ) ;
 	_month = Middle ( isoTimestamp ; 6 ; 2 ) ;
 	_day = Middle ( isoTimestamp ; 9 ; 2 ) ;
 	_hour = Middle ( isoTimestamp ; 12 ; 2 ) ;
-	_minute = Middle ( isoTimestamp ; 15 ; 2 );
-	_second = Right ( isoTimestamp ; Length ( isoTimestamp ) - 17 )
+	_minute = Middle ( isoTimestamp ; 15 ; 2 ) ;
+	_timezoneOffsetStart =
+		Max (
+			Position ( isoTimestamp ; "-" ; 20 ; 1 ) ;
+			Position ( isoTimestamp ; "+" ; 20 ; 1 )
+		) ;
+	_secondEnd =
+		If ( _timezoneOffsetStart = 0 ;
+			Length ( isoTimestamp ) ;
+			/* Else */ _timezoneOffsetStart - 1
+		) ;
+	_second = Middle ( isoTimestamp ; 18 ; _secondEnd - 17 )
 ] ;
 	Timestamp (
 		Date ( _month ; _day ; _year ) ;
