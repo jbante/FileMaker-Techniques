@@ -1,9 +1,9 @@
 /*******************************************************************************
  * TextBetween ( text ; startPattern ; endPattern ; startPosition ; occurrence )
  * Returns the subset of text between startPattern and endPattern. If
- * startPattern is empty, all text between startPosition and the first
- * occurrence of endPattern will be returned. If endPattern is empty, all text
- * after the specified startPattern will be returned.
+ * startPattern is empty, all text between startPosition and the endPattern will
+ * be returned. If endPattern is empty, all text after the specified
+ * startPattern will be returned.
  *
  * @parameter text: The text to extract from
  * @parameter startPattern: The start pattern to search for. The start pattern
@@ -23,18 +23,24 @@
  ******************************************************************************/
 
 Let ( [
+	_startPatternIsEmpty = IsEmpty ( startPattern ) ;
 	_start =
-		If ( IsEmpty ( startPattern ) ;
+		If ( _startPatternIsEmpty ;
 			startPosition ;
 		/* Else */
 			Position ( text ; startPattern ; startPosition ; occurrence )
 		) ;
 	_endOfStart = _start + Length ( startPattern ) ;
 	_end =
-		If ( IsEmpty ( endPattern ) ;
-			Length ( text ) ;
-		/* Else */
-			Position ( text ; endPattern ; _endOfStart ; 1 )
+		Case (
+			IsEmpty ( endPattern ) ;
+				Length ( text ) ;
+
+			_startPatternIsEmpty ;
+				Position ( text ; endPattern ; _endOfStart ; occurrence ) ;
+
+			/* Else */
+				Position ( text ; endPattern ; _endOfStart ; 1 )
 		)
 ] ;
 	If ( _start = 0 or _end = 0 ;
