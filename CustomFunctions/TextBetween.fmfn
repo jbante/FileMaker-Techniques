@@ -37,7 +37,7 @@ Let ( [
 				Length ( text ) ;
 
 			_startPatternIsEmpty ;
-				Position ( text ; endPattern ; _endOfStart ; occurrence ) ;
+				Position ( text ; endPattern ; 1 ; occurrence ) ;
 
 			/* Else */
 				Position ( text ; endPattern ; _endOfStart ; 1 )
