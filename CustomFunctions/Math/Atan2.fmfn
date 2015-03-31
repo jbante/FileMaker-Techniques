@@ -1,0 +1,23 @@
+/*******************************************************************************
+ * Atan2 ( y ; x )
+ * Computes the inverse tangent (arc tangent) of an angle specified by x and y
+ * coordinates about the origin.
+ *
+ * @parameter y
+ * @parameter x
+ *
+ * @return A number in the range (-Pi,Pi]
+ *
+ * @history 2015-03-30 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/Atan2
+ ******************************************************************************/
+
+Case (
+	x > 0 ;	Atan ( y / x ) ;
+	y ≥ 0 and x < 0 ;	Atan ( y / x ) + Pi ;
+	y < 0 and x < 0 ;	Atan ( y / x ) - Pi ;
+	y > 0 ;	Pi / 2 ;
+	y < 0 ;	- Pi / 2 ;
+	/* Else */ "?"
+)
