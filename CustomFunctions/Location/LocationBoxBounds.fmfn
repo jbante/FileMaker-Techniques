@@ -1,0 +1,104 @@
+/*******************************************************************************
+ * LocationBoxBounds ( latitude ; longitude ; radiusInMeters )
+ * Calculates the approximate coordinate bounds for an approximately square
+ * region around a point on the surface of the Earth. This can be useful for
+ * finding data within a certain distance of a reference point.
+ *
+ * Use FileMaker's GetValue function to retrieve each value from the result.
+ *
+ * When the geobox includes a pole, the function will return the appropriate
+ * values to perform a find for coordinates enclosed by the lower latitude. For
+ * example: [90, 88, -180, 180] for a region around the north pole.
+ *
+ * When the geobox crosses the antimeridian (180º/-180º longitude), the function
+ * will return a west boundary coordinate greater than the east boundary
+ * coordinate. In this situation, a coordinate search within the geobox should
+ * be broken into separate searches: one search from the west bound to 180º, and
+ * another from -180º to the east bound.
+ *
+ * The bounding region's approximation to a square shape is less accurate as
+ * radiusInMeters grows large and as the region approaches either pole. However,
+ * the region will always contain the circular region of the same radius.
+ *
+ * Square bounding regions are more computationally convenient for finding data.
+ * Developers needing an exact circular region can use a square region to
+ * constrain the available data to a smaller found set, then use the
+ * LocationDistance function to omit points between the circular and square
+ * neighborhoods of the reference point.
+ *
+ * @parameter latitude: Degrees between -90 and 90 for center of geobox
+ * @parameter longitude: Degrees between -180 and 180 for center of geobox
+ * @parameter radiusInMeters: The distance in meters from the center of the
+ * region to the closest points on the edges of the square bounding region.
+ *
+ * @return A return-delimited list of 4 numbers:
+ *		1. The south latitude boundary for the calculated region
+ *		2. The north latitude boundary for the calculated region
+ *		3. The west longitude boundary for the calculated region
+ *		4. The east longitude boundary for the calculated region
+ *
+ * @uses LocationEndPoint ( startLatitude ; startLongitude ; azimuth ; distanceInMeters )
+ *
+ * @history 2012-09-26 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-09-27 - Jeremy Bante <http://scr.im/jbante> - accounting for
+ * geoboxes that may span a pole or meridian.
+ * @history 2015-04-09 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * LocationEndPoint function for better accuracy.
+ ******************************************************************************/
+
+Let ( [
+	_northBound =
+		LocationEndPoint ( latitude ; longitude ; 0 ; radiusInMeters ) ;
+	_northBoundLatitude = GetAsNumber ( GetValue ( _northBound ; 1 ) ) ;
+	_northBoundLongitude = GetValue ( _northBound ; 2 ) ;
+	_southBound =
+		LocationEndPoint ( latitude ; longitude ; 180 ; radiusInMeters ) ;
+	_southBoundLatitude = GetAsNumber ( GetValue ( _southBound ; 1 ) ) ;
+	_southBoundLongitude = GetValue ( _southBound ; 2 ) ;
+
+	// determine if the bounding box needs to be wrapped around a pole
+	_wrapNorth =
+		_northBoundLongitude * longitude < 0
+		or ( longitude = 0 and Abs ( _northBoundLongitude ) > 1 ) ;
+	_wrapSouth =
+		_southBoundLongitude * longitude < 0
+		or ( longitude = 0 and Abs ( _southBoundLongitude ) > 1 ) ;
+
+	_northBoundLatitude =
+		Case (
+			_wrapNorth ;	90 ;
+			_wrapSouth ;	Max ( _northBoundLatitude ; _southBoundLatitude ) ;
+			/* Else */	_northBoundLatitude
+		) ;
+	_southBoundLatitude =
+		Case (
+			_wrapNorth ;	Min ( _northBoundLatitude ; _southBoundLatitude ) ;
+			_wrapSouth ;	-90 ;
+			/* Else */	_southBoundLatitude
+		) ;
+	_eastBoundLongitude =
+		If ( _wrapNorth or _wrapSouth ;
+			180 ;
+		/* Else */
+			GetValue (
+				LocationEndPoint ( latitude ; longitude ; 90 ; radiusInMeters ) ;
+				2
+			)
+		) ;
+	_westBoundLongitude =
+		If ( _wrapNorth or _wrapSouth ;
+			-180 ;
+		/* Else */
+			GetValue (
+				LocationEndPoint ( latitude ; longitude ; 270 ; radiusInMeters ) ;
+				2
+			)
+		)
+] ;
+	List (
+		_southBoundLatitude ;
+		_northBoundLatitude ;
+		_westBoundLongitude ;
+		_eastBoundLongitude
+	)
+)
