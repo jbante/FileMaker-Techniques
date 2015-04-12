@@ -47,84 +47,71 @@ If ( azimuth > 180 ;
 		_flattening = .0033528106647475 ;	// 1 / 298.257223563
 		_oneMinusFlattening = 1 - _flattening ;
 
-		_tanPhi1 = Tan ( Radians ( startLatitude ) ) ;
-		_tanTheta1 = _oneMinusFlattening * _tanPhi1 ;
-		_theta1 = Atan ( _tanTheta1 ) ;
-		_sinTheta1 = Sin ( _theta1 ) ;
-		_cosTheta1 = Cos ( _theta1 ) ;
+		_tanθ1 = _oneMinusFlattening * Tan ( Radians ( startLatitude ) ) ;
+		_θ1 = Atan ( _tanθ1 ) ;
+		_sinθ1 = Sin ( _θ1 ) ;
+		_cosθ1 = Cos ( _θ1 ) ;
 
 		_azimuth = Radians ( azimuth ) ;
 		_sinAzimuth = Sin ( _azimuth ) ;
 		_cosAzimuth = Cos ( _azimuth ) ;
-		_mm = _cosTheta1 * _sinAzimuth ;
-		_nn = _cosTheta1 * _cosAzimuth ;
+		_mm = _cosθ1 * _sinAzimuth ;
+		_nn = _cosθ1 * _cosAzimuth ;
 
 		_c1 = _flattening * _mm ;
 		_c2 = .25 * ( 1 - _mm ^ 2 ) * _flattening ;
 		_dd = ( 1 - _c2 ) * ( 1 - _c2 - _c1 * _mm ) ;
 		_pp = _c2 * ( 1 + .5 * _c1 * _mm ) / _dd ;
 
-		_sigma1 = Acos ( _sinTheta1 / Sin ( Acos ( _mm ) ) ) ;
+		_σ1 = Acos ( _sinθ1 / Sin ( Acos ( _mm ) ) ) ;
 		_d = distanceInMeters / ( _equatorialRadius * _dd ) ;
 		_sin_d = Sin ( _d ) ;
 		_cos_d = Cos ( _d ) ;
-		_u = 2 * ( _sigma1 - _d ) ;
+		_u = 2 * ( _σ1 - _d ) ;
 		_cos_u = Cos ( _u ) ;
 
 		_vv = _cos_u * _cos_d - Sin ( _u ) * _sin_d ;
-		_deltaSigma =
+		_Δσ =
 			_d
 			+ _c2 ^ 2 * _sin_d * _cos_d * ( 2 * _vv ^ 2 - 1 )
 			- 2 * _pp * _vv * ( 1 - 2 * _pp * _cos_u ) * _sin_d ;
-		_sinDeltaSigma = Sin ( _deltaSigma ) ;
-		_cosDeltaSigma = Cos ( _deltaSigma ) ;
+		_sinΔσ = Sin ( _Δσ ) ;
+		_cosΔσ = Cos ( _Δσ ) ;
 
-		_alpha21 =
+		_α21 = Atan ( _mm / ( _nn * _cosΔσ - _sinθ1 * _sinΔσ ) ) ;
+		_α21 =
 			If ( _mm ≠ 0 ;
-				Mod (
-					Atan (
-						_mm
-						/ ( _nn * _cosDeltaSigma - _sinTheta1 * _sinDeltaSigma )
-					) ;
-					Pi
-				) + Pi ;	// in [Pi,2*Pi)
-			/* Else */
-				0
+				Mod ( _α21 ; Pi ) + Pi ;	// in [Pi,2*Pi)
+				/* Else */ 0
 			) ;
 
-		_tanPhi2 =
+		_tanϕ2 =
 			If ( _mm ≠ 0 ;
 				-1
-				* ( _sinTheta1 * _cosDeltaSigma + _nn * _sinDeltaSigma )
-				* Sin ( _alpha21 )
+				* ( _sinθ1 * _cosΔσ + _nn * _sinΔσ )
+				* Sin ( _α21 )
 				/ ( _oneMinusFlattening * _mm ) ;
 			/* Else */
-				Tan ( Pi / 2 + _sigma1 - _deltaSigma ) / _oneMinusFlattening
+				Tan ( Pi / 2 + _σ1 - _Δσ ) / _oneMinusFlattening
 			) ;
-		_phi2 = Atan ( _tanPhi2 ) ;
+		_ϕ2 = Atan ( _tanϕ2 ) ;
 
 		_hh =
-			_c1 * ( 1 - _c2 ) * _deltaSigma
-			- _c1 * _c2 * _sinDeltaSigma * Cos ( 2 * _sigma1 - _deltaSigma ) ;
-		_tanDeltaEta =
-			_sinDeltaSigma * _sinAzimuth
-			/ (
-				_cosTheta1 * _cosDeltaSigma
-				- _sinTheta1 * _sinDeltaSigma * _cosAzimuth
-			) ;
-		_v = Atan ( Abs ( _tanDeltaEta ) ) ;
-		_deltaEta =
-			If ( _tanDeltaEta ≤ 0 or _v < _hh ; Pi - _v ; /* Else */ _v ) ;
-		_deltaLambda = _deltaEta - _hh ;
-		_lambda2 = Radians ( startLongitude ) + _deltaLambda ;
-		_lambda2 =
-			If ( _lambda2 > Pi ; _lambda2 - 2 * Pi ; /* Else */ _lambda2 )
+			_c1 * ( 1 - _c2 ) * _Δσ
+			- _c1 * _c2 * _sinΔσ * Cos ( 2 * _σ1 - _Δσ ) ;
+		_tanΔη =
+			_sinΔσ * _sinAzimuth
+			/ ( _cosθ1 * _cosΔσ - _sinθ1 * _sinΔσ * _cosAzimuth ) ;
+		_v = Atan ( Abs ( _tanΔη ) ) ;
+		_Δη = If ( _tanΔη ≤ 0 or _v < _hh ; Pi - _v ; /* Else */ _v ) ;
+		_Δλ = _Δη - _hh ;
+		_λ2 = Radians ( startLongitude ) + _Δλ ;
+		_λ2 = If ( _λ2 > Pi ; _λ2 - 2 * Pi ; /* Else */ _λ2 )
 	] ;
 		List (
-			Degrees ( _phi2 ) ;
-			Degrees ( _lambda2 ) ;
-			Degrees ( _alpha21 )
+			Degrees ( _ϕ2 ) ;
+			Degrees ( _λ2 ) ;
+			Degrees ( _α21 )
 		)
-
 	)
 )

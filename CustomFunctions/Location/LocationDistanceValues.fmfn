@@ -28,7 +28,7 @@
 Case (
 	startLongitude > endLongitude ;
 	// Calculation assumes endLongitude is greater than startLongitude,
-	// so reverse inputs, then reverse result back
+	// so reverse inputs, then reverse result
 	Let ( [
 		_values =
 			LocationDistanceValues (
@@ -44,40 +44,30 @@ Case (
 
 	/* Else */
 		Let ( [
+			// WGS84
 			_equatorialRadius = 6378137 ;	// meters
 			_flattening = .0033528106647475 ;	// 1 / 298.257223563
 
-			_parametricStartLatitude =
+			_θ1 =
 				Atan (
 					( 1 - _flattening ) * Tan ( Radians ( startLatitude ) )
 				) ;
-			_parametricEndLatitude =
+			_θ2 =
 				Atan ( ( 1 - _flattening ) * Tan ( Radians ( endLatitude ) ) ) ;
-			_latitudeMean =
-				( _parametricStartLatitude + _parametricEndLatitude ) / 2 ;
-			_sin_latitudeMean = Sin ( _latitudeMean ) ;
-			_cos_latitudeMean = Cos ( _latitudeMean ) ;
-			_halfLatitudeDifference =
-				( _parametricEndLatitude - _parametricStartLatitude ) / 2 ;
-			_sin_halfLatitudeDifference = Sin ( _halfLatitudeDifference ) ;
-			_cos_halfLatitudeDifference = Cos ( _halfLatitudeDifference ) ;
-			_longitudeDifference = Radians ( endLongitude - startLongitude ) ;
-			_halfLongitudeDifference = _longitudeDifference / 2 ;
-			_h = _cos_halfLatitudeDifference ^ 2 - _sin_latitudeMean ^ 2 ;
-			_l =
-				_sin_halfLatitudeDifference ^ 2
-				+ _h * Sin ( _halfLongitudeDifference ) ^ 2 ;
+			_θm = ( _θ1 + _θ2 ) / 2 ;
+			_sinθm = Sin ( _θm ) ;
+			_cosθm = Cos ( _θm ) ;
+			_Δθm = ( _θ2 - _θ1 ) / 2 ;
+			_sinΔθm = Sin ( _Δθm ) ;
+			_cosΔθm = Cos ( _Δθm ) ;
+			_Δλ = Radians ( endLongitude - startLongitude ) ;
+			_h = _cosΔθm ^ 2 - _sinθm ^ 2 ;
+			_l = _sinΔθm ^ 2 + _h * Sin ( _Δλ / 2 ) ^ 2 ;
 			_cos_d = 1 - 2 * _l ;
 			_d = Acos ( _cos_d ) ;
 			_sin_d = Sin ( _d ) ;
-			_uu =
-				2 * _sin_latitudeMean ^ 2
-				* _cos_halfLatitudeDifference ^ 2 / ( 1 - _l ) ;
-			_vv =
-				2
-				* _sin_halfLatitudeDifference ^ 2
-				* _cos_latitudeMean ^ 2
-				/ _l ;
+			_uu = 2 * _sinθm ^ 2 * _cosΔθm ^ 2 / ( 1 - _l ) ;
+			_vv = 2 * _sinΔθm ^ 2 * _cosθm ^ 2 / _l ;
 			_x = _uu + _vv ;
 			_t = _d / _sin_d ;
 			_e = 2 * _cos_d ;
@@ -86,48 +76,38 @@ Case (
 			_b = 2 * _dd ;
 			_a = _dd * _e ;
 			_c = _t - .5 * ( _a - _e ) ;
-			_delta1_d = .25 * _flattening * ( _t * _x - _y ) ;
-			_delta2_d =
-				( _flattening ^ 2 / 64 )
-				* (
-					_x * ( _a + _c * _x )
-					- _y * ( _b + _e * _y )
-					+ _dd * _x * _y
-				) ;
-			_distance =
-				_equatorialRadius * _sin_d * ( _t - _delta1_d + _delta2_d ) ;
+			_n1 = _x * ( _a + _c * _x ) ;
+			_n2 = _y * ( _b + _e * _y ) ;
+			_n3 = _dd * _x * _y ;
+			_δ1d = .25 * _flattening * ( _t * _x - _y ) ;
+			_δ2d = ( _n1 - _n2 + _n3 ) * _flattening ^ 2 / 64 ;
+			_distance = _equatorialRadius * _sin_d * ( _t - _δ1d + _δ2d ) ;
+
 			_f = 2 * _y - _e * ( 4 - _x ) ;
 			_m = 32 * _t - ( 20 * _t - _a ) * _x - ( _b + 4 ) * _y ;
 			_g = _flattening * .5 * _t + _flattening ^ 2 / 64 * _m ;
-			_q = 0 - ( _f * _g * Tan ( _longitudeDifference ) ) / 4 ;
-			_halfLongitudeDifference_prime =
-				.5 * ( _longitudeDifference + _q ) ;
-			_tan_halfLongitudeDifference_prime =
-				Tan ( _halfLongitudeDifference_prime ) ;
-			_c1 =
-				0
-				- _sin_halfLatitudeDifference
-				/ ( _cos_latitudeMean * _tan_halfLongitudeDifference_prime ) ;
-			_c2 =
-				_cos_halfLatitudeDifference
-				/ ( _sin_latitudeMean * _tan_halfLongitudeDifference_prime ) ;
+			_q = 0 - ( _f * _g * Tan ( _Δλ ) ) / 4 ;
+			_Δλprime = .5 * ( _Δλ + _q ) ;
+			_tanΔλprime = Tan ( _Δλprime ) ;
+			_c1 = 0 - _sinΔθm / ( _cosθm * _tanΔλprime ) ;
+			_c2 = _cosΔθm / ( _sinθm * _tanΔλprime ) ;
 			_u = Atan ( Abs ( _c1 ) ) ;
 			_v = Atan ( Abs ( _c2 ) ) ;
-			_alpha1 = _v - _u ;
-			_alpha2 = _v + _u ;
+			_α1 = _v - _u ;
+			_α2 = _v + _u ;
 			_startAzimuth =
 				Case (
-					_c1 < 0 and _c2 ≥ 0 ;	_alpha1 ;
-					_c1 ≥ 0 and _c2 ≥ 0 ;	_alpha2 ;
-					_c1 < 0 and _c2 < 0 ;	Pi - _alpha2 ;
-					_c1 ≥ 0 and _c2 < 0 ;	Pi - _alpha1
+					_c1 < 0 and _c2 ≥ 0 ;	_α1 ;
+					_c1 ≥ 0 and _c2 ≥ 0 ;	_α2 ;
+					_c1 < 0 and _c2 < 0 ;	Pi - _α2 ;
+					_c1 ≥ 0 and _c2 < 0 ;	Pi - _α1
 				) ;
 			_endAzimuth =
 				Case (
-					_c1 < 0 and _c2 ≥ 0 ;	Pi - _alpha2 ;
-					_c1 ≥ 0 and _c2 ≥ 0 ;	Pi - _alpha1 ;
-					_c1 < 0 and _c2 < 0 ;	_alpha1 ;
-					_c1 ≥ 0 and _c2 < 0 ;	_alpha2
+					_c1 < 0 and _c2 ≥ 0 ;	Pi - _α2 ;
+					_c1 ≥ 0 and _c2 ≥ 0 ;	Pi - _α1 ;
+					_c1 < 0 and _c2 < 0 ;	_α1 ;
+					_c1 ≥ 0 and _c2 < 0 ;	_α2
 				)
 		] ;
 			List (
