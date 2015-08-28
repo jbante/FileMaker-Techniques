@@ -1,0 +1,32 @@
+/*******************************************************************************
+ * StandardNormalCumulativeDistribution ( z )
+ * Returns the cumulative distribution function for the standard normal
+ * distribution at the specified z score.
+ *
+ * @parameter z: a number representing a z score for a normal distribution
+ *
+ * @return A number in [0,1]
+ *
+ * @history 2015-08-28 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/Normal_distribution
+ * @see https://en.wikipedia.org/wiki/Error_function
+ ******************************************************************************/
+
+Let ( [
+	_x = z / Sqrt ( 2 ) ;
+	_t = 1 / ( 1 + .5 * Abs ( _x ) ) ;
+	_polynomial = .17087277 * _t ;
+	_polynomial = ( _polynomial - .82215223 ) * _t ;
+	_polynomial = ( _polynomial + 1.48851587 ) * _t ;
+	_polynomial = ( _polynomial - 1.13520398 ) * _t ;
+	_polynomial = ( _polynomial + .27886807 ) * _t ;
+	_polynomial = ( _polynomial - .18628806 ) * _t ;
+	_polynomial = ( _polynomial + .09678418 ) * _t ;
+	_polynomial = ( _polynomial + .37409196 ) * _t ;
+	_polynomial = ( _polynomial + 1.00002368 ) * _t ;
+	_τ = _t * Exp ( - ( _x ^ 2 ) - 1.26551223 + _polynomial ) ;
+	_errorFunction = If ( _x ≥ 0 ; 1 - _τ ; /* Else */ _τ - 1 )
+] ;
+	.5 * ( 1 + _errorFunction )
+)

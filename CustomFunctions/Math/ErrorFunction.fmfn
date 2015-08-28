@@ -1,0 +1,30 @@
+/*******************************************************************************
+ * ErrorFunction ( x )
+ * Calculates the error function for x.
+ *
+ * This function uses a numerical approximation accurate to within 1.2e-7.
+ *
+ * @parameter x: a number
+ *
+ * @return A number in (-1,1)
+ *
+ * @history 2015-08-28 - Jeremy Bante <http://scr.im/jbante> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/Error_function#Numerical_approximation
+ ******************************************************************************/
+
+Let ( [
+	_t = 1 / ( 1 + .5 * Abs ( x ) ) ;
+	_polynomial = .17087277 * _t ;
+	_polynomial = ( _polynomial - .82215223 ) * _t ;
+	_polynomial = ( _polynomial + 1.48851587 ) * _t ;
+	_polynomial = ( _polynomial - 1.13520398 ) * _t ;
+	_polynomial = ( _polynomial + .27886807 ) * _t ;
+	_polynomial = ( _polynomial - .18628806 ) * _t ;
+	_polynomial = ( _polynomial + .09678418 ) * _t ;
+	_polynomial = ( _polynomial + .37409196 ) * _t ;
+	_polynomial = ( _polynomial + 1.00002368 ) * _t ;
+	_τ = _t * Exp ( - ( x ^ 2 ) - 1.26551223 + _polynomial )
+] ;
+	If ( x ≥ 0 ; 1 - _τ ; /* Else */ _τ - 1 )
+)
