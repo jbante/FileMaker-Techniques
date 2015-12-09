@@ -1,0 +1,53 @@
+/*******************************************************************************
+ * UniqueValues ( valueList )
+ * Returns a list containing all the unique values in valueList, i.e. removing
+ * duplicated values.
+ *
+ * @parameter valueList: a return-delimited list
+ *
+ * @return a return-delimited list
+ *
+ * @history 2015-12-09 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Case (
+	/* Step 0, set-up */
+	not $~uv.step ;
+		Let ( [
+			$~uv.step = 1 ;
+			$~uv.valueCount = ValueCount ( valueList )
+		] ;
+			UniqueValues ( valueList )
+		) ;
+
+	/* Step 1, collect unique values */
+	$~uv.step = 1 ;
+		Let ( [
+			$~uv.i = $~uv.i + 1 ;
+			_value = GetValue ( valueList ; $~uv.i ) ;
+			_valueIsUnique = IsEmpty ( FilterValues ( _value ; $~uv.result ) ) ;
+			$~uv.result =
+				List ( $~uv.result ; If ( _valueIsUnique ; _value ) ) ;
+			$~uv.step =
+				If ( $~uv.i < $~uv.valueCount ;
+					$~uv.step ;
+					/* Else */ $~uv.step + 1
+				)
+		] ;
+			UniqueValues ( valueList )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~uv.step = 2 ;
+		Let ( [
+			_result = $~uv.result ;
+
+			// purge variables
+			$~uv.i = "" ;
+			$~uv.result = "" ;
+			$~uv.step = "" ;
+			$~uv.valueCount = ""
+		] ;
+			_result
+		)
+)
