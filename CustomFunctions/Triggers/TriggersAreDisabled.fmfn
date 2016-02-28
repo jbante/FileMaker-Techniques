@@ -9,7 +9,7 @@
  * @global $$~DISABLETRIGGERS (deprecated)
  * @global $$~TRIGGERS_DISABLE
  *
- * @history 2014-07-02 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-07-02 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts
  ******************************************************************************/

@@ -19,7 +19,7 @@
  * HISTORY:
  *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
  *		relationship with the RFC 4122 format.
- *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/jbante> to
+ *		MODIFIED on 2010-11-22 by Jeremy Bante <http://scr.im/fugue> to
  *		handle the updated output format of UUIDNew.
  *		MODIFIED on 2010-10-04 by Jeremy Bante to handle randomly generated
  *		substitutes for NICAddresses outside the possible range of NICAddresses.

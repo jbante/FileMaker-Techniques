@@ -17,7 +17,7 @@
  *
  * @return The value of the tableKey encoded in theKey
  *
- * @history 2011-12-09 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-12-09 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Case (

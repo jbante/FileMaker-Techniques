@@ -10,7 +10,7 @@
  *
  * @uses RepeatTextToLength ( textToRepeat ; targetLength )
  *
- * @history 2014-07-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-07-08 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://www.soliantconsulting.com/blog/2012/09/extending-filemaker-pro’s-value-list-sort-capabilities-using-char-function
  ******************************************************************************/

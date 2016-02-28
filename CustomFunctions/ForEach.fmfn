@@ -18,10 +18,10 @@
  * @return A ¶-delimited list of the results of evaluating expression on
  * valueList
  *
- * @history 2011-11-11 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2011-12-23 - Jeremy Bante <http://scr.im/jbante> - include a value
+ * @history 2011-11-11 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2011-12-23 - Jeremy Bante <http://scr.im/fugue> - include a value
  * number in calculations.
- * @history 2012-01-10 - Jeremy Bante <http://scr.im/jbante> - combine recursive
+ * @history 2012-01-10 - Jeremy Bante <http://scr.im/fugue> - combine recursive
  * and non-recursive versions of the function, partly inspired by the CustomList
  * function by Agnès Barouh.
  *

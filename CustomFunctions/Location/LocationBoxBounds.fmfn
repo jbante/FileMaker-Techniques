@@ -39,10 +39,10 @@
  *
  * @uses LocationEndPoint ( startLatitude ; startLongitude ; azimuth ; distanceInMeters )
  *
- * @history 2012-09-26 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-09-27 - Jeremy Bante <http://scr.im/jbante> - accounting for
+ * @history 2012-09-26 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-09-27 - Jeremy Bante <http://scr.im/fugue> - accounting for
  * geoboxes that may span a pole or meridian.
- * @history 2015-04-09 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * @history 2015-04-09 - Jeremy Bante <http://scr.im/fugue> - Using the
  * LocationEndPoint function for better accuracy.
  ******************************************************************************/
 

@@ -8,8 +8,8 @@
  *
  * @return A FileMaker timestamp
  *
- * @history 2012-07-27 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2015-03-25 - Jeremy Bante <http://scr.im/jbante> - Accounting for
+ * @history 2012-07-27 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2015-03-25 - Jeremy Bante <http://scr.im/fugue> - Accounting for
  * UTC offsets.
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601

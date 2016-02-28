@@ -9,7 +9,7 @@
  *
  * @return The cardinal direction for the azimuth
  *
- * @history 2013-11-25 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2013-11-25 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Cardinal_direction
  ******************************************************************************/

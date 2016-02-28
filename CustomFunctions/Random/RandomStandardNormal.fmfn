@@ -7,8 +7,8 @@
  *
  * @global $$~STANDARDNORMAL
  *
- * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2011-02-22 - Jeremy Bante <http://scr.im/jbante> - Saving extra
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2011-02-22 - Jeremy Bante <http://scr.im/fugue> - Saving extra
  * value from Marsaglia polar method for later use.
  *
  * @see http://en.wikipedia.org/wiki/Normal_distribution

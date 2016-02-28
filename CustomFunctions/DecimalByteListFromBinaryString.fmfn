@@ -6,7 +6,7 @@
  *
  * @return A return-delimited list of numbers between 0 and 255.
  *
- * @history 2015-02-24 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2015-02-24 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

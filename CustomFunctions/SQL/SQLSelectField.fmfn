@@ -18,12 +18,12 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		MODIFIED on 2013-01-29 by Jeremy Bante <http://scr.im/jbante> to fix a
+ *		MODIFIED on 2013-01-29 by Jeremy Bante <http://scr.im/fugue> to fix a
  *		bug where the matchField parameter was not correctly recognized.
- *		MODIFIED on 2013-01-21 by Jeremy Bante <http://scr.im/jbante> to fix a
+ *		MODIFIED on 2013-01-21 by Jeremy Bante <http://scr.im/fugue> to fix a
  *		bug where the table name was used instead of the field name in the where
  *		clause.
- *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2012-12-18 by Jeremy Bante <http://scr.im/fugue>.
  *		Based on a function by Todd Geist.
  * =====================================
  */

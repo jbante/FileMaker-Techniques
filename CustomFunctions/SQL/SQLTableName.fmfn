@@ -8,10 +8,10 @@
  * @return The table name of a field quoted for SQL
  *
  * @history Based on a function by Todd Geist.
- * @history 2012-12-18 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2013-01-26 - Jeremy Bante <http://scr.im/jbante> - Accepting the
+ * @history 2012-12-18 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2013-01-26 - Jeremy Bante <http://scr.im/fugue> - Accepting the
  * tableAlias parameter.
- * @history 2013-05-08 - Jeremy Bante <http://scr.im/jbante> - Not accepting the
+ * @history 2013-05-08 - Jeremy Bante <http://scr.im/fugue> - Not accepting the
  * tableAlias parameter, since that is better suited to the calculation outside
  * this function.
  ******************************************************************************/

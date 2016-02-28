@@ -7,8 +7,8 @@
  *
  * @return True (1) if the caps lock key is indicated, False (0) otherwise
  *
- * @history 2011-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-04-02 - Jeremy Bante <http://scr.im/jbante> - Accepting the
+ * @history 2011-04-21 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-04-02 - Jeremy Bante <http://scr.im/fugue> - Accepting the
  * modifierKeys parameter.
  ******************************************************************************/
 

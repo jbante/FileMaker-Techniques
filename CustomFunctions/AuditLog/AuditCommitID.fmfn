@@ -8,7 +8,7 @@
  *
  * @return The event ID (UUID) from the first (most recent) line of logData.
  *
- * @history 2011-06-12 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-06-12 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

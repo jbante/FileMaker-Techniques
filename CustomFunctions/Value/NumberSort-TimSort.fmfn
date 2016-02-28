@@ -17,10 +17,10 @@
  *		calculation speed.
  *
  * HISTORY:
- *		MODIFIED on 2013-04-10 by Jeremy Bante <http://scr.im/jbante> to
+ *		MODIFIED on 2013-04-10 by Jeremy Bante <http://scr.im/fugue> to
  *		preserve non-numeric data (such as trailing decimal zeros) in sorted
  *		values.
- *		CREATED on 2011-04-13 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2011-04-13 by Jeremy Bante <http://scr.im/fugue>.
  *
  * REFERENCES:
  *		Timsort: http://bugs.python.org/file4451/timsort.txt

@@ -17,8 +17,8 @@
  *
  * @return Contents of text between the startPattern and endPattern
  *
- * @history 2014-10-10 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2015-03-25 - Jeremy Bante <http://scr.im/jbante> - Handling empty
+ * @history 2014-10-10 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2015-03-25 - Jeremy Bante <http://scr.im/fugue> - Handling empty
  * startPattern and endPattern parameters.
  ******************************************************************************/
 

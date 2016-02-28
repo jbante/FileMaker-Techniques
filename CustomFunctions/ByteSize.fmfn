@@ -17,7 +17,7 @@
  * @return The same quantity of bytes expressed in a unit of appropriate
  * magnitude.
  *
- * @history 2012-06-01 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-06-01 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Byte
  ******************************************************************************/

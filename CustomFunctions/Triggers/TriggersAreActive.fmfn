@@ -9,12 +9,12 @@
  * @global $$~DISABLETRIGGERS (deprecated)
  * @global $$~TRIGGERS_DISABLE
  *
- * @history 2010-12-12 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2010-12-13 - Jeremy Bante <http://scr.im/jbante> - Using name
+ * @history 2010-12-12 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2010-12-13 - Jeremy Bante <http://scr.im/fugue> - Using name
  * suggested in FileMakerStandards.org discussion.
- * @history 2011-02-09 - Jeremy Bante <http://scr.im/jbante> - Adopting
+ * @history 2011-02-09 - Jeremy Bante <http://scr.im/fugue> - Adopting
  * different variable names.
- * @history 2013-04-08 - Jeremy Bante <http://scr.im/jbante> - Adding backwards
+ * @history 2013-04-08 - Jeremy Bante <http://scr.im/fugue> - Adding backwards
  * compatibility with older variable names.
  *
  * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts

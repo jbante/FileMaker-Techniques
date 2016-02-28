@@ -40,7 +40,7 @@
  * HISTORY:
  *		MODIFIED on 2011-02-02 by Jeremy Bante to use a format with a bijective
  *		relationship with the RFC 4122 format.
- *		CREATED on 2010-12-02 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2010-12-02 by Jeremy Bante <http://scr.im/fugue>.
  *
  * REFERENCES:
  *		Key values Best Practice: http://filemakerstandards.org/pages/viewpage.action?pageId=557138

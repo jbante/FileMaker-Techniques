@@ -15,15 +15,15 @@
  * @global $$~TRIGGERS_SCRIPTS
  * @global $~triggers_disableKey
  *
- * @history 2010-12-12 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2010-12-13 - Jeremy Bante <http://scr.im/jbante> - Using names
+ * @history 2010-12-12 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2010-12-13 - Jeremy Bante <http://scr.im/fugue> - Using names
  * suggested at filemakerstandards.org.
- * @history 2011-02-09 - Jeremy Bante <http://scr.im/jbante> - Adopting
+ * @history 2011-02-09 - Jeremy Bante <http://scr.im/fugue> - Adopting
  * different variable names.
- * @history 2013-03-25 - Jeremy Bante <http://scr.im/jbante> - Making the
+ * @history 2013-03-25 - Jeremy Bante <http://scr.im/fugue> - Making the
  * function robust to sub-scripts that disabled triggers without re-enabling
  * them.
- * @history 2013-04-08 - Jeremy Bante <http://scr.im/jbante> - Adding older
+ * @history 2013-04-08 - Jeremy Bante <http://scr.im/fugue> - Adding older
  * variable names for backwards compatibility.
  *
  * @see http://filemakerstandards.org/display/bp/Suppressible+Triggered+Scripts

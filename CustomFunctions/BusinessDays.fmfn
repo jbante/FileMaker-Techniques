@@ -9,10 +9,10 @@
  *
  * @uses BusinessHolidays ( calendarYear )
  *
- * @history 2011-10-18 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2011-10-19 - Jeremy Bante <http://scr.im/jbante> - correctly handle
+ * @history 2011-10-18 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2011-10-19 - Jeremy Bante <http://scr.im/fugue> - correctly handle
  * multi-year ranges.
- * @history 2012-02-22 - Jeremy Bante <http://scr.im/jbante> - check for valid
+ * @history 2012-02-22 - Jeremy Bante <http://scr.im/fugue> - check for valid
  * input parameters, based on a comment by Brian Rich.
  ******************************************************************************/
 

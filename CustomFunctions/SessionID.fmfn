@@ -23,7 +23,7 @@
  * address. If privacy is a concern, the UUIDNew function can be replaced with a more suitable function, such as UUIDRandom.
  *
  * HISTORY:
- * CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/jbante>.
+ * CREATED on 2010-09-06 by Jeremy Bante <http://scr.im/fugue>.
  * INSPIRED by Twitter user @shintan
  * =====================================
  */

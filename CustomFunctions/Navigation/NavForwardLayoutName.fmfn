@@ -28,7 +28,7 @@
  * HISTORY:
  *		MODIFIED on 2012-01-02 by Jeremy Bante to not modify variables when
  *		there isn't actually a target layout.
- *		CREATED on 2011-12-30 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2011-12-30 by Jeremy Bante <http://scr.im/fugue>.
  * =====================================
  */
 

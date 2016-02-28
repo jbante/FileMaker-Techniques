@@ -20,14 +20,14 @@
  *
  * @return An encrypted version of text
  *
- * @history 2011-01-04 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2011-01-05 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * @history 2011-01-04 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2011-01-05 - Jeremy Bante <http://scr.im/fugue> - use a different
  * chaotic map when transforming the key.
- * @history 2011-01-09 - Jeremy Bante <http://scr.im/jbante> - use a different
+ * @history 2011-01-09 - Jeremy Bante <http://scr.im/fugue> - use a different
  * chaotic map that results in greater diffusion and faster calculation.
- * @history 2011-01-14 - Jeremy Bante <http://scr.im/jbante> -  use a different
+ * @history 2011-01-14 - Jeremy Bante <http://scr.im/fugue> -  use a different
  * map and systematically perturbed orbits.
- * @history 2011-01-23 - Jeremy Bante <http://scr.im/jbante> - accounting for
+ * @history 2011-01-23 - Jeremy Bante <http://scr.im/fugue> - accounting for
  * composite characters.
  ******************************************************************************/
 

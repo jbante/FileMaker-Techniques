@@ -6,7 +6,7 @@
  *
  * @return A number representing a 32-bit checksum
  *
- * @history 2014-01-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-01-05 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Adler-32
  * @see http://www.ietf.org/rfc/rfc1950.txt

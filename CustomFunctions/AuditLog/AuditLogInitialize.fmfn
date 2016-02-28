@@ -9,7 +9,7 @@
  *
  * @global $~auditLog.initialize
  *
- * @history 2011-03-30 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-03-30 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

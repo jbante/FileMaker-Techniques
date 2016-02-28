@@ -17,8 +17,8 @@
  *
  * @return A number such that -1 < SortAsymptote ( ordinal ) < 1
  *
- * @history 2011-02-15 - Jeremy Bante <http://scr.im/jbante> - Created.
- * @history 2015-01-20 - Jeremy Bante <http://scr.im/jbante> - Simplifying
+ * @history 2011-02-15 - Jeremy Bante <http://scr.im/fugue> - Created.
+ * @history 2015-01-20 - Jeremy Bante <http://scr.im/fugue> - Simplifying
  * calculation and updating formatting.
  ******************************************************************************/
 

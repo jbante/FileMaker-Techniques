@@ -11,7 +11,7 @@
  *
  * @global $$~LAYOUT_PARAMETER[i]
  *
- * @history 2012-09-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-09-21 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

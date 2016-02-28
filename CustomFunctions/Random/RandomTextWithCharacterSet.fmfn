@@ -8,7 +8,7 @@
  *
  * @return text
  *
- * @history 2012-11-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-11-08 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 If ( textLength ≤ 0 or IsEmpty ( characterSet ) ;

@@ -11,7 +11,7 @@
  * retrieved (for example, if the cell does not exist) the function returns
  * Null.
  *
- * @history 2011-02-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-02-11 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

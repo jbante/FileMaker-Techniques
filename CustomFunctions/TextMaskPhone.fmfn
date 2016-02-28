@@ -8,8 +8,8 @@
  *
  * @uses TextMask ( text ; prototype )
  *
- * @history 2012-12-05 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2014-12-03 - Jeremy Bante <http://scr.im/jbante> - Updating
+ * @history 2012-12-05 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2014-12-03 - Jeremy Bante <http://scr.im/fugue> - Updating
  * formatting and reorganizing logic
  ******************************************************************************/
 

@@ -18,7 +18,7 @@ Beta_bySeries(
 	49999; //remainingStackDepth
 ) //end Beta_bySeries
 
-By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+By Jeremy Bante <http://scr.im/fugue> in 2010.*/
 Case(
 	iStartAtZero = 0; //first iteration
 	Beta_bySeries(

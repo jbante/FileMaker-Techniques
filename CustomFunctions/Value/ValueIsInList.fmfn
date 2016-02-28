@@ -7,12 +7,12 @@
  *
  * @return True (1) or False (0)
  *
- * @history 2012-08-15 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-09-14 - Jeremy Bante <http://scr.im/jbante> - Improving speed
+ * @history 2012-08-15 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-09-14 - Jeremy Bante <http://scr.im/fugue> - Improving speed
  * with Position method.
- * @history 2015-01-13 - Jeremy Bante <http://scr.im/jbante> - Improving speed
+ * @history 2015-01-13 - Jeremy Bante <http://scr.im/fugue> - Improving speed
  * with FilterValues method.
- * @history 2015-03-18 - Jeremy Bante <http://scr.im/jbante> - Renaming function
+ * @history 2015-03-18 - Jeremy Bante <http://scr.im/fugue> - Renaming function
  * to match convention.
  ******************************************************************************/
 

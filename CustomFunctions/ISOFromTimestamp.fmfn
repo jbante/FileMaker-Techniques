@@ -6,7 +6,7 @@
  * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DD hh:mm:ss
  * (24-hour time)
  *
- * @history 2011-05-17 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-05-17 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/

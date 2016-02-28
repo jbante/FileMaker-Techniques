@@ -15,8 +15,8 @@
  *		2. longitude of the destination point
  *		3. forward azimuth of the path at the destination
  *
- * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2015-04-09 - Jeremy Bante <http://scr.im/jbante> - Corrected
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2015-04-09 - Jeremy Bante <http://scr.im/fugue> - Corrected
  * calculations
  *
  * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf

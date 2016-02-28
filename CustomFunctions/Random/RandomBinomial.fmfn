@@ -9,7 +9,7 @@
  *
  * @return A number between 0 and trials
  *
- * @history 2010-02-22 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2010-02-22 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Binomial_distribution
  ******************************************************************************/

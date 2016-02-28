@@ -2,12 +2,12 @@
  * UTCOffset
  * @return The offset from UTC of the current device clock, in seconds.
  *
- * @history 2012-05-18 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2013-12-13 - Jeremy Bante <http://scr.im/jbante> - Using new
+ * @history 2012-05-18 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2013-12-13 - Jeremy Bante <http://scr.im/fugue> - Using new
  * Get ( CurrentTimeUTCMilliseconds ) function in FileMaker 13.
- * @history 2014-04-03 - Jeremy Bante <http://scr.im/jbante> - Using Floor
+ * @history 2014-04-03 - Jeremy Bante <http://scr.im/fugue> - Using Floor
  * instead of Round, as recommended by Jesse Barnum.
- * @history 2014-06-17 - Jeremy Bante <http://scr.im/jbante> - Explicitly
+ * @history 2014-06-17 - Jeremy Bante <http://scr.im/fugue> - Explicitly
  * casting type as time.
  ******************************************************************************/
 

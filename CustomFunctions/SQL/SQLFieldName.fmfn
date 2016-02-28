@@ -8,10 +8,10 @@
  * @return The field name formatted as a SQL column name
  *
  * @history Based on functions by Todd Geist and Dan Smith.
- * @history 2012-12-18 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2013-01-26 - Jeremy Bante <http://scr.im/jbante> - Accepting
+ * @history 2012-12-18 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2013-01-26 - Jeremy Bante <http://scr.im/fugue> - Accepting
  * tableAlias and fieldAlias parameters.
- * @history 2013-05-08 - Jeremy Bante <http://scr.im/jbante> - Not accepting
+ * @history 2013-05-08 - Jeremy Bante <http://scr.im/fugue> - Not accepting
  * *Alias parameters and not include table name in result, since that is better
  * suited to the calculation outside this function.
  ******************************************************************************/

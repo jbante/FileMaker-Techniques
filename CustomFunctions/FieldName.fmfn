@@ -6,8 +6,8 @@
  * @return The field name of the field passed as a parameter, not including the
  * table occurrence name.
  *
- * @history 2011-05-26 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-01-17 - Jeremy Bante <http://scr.im/jbante> - Making the
+ * @history 2011-05-26 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-01-17 - Jeremy Bante <http://scr.im/fugue> - Making the
  * function more concise.
  ******************************************************************************/
 

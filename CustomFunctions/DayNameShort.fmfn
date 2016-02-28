@@ -6,7 +6,7 @@
  *
  * @return The conventional day name abbreviation for the specified date
  *
- * @history 2011-01-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-01-11 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Choose ( DayOfWeek ( theDate ) - 1 ;

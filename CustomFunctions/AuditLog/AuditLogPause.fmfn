@@ -7,7 +7,7 @@
  *
  * @global $~auditLog.pause
  *
- * @history 2011-05-27 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-05-27 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

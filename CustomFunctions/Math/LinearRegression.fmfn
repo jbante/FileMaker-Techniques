@@ -8,7 +8,7 @@
  * @return An expression of the form B + Ax, where A and B represent the
  * coefficients of a linear regression.
  *
- * @history 2014-01-13 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-01-13 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Simple_linear_regression
  * @see http://en.wikipedia.org/wiki/Algorithms_for_calculating_variance

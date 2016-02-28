@@ -12,7 +12,7 @@
  * @return theTime expressed as an interval length in only its most significant
  * order of magnitude (hours, minutes, or seconds)
  *
- * @history 2011-06-05 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-06-05 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

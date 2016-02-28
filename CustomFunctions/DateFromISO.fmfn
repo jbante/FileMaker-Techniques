@@ -6,7 +6,7 @@
  *
  * @return A FileMaker-type date parsed from isoDate
  *
- * @history 2013-01-25 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2013-01-25 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/

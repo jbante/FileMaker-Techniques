@@ -16,8 +16,8 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		CREATED on 2012-03-12 by Jeremy Bante <http://scr.im/jbante>.
- *		MODIFIED on 2012-03-23 by Jeremy Bante <http://scr.im/jbante> to
+ *		CREATED on 2012-03-12 by Jeremy Bante <http://scr.im/fugue>.
+ *		MODIFIED on 2012-03-23 by Jeremy Bante <http://scr.im/fugue> to
  *		correctly handle index = 0.
  *
  * REFERENCES:

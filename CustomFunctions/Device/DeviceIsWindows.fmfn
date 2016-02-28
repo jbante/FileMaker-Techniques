@@ -4,7 +4,7 @@
  * @return True (1) when the function is called in the context of Windows, and
  * False (0) otherwise.
  *
- * @history 2011-05-23 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-05-23 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Get ( SystemPlatform ) = 2

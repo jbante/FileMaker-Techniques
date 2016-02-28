@@ -12,7 +12,7 @@
  *
  * @return A number between 1 and total
  *
- * @history 2012-02-08 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2012-02-08 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

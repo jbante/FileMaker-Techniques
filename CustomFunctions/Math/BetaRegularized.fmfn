@@ -35,7 +35,7 @@ Parameters:
 • iStartAtZero — Always set to 0 (zero) in use. An iteration index for recursive calls.
 • remainingStackDepth — The number of recursive calls that Beta() is free to use. If IncompleteBeta_bySeries() is not being called from within another function, remainingStackDepth can be set as high as 49999. IncompleteBeta_bySeries() is tail recursive.
 
-If you experience unexpected behavior, check the parameters that you are passing; this function does not check for invalid values. By Jeremy Bante of Kyo Logic, LLC, in 2010.*/
+If you experience unexpected behavior, check the parameters that you are passing; this function does not check for invalid values. By Jeremy Bante <http://scr.im/fugue> in 2010.*/
 Case(
 	(p = 0) or (p = 1); //trivial case
 	p;

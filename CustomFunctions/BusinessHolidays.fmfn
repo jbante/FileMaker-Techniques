@@ -10,7 +10,7 @@
  *
  * @used-by BusinessHolidays ( calendarYear )
  *
- * @history 2011-10-18 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-10-18 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 List (

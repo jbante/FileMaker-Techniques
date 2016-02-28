@@ -4,7 +4,7 @@
  * @return True (1) when the function is called in the context of an iPhone or
  * iPod Touch, and False (0) otherwise.
  *
- * @history 2010-08-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2010-08-21 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Left ( Get ( ApplicationVersion ) ; 3 ) = "Go "

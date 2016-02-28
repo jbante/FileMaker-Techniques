@@ -12,11 +12,11 @@
  * DEPENDENCIES: none
  *
  * HISTORY:
- *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/jbante> to use the
+ *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/fugue> to use the
  *		current script name if none is specified.
- *		MODIFIED on 2012-02-20 by Jeremy Bante <http://scr.im/jbante> to return
+ *		MODIFIED on 2012-02-20 by Jeremy Bante <http://scr.im/fugue> to return
  *		an error value (-1) for unknown scripts.
- *		CREATED on 2012-01-26 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2012-01-26 by Jeremy Bante <http://scr.im/fugue>.
  *		INSPIRED by custom functions by Fabrice Nordman.
  * =====================================
  */

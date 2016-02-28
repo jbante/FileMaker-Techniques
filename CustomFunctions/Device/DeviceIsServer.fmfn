@@ -4,8 +4,8 @@
  * @return True (1) if the calculation is called in the context of a server-side
  * process, False (0) otherwise.
  *
- * @history 2011-03-11 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2013-05-24 - Jeremy Bante <http://scr.im/jbante> - Improving
+ * @history 2011-03-11 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2013-05-24 - Jeremy Bante <http://scr.im/fugue> - Improving
  * performance
  ******************************************************************************/
 

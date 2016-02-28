@@ -16,8 +16,8 @@
  *		2. initial bearing starting from the start point towards the end point
  *		3. final forward bearing at the end point
  *
- * @history 2013-09-02 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * @history 2013-09-02 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Using the
  * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
  * instead of a sphere to improve accuracy.
  *

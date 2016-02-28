@@ -24,7 +24,7 @@
  *		relationship with the RFC 4122 format.
  *		MODIFIED on 2010-11-22 by Jeremy Bante to extract timestamps from the
  *		updated output format for UUIDNew.
- *		CREATED on 2010-09-12 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2010-09-12 by Jeremy Bante <http://scr.im/fugue>.
  *		INSPIRED by UUID functions created by Ray Cologon.
  *
  * REFERENCES:

@@ -9,7 +9,7 @@
  * @return The contents of the $localVariable with the same name as the passed
  * field.
  *
- * @history 2011-05-22 - Jeremy Bante <http://scr.im/jbante> - Created, based on
+ * @history 2011-05-22 - Jeremy Bante <http://scr.im/fugue> - Created, based on
  * a function by Matt Petrowsky.
  *
  *

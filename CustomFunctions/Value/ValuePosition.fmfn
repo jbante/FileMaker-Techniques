@@ -10,10 +10,10 @@
  *
  * @return The value number of searchValue in valueList
  *
- * @history 2011-05-22 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2014-06-24 - Jeremy Bante <http://scr.im/jbante> - Full feature
+ * @history 2011-05-22 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2014-06-24 - Jeremy Bante <http://scr.im/fugue> - Full feature
  * parity with built-in Position function.
- * @history 2015-03-18 - Jeremy Bante <http://scr.im/jbante> - Improving
+ * @history 2015-03-18 - Jeremy Bante <http://scr.im/fugue> - Improving
  * performance when the value is not found by only using Left on the valueList
  * when the value is found (based on an example by Will Baker’s mustache
  * (https://beezwax.net/beez/100)).

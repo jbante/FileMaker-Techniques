@@ -6,8 +6,8 @@
  *
  * @return True (1) if the option key is indicated by the modifierKeys value, False (0) otherwise
  *
- * @history 2011-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-04-02 - Jeremy Bante <http://scr.im/jbante> - Accepting the
+ * @history 2011-04-21 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-04-02 - Jeremy Bante <http://scr.im/fugue> - Accepting the
  * modifierKeys parameter.
  ******************************************************************************/
 
@@ -29,9 +29,9 @@
  * EXAMPLE: KeyOption ( Get ( ActiveModifierKeys ) )
  *
  * HISTORY:
- *		MODIFIED on 2012-04-02 by Jeremy Bante <http://scr.im/jbante> to accept
+ *		MODIFIED on 2012-04-02 by Jeremy Bante <http://scr.im/fugue> to accept
  *		the modifierKeys parameter.
- *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/jbante>.
+ *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/fugue>.
  *		INSPIRED by a function created by Marx Martin of The Support Group.
  * =====================================
  */

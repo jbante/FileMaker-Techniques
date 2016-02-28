@@ -6,8 +6,8 @@
  *
  * @return A number representing a 16-bit checksum
  *
- * @history 2014-06-26 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2015-01-13 - Jeremy Bante <http://scr.im/jbante> - Improving XOR
+ * @history 2014-06-26 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2015-01-13 - Jeremy Bante <http://scr.im/fugue> - Improving XOR
  * speed with binary rather than decimal representation
  *
  * @see http://en.wikipedia.org/wiki/Cyclic_redundancy_check

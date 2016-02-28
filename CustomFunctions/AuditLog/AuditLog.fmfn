@@ -33,7 +33,7 @@
  * @global $~auditLog.pause A flag indicating that the current change is part of
  * a scripted process, and shouldn't be logged until the script is done.
  *
- * @history 2011-06-13 - Jeremy Bante <http://scr.im/jbante> - Created, inspired
+ * @history 2011-06-13 - Jeremy Bante <http://scr.im/fugue> - Created, inspired
  * by the UltraLog solution by Ray Cologon
  *
  * @see http://www.nightwing.com.au/FileMaker/demosX/demoX01.html Ray Cologon's UltraLog

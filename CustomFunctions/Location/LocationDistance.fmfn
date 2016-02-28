@@ -10,8 +10,8 @@
  *
  * @return The distance between the two points, in meters.
  *
- * @history 2012-09-26 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2014-09-15 - Jeremy Bante <http://scr.im/jbante> - Using the
+ * @history 2012-09-26 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Using the
  * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
  * instead of a sphere to improve accuracy.
  *

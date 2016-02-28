@@ -12,7 +12,7 @@
  * @return An array containing the data value at the specified index, in
  * addition to any other values in array.
  *
- * @history 2011-02-11 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-02-11 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
 Let ( [

@@ -5,7 +5,7 @@
  *
  * @return theDate rendered in ISO 8601 format: YYYY-MM-DD
  *
- * @history 2011-09-22 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2011-09-22 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/

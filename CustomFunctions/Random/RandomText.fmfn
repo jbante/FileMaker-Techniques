@@ -15,14 +15,14 @@
  *
  * @return A string of text
  *
- * @history 2012-11-08 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2012-11-10 - Jeremy Bante <http://scr.im/jbante> - Fixing a bug
+ * @history 2012-11-08 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2012-11-10 - Jeremy Bante <http://scr.im/fugue> - Fixing a bug
  * where the character range could be incorrect if one parameter is empty and
  * the other is not.
- * @history 2012-11-28 - Jeremy Bante <http://scr.im/jbante> - Not returning
+ * @history 2012-11-28 - Jeremy Bante <http://scr.im/fugue> - Not returning
  * characters between 55295 and 57348, which are sometimes mishandled by
  * FileMaker.
- * @history 2014-10-26 - Jeremy Bante <http://scr.im/jbante> - Rejecting problem
+ * @history 2014-10-26 - Jeremy Bante <http://scr.im/fugue> - Rejecting problem
  * characters for diacritical marks and accepting some control characters.
  ******************************************************************************/
 

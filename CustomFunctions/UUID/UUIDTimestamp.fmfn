@@ -32,11 +32,11 @@
  *
  * @global $$~UUID.DATA[2]
  *
- * @history 2012-02-25 - Jeremy Bante <http://scr.im/jbante> - Created
- * @history 2013-12-13 - Jeremy Bante <http://scr.im/jbante> - Generate ~serial
+ * @history 2012-02-25 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2013-12-13 - Jeremy Bante <http://scr.im/fugue> - Generate ~serial
  * number values that result in easier-to-read timestamps from the
  * UUIDGetTimestamp function.
- * @history 2013-12-13 - Jeremy Bante <http://scr.im/jbante> - Using new
+ * @history 2013-12-13 - Jeremy Bante <http://scr.im/fugue> - Using new
  * Get ( CurrentTimeUTCMilliseconds ) function in FileMaker 13.
  *
  * @see http://filemakerstandards.org/pages/viewpage.action?pageId=557138 Key values best practice

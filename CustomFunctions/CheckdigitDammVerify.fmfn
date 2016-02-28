@@ -13,7 +13,7 @@
  *
  * @uses CheckdigitDamm ( digitSequence )
  *
- * @history 2014-04-21 - Jeremy Bante <http://scr.im/jbante> - Created
+ * @history 2014-04-21 - Jeremy Bante <http://scr.im/fugue> - Created
  *
  * @see http://en.wikipedia.org/wiki/Damm_algorithm
  ******************************************************************************/
