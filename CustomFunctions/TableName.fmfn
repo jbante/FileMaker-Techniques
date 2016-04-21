@@ -1,19 +1,11 @@
-/**
- * =====================================
+/*******************************************************************************
  * TableName ( fieldReference )
  *
- * RETURNS:
- *		The table name of the field passed as a parameter, not including the
- *		field name.
+ * @parameter fieldReference: A reference to a field (not the field name)
  *
- * PARAMETERS:
- *		fieldReference: A reference to a field (not the field name)
+ * @return The table name of the field passed as a parameter, not including the
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2012-05-21 by Jeremy Bante <http://scr.im/fugue>.
- * =====================================
- */
+ * @history 2012-05-21 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
 
 GetValue ( Substitute ( GetFieldName ( fieldReference ) ; "::" ; ¶ ) ; 1 )
