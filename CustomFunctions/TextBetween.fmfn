@@ -20,10 +20,11 @@
  * @history 2014-10-10 - Jeremy Bante <http://scr.im/fugue> - Created
  * @history 2015-03-25 - Jeremy Bante <http://scr.im/fugue> - Handling empty
  * startPattern and endPattern parameters.
+ * @history 2016-08-03 - Jeremy Bante <http://scr.im/fugue> - Fixing a bug that
+ * was truncating characters when parsing an empty end pattern.
  ******************************************************************************/
 
-Let ( [
-	_startPatternIsEmpty = IsEmpty ( startPattern ) ;
+Let ( [_startPatternIsEmpty = IsEmpty ( startPattern ) ;
 	_start =
 		If ( _startPatternIsEmpty ;
 			startPosition ;
@@ -34,7 +35,7 @@ Let ( [
 	_end =
 		Case (
 			IsEmpty ( endPattern ) ;
-				Length ( text ) ;
+				Length ( text ) + 1 ;
 
 			_startPatternIsEmpty ;
 				Position ( text ; endPattern ; 1 ; occurrence ) ;
