@@ -1,0 +1,18 @@
+/*******************************************************************************
+ * OrientationIsCounterClockwise ( x1 ; y1 ; x2 ; y2 ; x3 ; y3 )
+ * Returns True (1) if the sequence of points is oriented counterclockwise;
+ * False (0) otherwise.
+ *
+ * @parameter x1: x coordinate of the first point in the sequence
+ * @parameter y1: y coordinate of the first point in the sequence
+ * @parameter x2
+ * @parameter y2
+ * @parameter x3
+ * @parameter y3
+ *
+ * @uses Orientation
+ *
+ * @history 2016-08-24 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Orientation ( x1 ; y1 ; x2 ; y2 ; x3 ; y3 ) = 1
