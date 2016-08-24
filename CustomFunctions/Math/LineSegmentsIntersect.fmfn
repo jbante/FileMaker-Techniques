@@ -1,0 +1,25 @@
+/*******************************************************************************
+ * LineSegmentsIntersect ( ax ; ay ; bx ; by ; cx ; cy ; dx ; dy )
+ * Determines whether or not 2 line segments in the cartesian plane intersect.
+ *
+ * @parameter ax: The x coordinate of the first point of the first segment
+ * @parameter ay: The y coordinate of the first point of the first segment
+ * @parameter bx: The x coordinate of the second point of the first segment
+ * @parameter by: The y coordinate of the second point of the first segment
+ * @parameter cx: The x coordinate of the first point of the second segment
+ * @parameter cy: The y coordinate of the first point of the second segment
+ * @parameter dx: The x coordinate of the second point of the second segment
+ * @parameter dy: The y coordinate of the second point of the second segment
+ *
+ * @return True (1) if the line segments intersect; False (0) otherwise.
+ *
+ * @uses Orientation ( x1 ; y1 ; x2 ; y2 ; x3 ; y3 )
+ *
+ * @history 2016-08-24 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see http://algs4.cs.princeton.edu/91primitives/
+ ******************************************************************************/
+
+// end points of each segment fall on either side of the other segment
+Orientation ( ax ; ay ; cx ; cy ; dx ; dy ) * Orientation ( bx ; by ; cx ; cy ; dx ; dy ) < 0
+and Orientation ( ax ; ay ; bx ; by ; cx ; cy ) * Orientation ( ax ; ay ; bx ; by ; dx ; dy ) < 0
