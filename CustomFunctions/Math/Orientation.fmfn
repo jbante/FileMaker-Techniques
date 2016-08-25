@@ -25,13 +25,14 @@ Let ( [
 	_b = y3 - y1 ;
 	_c = x3 - x1 ;
 	_d = y2 - y1 ;
-	_pointsAreClose = Min ( _a ; _b ; _c ; _d ) < .00001 ;
+	_min = Abs ( Min ( _a ; _b ; _c ; _d ) ) ;
+	_pointsAreClose = _min < .00001 and _min > 0 ;
 	_α = If ( _pointsAreClose ; Log ( _a ) + Log ( _b ) ; /* Else */ _a * _b ) ;
 	_β = If ( _pointsAreClose ; Log ( _c ) + Log ( _d ) ; /* Else */ _c * _d )
 ] ;
 	Case (
 		_α > _β ;	1 ;
-		_α < _β ; -1 ;
-		/* Else */ 0
+		_α < _β ;	-1 ;
+		/* Else */	0
 	)
 )
