@@ -23,16 +23,31 @@
 Let ( [
 	_a = x2 - x1 ;
 	_b = y3 - y1 ;
+	_abSign = Sign ( _a ) * Sign ( _b ) ;
 	_c = x3 - x1 ;
 	_d = y2 - y1 ;
-	_min = Abs ( Min ( _a ; _b ; _c ; _d ) ) ;
+	_cdSign = Sign ( _c ) * Sign ( _d ) ;
+	_min = Min ( Abs ( _a ) ; Abs ( _b ) ; Abs ( _c ) ; Abs ( _d ) ) ;
 	_pointsAreClose = _min < .00001 and _min > 0 ;
-	_α = If ( _pointsAreClose ; Log ( _a ) + Log ( _b ) ; /* Else */ _a * _b ) ;
-	_β = If ( _pointsAreClose ; Log ( _c ) + Log ( _d ) ; /* Else */ _c * _d )
+	_α =
+		If ( _pointsAreClose ;
+			Log ( Abs ( _a ) ) + Log ( Abs ( _b ) ) ;
+			/* Else */ _a * _b
+		) ;
+	_β =
+		If ( _pointsAreClose ;
+			Log ( Abs ( _c ) ) + Log ( Abs ( _d ) ) ;
+			/* Else */ _c * _d
+		)
 ] ;
 	Case (
-		_α > _β ;	1 ;
-		_α < _β ;	-1 ;
+		not _pointsAreClose ;	Sign ( _α - _β ) ;
+		_abSign > _cdSign ;	1 ;
+		_abSign < _cdSign ;	-1 ;
+		_abSign > 0 and _α > _β ;	1 ;
+		_abSign > 0 and _α < _β ;	-1 ;
+		_abSign < 0 and _α > _β ;	-1 ;
+		_abSign < 0 and _α < _β ;	1 ;
 		/* Else */	0
 	)
 )
