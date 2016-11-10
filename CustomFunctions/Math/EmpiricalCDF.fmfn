@@ -1,0 +1,41 @@
+/*******************************************************************************
+ * EmpiricalCDF ( numberList ; value )
+ * An empirical cumulative distribution function (inverse of a quantile
+ * function), i.e., returns the proportion of values in numberList that are less
+ * than value.
+ *
+ * @assumptions
+ * Called from "Layout Name" (TableName)
+ *
+ * @parameter numberList: a return-delimited list of numbers. The list does not
+ * need to be sorted.
+ * @parameter value: a number
+ *
+ * @return a number in [0,1]
+ *
+ * @history 2016-11-10 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/Cumulative_distribution_function
+ ******************************************************************************/
+
+Let ( [
+	_firstValue = LeftValues ( numberList ; 1 ) ;
+	_newList = Replace ( numberList ; 1 ; Length ( _firstValue ) ; "" ) ;
+	_comparisonValue = GetAsNumber ( _firstValue ) ;
+	$~ecdf.lessThanCount =
+		$~ecdf.lessThanCount
+		+ If ( _comparisonValue < value ; 1 ; /* Else */ 0 ) ;
+	$~ecdf.totalCount = $~ecdf.totalCount + 1
+] ;
+	If ( not IsEmpty ( _newList ) ;
+		EmpiricalCDF ( _newList ; value ) ;
+	/* Else, clean-up variables and return final result */
+		Let ( [
+			_proportion = $~ecdf.lessThanCount / $~ecdf.totalCount ;
+			$~ecdf.lessThanCount = "" ;
+			$~ecdf.totalCount = ""
+		] ;
+			_proportion
+		)
+	)
+)
