@@ -1,0 +1,16 @@
+/*******************************************************************************
+ * QuarterStartDate ( theDate )
+ *
+ * @parameter theDate
+ *
+ * @return The date of the start of the calendar quarter including theDate
+ *
+ * @history 2016-11-11 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Let ( [
+	_quarter = Ceiling ( Month ( theDate ) / 3 ) ;
+	_startMonth = _quarter * 3 - 2
+] ;
+	Date ( _startMonth ; 1 ; Year ( theDate ) )
+)
