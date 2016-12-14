@@ -18,13 +18,13 @@
 
  Case (
 	/* Step 0, select pivot */
-	not $~step ;
+	not $~q.step ;
 		Let ( [
-			$~n = ValueCount ( numberList ) ;
+			$~q.n = ValueCount ( numberList ) ;
 			_pivotPosition =
-				If ( $~n < 3 ;
+				If ( $~q.n < 3 ;
 					1 ;
-					/* Else */ Ceiling ( $~n * ( theQuantile + 1 - Random ) / 2 )
+					/* Else */ Ceiling ( $~q.n * ( theQuantile + 1 - Random ) / 2 )
 				) ;
 			// For short lists, choosing the first value for the pivot and
 			// reversing the list order in the partitions guarantees that the
@@ -33,13 +33,13 @@
 			// and a random value is a compromise between probabilistically
 			// optimum speed on random lists and best speed when the numberList
 			// is already (more-or-less) sorted.
-			$~pivot = GetAsNumber ( GetValue ( numberList ; _pivotPosition ) ) ;
+			$~q.pivot = GetAsNumber ( GetValue ( numberList ; _pivotPosition ) ) ;
 			_firstValue = LeftValues ( numberList ; 1 ) ;
-			$~number = GetAsNumber ( _firstValue ) ;
-			$~step =
+			$~q.number = GetAsNumber ( _firstValue ) ;
+			$~q.step =
 				Case (
 					theQuantile ≤ 0 or theQuantile ≥ 1 ;	-1 ;	// bad input
-					$~n < 2 ;	2 ;	// solution is trivial
+					$~q.n < 2 ;	2 ;	// solution is trivial
 					/* Else */ 1
 				)
 		] ;
@@ -50,14 +50,14 @@
 		) ;
 
 	/* Step 1, partition numberList according to pivot */
-	$~step = 1 and ( $~number = $~pivot or IsEmpty ( $~number ) ) ;
+	$~q.step = 1 and ( $~q.number = $~q.pivot or IsEmpty ( $~q.number ) ) ;
 		Let ( [
 			// Having this separate case prevents a degenerate scenario of a
 			// list where all values are equal
 			_nextValue = LeftValues ( numberList ; 1 ) ;
-			$~number = GetAsNumber ( _nextValue ) ;
-			$~i = $~i + 1 ;
-			$~step = If ( $~i < $~n ; $~step ; /* Else */ $~step + 1 )
+			$~q.number = GetAsNumber ( _nextValue ) ;
+			$~q.i = $~q.i + 1 ;
+			$~q.step = If ( $~q.i < $~q.n ; $~q.step ; /* Else */ $~q.step + 1 )
 		] ;
 			Quantile (
 				Replace ( numberList ; 1 ; Length ( _nextValue ) ; "" ) ;
@@ -65,18 +65,18 @@
 			)
 		) ;
 
-	$~step = 1 and $~number < $~pivot ;
+	$~q.step = 1 and $~q.number < $~q.pivot ;
 		Let ( [
-			$~lowList = List ( $~number ; $~lowList ) ;
+			$~q.lowList = List ( $~q.number ; $~q.lowList ) ;
 			// Reversing the order in partitions is part of a strategy to avoid
 			// degenerate recursion in small lists, and also part of a strategy
 			// to balance good speed between lists already (more-or-less) sorted
 			// ascending vs. descending (in combination with pivot selection).
-			$~lowN = $~lowN + 1 ;
+			$~q.lowN = $~q.lowN + 1 ;
 			_nextValue = LeftValues ( numberList ; 1 ) ;
-			$~number = GetAsNumber ( _nextValue ) ;
-			$~i = $~i + 1 ;
-			$~step = If ( $~i < $~n ; $~step ; /* Else */ $~step + 1 )
+			$~q.number = GetAsNumber ( _nextValue ) ;
+			$~q.i = $~q.i + 1 ;
+			$~q.step = If ( $~q.i < $~q.n ; $~q.step ; /* Else */ $~q.step + 1 )
 		] ;
 			Quantile (
 				Replace ( numberList ; 1 ; Length ( _nextValue ) ; "" ) ;
@@ -84,14 +84,14 @@
 			)
 		) ;
 
-	$~step = 1 ; // and $~number > $~pivot
+	$~q.step = 1 ; // and $~q.number > $~q.pivot
 		Let ( [
-			$~highList = List ( $~number ; $~highList ) ;
-			$~highN = $~highN + 1 ;
+			$~q.highList = List ( $~q.number ; $~q.highList ) ;
+			$~q.highN = $~q.highN + 1 ;
 			_nextValue = LeftValues ( numberList ; 1 ) ;
-			$~number = GetAsNumber ( _nextValue ) ;
-			$~i = $~i + 1 ;
-			$~step = If ( $~i < $~n ; $~step ; /* Else */ $~step + 1 )
+			$~q.number = GetAsNumber ( _nextValue ) ;
+			$~q.i = $~q.i + 1 ;
+			$~q.step = If ( $~q.i < $~q.n ; $~q.step ; /* Else */ $~q.step + 1 )
 		] ;
 			Quantile (
 				Replace ( numberList ; 1 ; Length ( _nextValue ) ; "" ) ;
@@ -100,17 +100,17 @@
 		) ;
 
 	/* Step 2, recurse on partition, or return result */
-	$~step = 2 or $~step = -1 ;
+	$~q.step = 2 or $~q.step = -1 ;
 		Let ( [
 			// setup next partition
-			_lowSize = $~lowN / $~n ;
-			_highSize = $~highN / $~n ;
+			_lowSize = $~q.lowN / $~q.n ;
+			_highSize = $~q.highN / $~q.n ;
 			_useLowList = _lowSize > theQuantile ;
 			_useHighList = _highSize ≥ 1 - theQuantile ;
 			_newList =
 				Case (
-					_useLowList ;	$~lowList ;
-					_useHighList ;	$~highList
+					_useLowList ;	$~q.lowList ;
+					_useHighList ;	$~q.highList
 				) ;
 			_newQuantile =
 				Case (
@@ -119,31 +119,31 @@
 					_useHighList ;
 						Max (
 							( theQuantile - 1 + _highSize ) / _highSize ;
-							1 / ( $~highN + 1 )
+							1 / ( $~q.highN + 1 )
 						)
 				) ;
 
 			// check for completion
-			_error = $~step = -1 ;
-			_listIsEmpty = $~n = 0 ;
+			_error = $~q.step = -1 ;
+			_listIsEmpty = $~q.n = 0 ;
 			_result =
 				Case (
-					not ( _useLowList or _useHighList ) ;	$~pivot ;
-					_useLowList and $~lowN = 1 ;	$~lowList ;
-					_useHighList and $~highN = 1 ;	$~highList ;
+					not ( _useLowList or _useHighList ) ;	$~q.pivot ;
+					_useLowList and $~q.lowN = 1 ;	$~q.lowList ;
+					_useHighList and $~q.highN = 1 ;	$~q.highList ;
 					/* Else */	""
 				) ;
 
 			// purge variables
-			$~highList = "" ;
-			$~highN = "" ;
-			$~i = "" ;
-			$~lowList = "" ;
-			$~lowN = "" ;
-			$~n = "" ;
-			$~number = "" ;
-			$~pivot = "" ;
-			$~step = ""
+			$~q.highList = "" ;
+			$~q.highN = "" ;
+			$~q.i = "" ;
+			$~q.lowList = "" ;
+			$~q.lowN = "" ;
+			$~q.n = "" ;
+			$~q.number = "" ;
+			$~q.pivot = "" ;
+			$~q.step = ""
 		] ;
 			Case (
 				_error ;	"?" ;
