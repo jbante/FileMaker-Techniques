@@ -10,8 +10,8 @@
  * @return A value from numberList
  *
  * @history 2011-05-16 - Jeremy Bante <http://scr.im/fugue> - Created
- * @history 2016-12-14 - Jeremy Bante <http-//scr.im/fugue> - Improving speed
- * by using the Quickselect algorithm.
+ * @history 2016-12-14 - Jeremy Bante <http://scr.im/fugue> - Improving speed
+ * by using a variation of the Quickselect algorithm.
  *
  * @see https://en.wikipedia.org/wiki/Quickselect
  ******************************************************************************/
