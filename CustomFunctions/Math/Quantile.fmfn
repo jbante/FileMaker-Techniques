@@ -21,10 +21,13 @@
 	not $~q.step ;
 		Let ( [
 			$~q.n = ValueCount ( numberList ) ;
+			_firstValue = LeftValues ( numberList ; 1 ) ;
+			$~q.number = GetAsNumber ( _firstValue ) ;
 			_pivotPosition =
 				If ( $~q.n < 3 ;
 					1 ;
-					/* Else */ Ceiling ( $~q.n * ( theQuantile + 1 - Random ) / 2 )
+				/* Else */
+					Ceiling ( $~q.n * ( theQuantile + 1 - Random ) / 2 )
 				) ;
 			// For short lists, choosing the first value for the pivot and
 			// reversing the list order in the partitions guarantees that the
@@ -34,23 +37,37 @@
 			// optimum speed on random lists and best speed when the numberList
 			// is already (more-or-less) sorted.
 			$~q.pivot = GetAsNumber ( GetValue ( numberList ; _pivotPosition ) ) ;
-			_firstValue = LeftValues ( numberList ; 1 ) ;
-			$~q.number = GetAsNumber ( _firstValue ) ;
+			$~q.pivot =
+				If ( IsEmpty ( $~q.pivot ) ; $~q.number ; /* Else */ $~q.pivot ) ;
 			$~q.step =
 				Case (
 					theQuantile ≤ 0 or theQuantile ≥ 1 ;	-1 ;	// bad input
 					$~q.n < 2 ;	2 ;	// solution is trivial
-					/* Else */ 1
+					IsEmpty ( $~q.pivot ) ;	0 ;	// pick a new pivot
+					/* Else */	1
 				)
 		] ;
 			Quantile (
 				Replace ( numberList ; 1 ; Length ( _firstValue ) ; "" ) ;
-				theQuantile
+				GetAsNumber ( theQuantile )
 			)
 		) ;
 
 	/* Step 1, partition numberList according to pivot */
-	$~q.step = 1 and ( $~q.number = $~q.pivot or IsEmpty ( $~q.number ) ) ;
+	$~q.step = 1 and IsEmpty ( $~q.number ) ;
+		Let ( [
+			// Don't count empty values
+			_nextValue = LeftValues ( numberList ; 1 ) ;
+			$~q.number = GetAsNumber ( _nextValue ) ;
+			$~q.n = $~q.n - 1 ;
+			$~q.step = If ( $~q.i < $~q.n ; $~q.step ; /* Else */ $~q.step + 1 )
+		] ;
+			Quantile (
+				Replace ( numberList ; 1 ; Length ( _nextValue ) ; "" ) ;
+				theQuantile
+			)
+		) ;
+	$~q.step = 1 and $~q.number = $~q.pivot ;
 		Let ( [
 			// Having this separate case prevents a degenerate scenario of a
 			// list where all values are equal
@@ -103,10 +120,9 @@
 	$~q.step = 2 or $~q.step = -1 ;
 		Let ( [
 			// setup next partition
-			_lowSize = $~q.lowN / $~q.n ;
-			_highSize = $~q.highN / $~q.n ;
-			_useLowList = _lowSize > theQuantile ;
-			_useHighList = _highSize ≥ 1 - theQuantile ;
+			_targetValue = Floor ( $~q.n * theQuantile ) + 1 ;
+			_useLowList = $~q.lowN ≥ _targetValue ;
+			_useHighList = $~q.highN > $~q.n - _targetValue ;
 			_newList =
 				Case (
 					_useLowList ;	$~q.lowList ;
@@ -115,10 +131,10 @@
 			_newQuantile =
 				Case (
 					_useLowList ;
-						theQuantile  / _lowSize ;
+						theQuantile * $~q.n / $~q.lowN ;
 					_useHighList ;
 						Max (
-							( theQuantile - 1 + _highSize ) / _highSize ;
+							( theQuantile - 1 ) * $~q.n / $~q.highN + 1 ;
 							1 / ( $~q.highN + 1 )
 						)
 				) ;
