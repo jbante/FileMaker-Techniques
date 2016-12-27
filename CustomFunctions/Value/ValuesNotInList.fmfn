@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * ValuesNotInList ( searchList ; referenceList )
+ * Identifies all the values in searchList that are not in referenceList.
+ *
+ * @parameter searchList: a return-delimited list
+ * @parameter referenceList: a return-delimited list
+ *
+ * @return a return-delimited list of values in searchList that are not in
+ * referenceList
+ *
+ * @history 2016-12-27 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Let ( [
+	_searchValue = LeftValues ( searchList ; 1 ) ;
+	_valueIsNotInList = IsEmpty ( FilterValues ( _searchValue ; referenceList ) )
+] ;
+	If ( _valueIsNotInList ;
+		_searchValue
+	)
+	& If ( not ( IsEmpty ( _searchValue ) or IsEmpty ( searchList ) ) ;
+		ValuesNotInList (
+			Replace ( searchList ; 1 ; Length ( _searchValue ) ; "" ) ;
+			referenceList
+		)
+	)
+)
