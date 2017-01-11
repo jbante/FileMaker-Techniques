@@ -24,7 +24,8 @@
  * was truncating characters when parsing an empty end pattern.
  ******************************************************************************/
 
-Let ( [_startPatternIsEmpty = IsEmpty ( startPattern ) ;
+Let ( [
+	_startPatternIsEmpty = IsEmpty ( startPattern ) ;
 	_start =
 		If ( _startPatternIsEmpty ;
 			startPosition ;
