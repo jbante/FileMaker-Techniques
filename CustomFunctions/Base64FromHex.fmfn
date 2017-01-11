@@ -42,7 +42,6 @@ Let ( [
 			_base64String & Choose ( _numberOfBytes ; "" ; "==" ; "=" ; "" ) ;
 			4
 		) ;
-	_number = Div ( _number ; 64 ) ;
 	_remainder = Replace ( hexString ; 1 ; 6 ; "" )
 ] ;
 	If ( _lengthError ; "?" ; /* Else */ _base64String )
