@@ -28,7 +28,7 @@ Let ( [
 			// insert arithmetic
 			[ "x" ; " ) * 16 + " ]
 		) ;
-	_number = Evaluate ( _expression ) ;
+	_number = Evaluate ( _expression ) * Choose ( _numberOfBytes ; 0 ; 16 ; 4 ; 1 ) ;
 	_base64 = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/" ;
 	_base64String = Middle ( _base64 ; Mod ( _number ; 64 ) + 1 ; 1 ) ;
 	_number = Div ( _number ; 64 ) ;
