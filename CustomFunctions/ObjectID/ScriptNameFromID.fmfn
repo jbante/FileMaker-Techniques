@@ -1,0 +1,20 @@
+/*******************************************************************************
+ * ScriptNameFromID ( file ; theScriptID )
+ *
+ * @parameter file: The name of the FileMaker file containing the script
+ * @parameter theScriptID: FileMaker's internal ID for the script
+ *
+ * @return The current name of a FileMaker script, based on its ID
+ *
+ * @history 2012-01-26 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
+
+Let ( [
+	_idList = ¶ & ScriptIDs ( file ) & ¶ ;
+	_value = Position ( _idList ; ¶ & theScriptID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ ) ;
+	_name = GetValue ( ScriptNames ( file ) ; _value )
+] ;
+	If ( IsEmpty ( _name ) ; "?" ; /* Else */ _name )
+)

@@ -1,0 +1,19 @@
+/*******************************************************************************
+ * TableNameFromID ( file ; theTableID )
+ *
+ * @parameter file: The name of the FileMaker file containing the table
+ * @parameter theTableID: FileMaker's internal ID for the table
+ *
+ * @return The current name of a FileMaker script, based on its ID
+ *
+ * @history 2012-01-26 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
+
+Let ( [
+	_idList = ¶ & TableIDs ( file ) & ¶ ;
+	_value = Position ( _idList ; ¶ & theTableID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ )
+] ;
+	GetValue ( TableNames ( file ) ; _value )
+)

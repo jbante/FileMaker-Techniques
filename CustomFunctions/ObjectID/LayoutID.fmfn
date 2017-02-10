@@ -1,34 +1,26 @@
-/**
- * =====================================
+/*******************************************************************************
  * LayoutID ( file ; theLayoutName )
  *
- * RETURNS:
- *		FileMaker's internal ID for a layout.
+ * @parameter file: The name of the FileMaker file containing the layout
+ * @parameter theLayoutName
  *
- * PARAMETERS:
- *		file: The name of the FileMaker file containing the layout.
- *		theLayoutName
+ * @return FileMaker's internal ID for a layout
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		MODIFIED on 2012-12-17 by Jeremy Bante <http://scr.im/fugue> to use the
- *		current layout name if none is specified.
- *		MODIFIED on 2012-01-26 by Jeremy Bante to accept the file parameter.
- *		CREATED on 2011-06-01 by Jeremy Bante <http://scr.im/fugue>.
- *		INSPIRED by custom functions by Fabrice Nordman.
- * =====================================
- */
+ * @history 2012-12-17 - Jeremy Bante <http://scr.im/fugue> - Using current
+ * layout name if none is specified.
+ * @history 2012-01-26 - Jeremy Bante <http://scr.im/fugue> - Adding file parameter
+ * @history 2011-06-01 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
 
 If ( IsEmpty ( theLayoutName ) ;
 	GetValue ( LayoutIDs ( file ) ; Get ( LayoutNumber ) ) ;
 /* Else */
 	Let ( [
-		~nameList = ¶ & LayoutNames ( file ) & ¶;
-		~value =
-			Position ( ~nameList ; ¶ & theLayoutName & ¶ ; 1 ; 1 );
-		~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ )
-	];
-		GetValue ( LayoutIDs ( file ) ; ~value )
+		_nameList = ¶ & LayoutNames ( file ) & ¶ ;
+		_value = Position ( _nameList ; ¶ & theLayoutName & ¶ ; 1 ; 1 ) ;
+		_value = PatternCount ( Left ( _nameList ; _value ) ; ¶ )
+	] ;
+		GetValue ( LayoutIDs ( file ) ; _value )
 	)
 )

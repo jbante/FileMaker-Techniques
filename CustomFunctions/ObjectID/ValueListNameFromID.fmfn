@@ -1,0 +1,21 @@
+/*******************************************************************************
+ * ValueListNameFromID ( file ; theValueListID )
+ *
+ * @parameter file: The name of the FileMaker file containing the value list
+ * @parameter theValueListID: FileMaker's internal ID for the value list
+ *
+ * @return The current name of a FileMaker value list, based on its ID
+ *
+ * @history 2012-04-13 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
+
+Let ( [
+	_idList = ¶ & ValueListIDs ( file ) & ¶ ;
+	_value =
+		Position ( _idList ; ¶ & theValueListID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ ) ;
+	_name = GetValue ( ValueListNames ( file ) ; _value )
+] ;
+	If ( IsEmpty ( _name ) ; "?" ; /* Else */ _name )
+)

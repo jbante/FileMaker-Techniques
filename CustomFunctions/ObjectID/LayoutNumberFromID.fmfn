@@ -1,0 +1,19 @@
+/*******************************************************************************
+ * LayoutNumberFromID ( file ; theLayoutID )
+ *
+ * @parameter file: The name of the FileMaker file containing the layout
+ * @parameter theLayoutID: FileMaker's internal ID for the layout
+ *
+ * @return The current number of a FileMaker layout, based on its ID
+ *
+ * @history 2012-09-05 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
+
+Let ( [
+	_idList = ¶ & LayoutIDs ( file ) & ¶ ;
+	_value = Position ( _idList ; ¶ & theLayoutID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ )
+] ;
+	_value
+)

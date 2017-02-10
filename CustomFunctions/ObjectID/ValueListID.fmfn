@@ -1,28 +1,20 @@
-/**
- * =====================================
+/*******************************************************************************
  * ValueListID ( file ; theValueListName )
  *
- * RETURNS:
- *		FileMaker's internal ID for a value list.
+ * @parameter file: The name of the FileMaker file containing the valueList
+ * @parameter theValueListName
  *
- * PARAMETERS:
- *		file: The name of the FileMaker file containing the valueList.
- *		theValueListName
+ * @return FileMaker's internal ID for a value list
  *
- * DEPENDENCIES: none
- *
- * HISTORY:
- *		CREATED on 2012-04-13 by Jeremy Bante <http://scr.im/fugue>.
- *		INSPIRED by custom functions by Fabrice Nordman.
- * =====================================
- */
+ * @history 2012-04-13 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
 
 Let ( [
-	~nameList = ¶ & ValueListNames ( file ) & ¶;
-	~value =
-		Position ( ~nameList ; ¶ & theValueListName & ¶ ; 1 ; 1 );
-	~value = PatternCount ( Left ( ~nameList ; ~value ) ; ¶ );
-	~id = GetValue ( ValueListIDs ( file ) ; ~value )
-];
-	If ( IsEmpty ( ~id ) ; -1 ; /* Else */ ~id )
+	_nameList = ¶ & ValueListNames ( file ) & ¶ ;
+	_value = Position ( _nameList ; ¶ & theValueListName & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _nameList ; _value ) ; ¶ ) ;
+	_id = GetValue ( ValueListIDs ( file ) ; _value )
+] ;
+	If ( IsEmpty ( _id ) ; "?" ; /* Else */ _id )
 )

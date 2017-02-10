@@ -1,0 +1,20 @@
+/*******************************************************************************
+ * FieldNameFromID ( file ; tableName ; theFieldID )
+ *
+ * @parameter file: The name of the FileMaker file containing the field
+ * @parameter tableName: The name of the table the field is in
+ * @parameter theFieldID: FileMaker's internal ID for the field
+ *
+ * @return The current name of a FileMaker field, based on its ID
+ *
+ * @history 2012-01-26 - Jeremy Bante <http://scr.im/fugue> - Created. Inspired
+ * by custom functions by Fabrice Nordman.
+ ******************************************************************************/
+
+Let ( [
+	_idList = ¶ & FieldIDs ( file ; tableName ) & ¶ ;
+	_value = Position ( _idList ; ¶ & theFieldID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _value ) ; "¶" )
+];
+	GetValue ( FieldNames ( file ; tableName ) ; _value )
+)
