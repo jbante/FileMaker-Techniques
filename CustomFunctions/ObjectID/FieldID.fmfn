@@ -1,8 +1,8 @@
 /*******************************************************************************
- * Function ( parameter1 ; parameter2 )
+ * FieldID ( file ; field )
  *
- * @parameter file: The name of the FileMaker file containing the field.
- * @parameter field: The field (not literal field name) to retrieve the ID of.
+ * @parameter file: The name of the FileMaker file containing the field
+ * @parameter field: The field (not literal field name) to retrieve the ID of
  *
  * @return FileMaker's internal ID for a field.
  *
@@ -16,8 +16,9 @@ Let ( [
 	_tableName = GetValue ( _fieldName ; 1 ) ;
 	_fieldName = GetValue ( _fieldName ; 2 ) ;
 	_nameList = ¶ & FieldNames ( file ; _tableName ) & ¶ ;
-	_value = Position ( _nameList ; ¶ & _fieldName & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _nameList ; _value ) ; "¶" )
+	_position = Position ( _nameList ; ¶ & _fieldName & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _nameList ; _position ) ; "¶" ) ;
+	_id = GetValue ( FieldIDs ( file ; _tableName ) ; _value )
 ];
-	GetValue ( FieldIDs ( file ; _tableName ) ; _value )
+	If ( _position = 0 ; "?" ; /* Else */ _id )
 )

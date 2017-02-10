@@ -12,9 +12,9 @@
 
 Let ( [
 	_nameList = ¶ & ValueListNames ( file ) & ¶ ;
-	_value = Position ( _nameList ; ¶ & theValueListName & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _nameList ; _value ) ; ¶ ) ;
+	_position = Position ( _nameList ; ¶ & theValueListName & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _nameList ; _position ) ; ¶ ) ;
 	_id = GetValue ( ValueListIDs ( file ) ; _value )
 ] ;
-	If ( IsEmpty ( _id ) ; "?" ; /* Else */ _id )
+	If ( _position = 0 ; "?" ; /* Else */ _id )
 )

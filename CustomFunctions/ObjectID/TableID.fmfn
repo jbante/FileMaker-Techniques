@@ -20,8 +20,9 @@ Let ( [
 			/* Else */ theTableName
 		) ;
 	_nameList = ¶ & TableNames ( file ) & ¶ ;
-	_value = Position ( _nameList ; ¶ & theTableName & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _nameList ; _value ) ; ¶ )
+	_position = Position ( _nameList ; ¶ & theTableName & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _nameList ; _position ) ; ¶ ) ;
+	_id = GetValue ( TableIDs ( file ) ; _value )
 ] ;
-	GetValue ( TableIDs ( file ) ; _value )
+	If ( _position = 0 ; "?" ; /* Else */ _id )
 )

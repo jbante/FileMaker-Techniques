@@ -18,9 +18,10 @@ If ( IsEmpty ( theLayoutName ) ;
 /* Else */
 	Let ( [
 		_nameList = ¶ & LayoutNames ( file ) & ¶ ;
-		_value = Position ( _nameList ; ¶ & theLayoutName & ¶ ; 1 ; 1 ) ;
-		_value = PatternCount ( Left ( _nameList ; _value ) ; ¶ )
+		_position = Position ( _nameList ; ¶ & theLayoutName & ¶ ; 1 ; 1 ) ;
+		_value = PatternCount ( Left ( _nameList ; _position ) ; ¶ ) ;
+		_id = GetValue ( LayoutIDs ( file ) ; _value )
 	] ;
-		GetValue ( LayoutIDs ( file ) ; _value )
+		If ( _position = 0 ; "?" ; /* Else */ _id )
 	)
 )

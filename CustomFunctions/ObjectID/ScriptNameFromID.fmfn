@@ -12,9 +12,9 @@
 
 Let ( [
 	_idList = ¶ & ScriptIDs ( file ) & ¶ ;
-	_value = Position ( _idList ; ¶ & theScriptID & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ ) ;
+	_position = Position ( _idList ; ¶ & theScriptID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _position ) ; ¶ ) ;
 	_name = GetValue ( ScriptNames ( file ) ; _value )
 ] ;
-	If ( IsEmpty ( _name ) ; "?" ; /* Else */ _name )
+	If ( _position = 0 ; "?" ; /* Else */ _name )
 )

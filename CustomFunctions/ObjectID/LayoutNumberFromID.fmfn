@@ -12,8 +12,8 @@
 
 Let ( [
 	_idList = ¶ & LayoutIDs ( file ) & ¶ ;
-	_value = Position ( _idList ; ¶ & theLayoutID & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ )
+	_position = Position ( _idList ; ¶ & theLayoutID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _position ) ; ¶ )
 ] ;
-	_value
+	If ( _position = 0 ; "?" ; /* Else */ _value )
 )

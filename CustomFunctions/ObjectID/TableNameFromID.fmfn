@@ -12,8 +12,9 @@
 
 Let ( [
 	_idList = ¶ & TableIDs ( file ) & ¶ ;
-	_value = Position ( _idList ; ¶ & theTableID & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _idList ; _value ) ; ¶ )
+	_position = Position ( _idList ; ¶ & theTableID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _position ) ; ¶ ) ;
+	_name = GetValue ( TableNames ( file ) ; _value )
 ] ;
-	GetValue ( TableNames ( file ) ; _value )
+	If ( _position = 0 ; "?" ; /* Else */ _name )
 )

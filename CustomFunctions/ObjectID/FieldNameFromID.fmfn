@@ -13,8 +13,9 @@
 
 Let ( [
 	_idList = ¶ & FieldIDs ( file ; tableName ) & ¶ ;
-	_value = Position ( _idList ; ¶ & theFieldID & ¶ ; 1 ; 1 ) ;
-	_value = PatternCount ( Left ( _idList ; _value ) ; "¶" )
+	_position = Position ( _idList ; ¶ & theFieldID & ¶ ; 1 ; 1 ) ;
+	_value = PatternCount ( Left ( _idList ; _position ) ; "¶" ) ;
+	_name = GetValue ( FieldNames ( file ; tableName ) ; _value )
 ];
-	GetValue ( FieldNames ( file ; tableName ) ; _value )
+	If ( _position = 0 ; "?" ; /* Else */ _name )
 )
