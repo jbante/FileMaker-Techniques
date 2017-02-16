@@ -1,0 +1,27 @@
+/*******************************************************************************
+ * ValueRemove ( theList ; valueToRemove )
+ * Removes all occurrences of a value from a return-delimited list.
+ *
+ * @parameter theList: a return-delimited list
+ * @parameter valueToRemove
+ *
+ * @return a return-delimited list not containing valueToRemove
+ *
+ * @history 2017-02-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+If ( IsEmpty ( theList ) or IsEmpty ( valueToRemove ) ;
+	theList ;
+/* Else */
+	Let ( [
+		_cap = Get ( UUID )
+	] ;
+		Substitute ( _cap & ¶ & theList & ¶ & _cap ;
+			[ ¶ ; "¶¶" ] ;
+			[ ¶ & valueToRemove & ¶ ; "" ] ;
+			[ "¶¶" ; ¶ ] ;
+			[ _cap & ¶ ; "" ] ;
+			[ ¶ & _cap ; "" ]
+		)
+	)
+)
