@@ -14,6 +14,8 @@
  * with FilterValues method.
  * @history 2015-03-18 - Jeremy Bante <http://scr.im/fugue> - Renaming function
  * to match convention.
+ * @history 2017-03-16 - Erik Shagdar - Convert to using Position instead of
+ * FilterValues to pick up NULL strings.
  ******************************************************************************/
 
-not IsEmpty ( FilterValues ( searchValue ; referenceList ) )
+Position ( "¶" & referenceList & "¶"; "¶" & searchValue & "¶"; 1; 1 ) > 0
