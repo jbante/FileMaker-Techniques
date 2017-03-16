@@ -14,6 +14,8 @@
  * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Using the
  * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
  * instead of a sphere to improve accuracy.
+ * @history 2017-03-16 - Erik Shagdar - updated function to use the 
+ * specified parameters.
  *
  * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
  * @see http://en.wikipedia.org/wiki/World_Geodetic_System
@@ -26,17 +28,17 @@ Let ( [
 
 	_θ1 =
 		Atan (
-			( 1 - _flattening ) * Tan ( Radians ( startLatitude ) )
+			( 1 - _flattening ) * Tan ( Radians ( latitude1 ) )
 		) ;
 	_θ2 =
-		Atan ( ( 1 - _flattening ) * Tan ( Radians ( endLatitude ) ) ) ;
+		Atan ( ( 1 - _flattening ) * Tan ( Radians ( latitude2 ) ) ) ;
 	_θm = ( _θ1 + _θ2 ) / 2 ;
 	_sinθm = Sin ( _θm ) ;
 	_cosθm = Cos ( _θm ) ;
 	_Δθm = ( _θ2 - _θ1 ) / 2 ;
 	_sinΔθm = Sin ( _Δθm ) ;
 	_cosΔθm = Cos ( _Δθm ) ;
-	_Δλ = Radians ( endLongitude - startLongitude ) ;
+	_Δλ = Radians ( longitude2 - longitude1 ) ;
 	_h = _cosΔθm ^ 2 - _sinθm ^ 2 ;
 	_l = _sinΔθm ^ 2 + _h * Sin ( _Δλ / 2 ) ^ 2 ;
 	_cos_d = 1 - 2 * _l ;
