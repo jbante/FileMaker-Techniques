@@ -16,6 +16,12 @@
  * to match convention.
  * @history 2017-03-16 - Erik Shagdar - Convert to using Position instead of
  * FilterValues to pick up NULL strings.
+ * @history 2017-03-17 - Jeremy Bante <http://scr.im/fugue> - Combining faster
+ * FilterValues and more general Position methods.
  ******************************************************************************/
 
-Position ( "¶" & referenceList & "¶"; "¶" & searchValue & "¶"; 1; 1 ) > 0
+If ( IsEmpty ( searchValue ) ;
+	Position ( ¶ & referenceList & ¶ ; "¶¶" ; 1 ; 1 ) > 0 ;
+/* Else, use faster FilterValues method on cases where it works */
+	not IsEmpty ( FilterValues ( searchValue ; referenceList ) )
+)
