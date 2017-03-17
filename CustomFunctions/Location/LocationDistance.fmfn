@@ -1,12 +1,12 @@
 /*******************************************************************************
- * LocationDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ * LocationDistance ( startLatitude ; startLongitude ; endLatitude ; endLongitude )
  * Calculates the distance between two points on the surface of the Earth. This
  * function assumes that coordinates are in the WGS84 coordinate system.
  *
- * @parameter latitude1: Latitude of the first point
- * @parameter longitude1: Longitude of the first point
- * @parameter latitude2: Latitude of the second point
- * @parameter longitude2: Longitude of the second point
+ * @parameter startLatitude: Latitude of the first point
+ * @parameter startLongitude: Longitude of the first point
+ * @parameter endLatitude: Latitude of the second point
+ * @parameter endLongitude: Longitude of the second point
  *
  * @return The distance between the two points, in meters.
  *
@@ -14,7 +14,7 @@
  * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Using the
  * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
  * instead of a sphere to improve accuracy.
- * @history 2017-03-16 - Erik Shagdar - updated function to use the 
+ * @history 2017-03-16 - Erik Shagdar - updated function to use the
  * specified parameters.
  *
  * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
@@ -28,17 +28,17 @@ Let ( [
 
 	_θ1 =
 		Atan (
-			( 1 - _flattening ) * Tan ( Radians ( latitude1 ) )
+			( 1 - _flattening ) * Tan ( Radians ( startLatitude ) )
 		) ;
 	_θ2 =
-		Atan ( ( 1 - _flattening ) * Tan ( Radians ( latitude2 ) ) ) ;
+		Atan ( ( 1 - _flattening ) * Tan ( Radians ( endLatitude ) ) ) ;
 	_θm = ( _θ1 + _θ2 ) / 2 ;
 	_sinθm = Sin ( _θm ) ;
 	_cosθm = Cos ( _θm ) ;
 	_Δθm = ( _θ2 - _θ1 ) / 2 ;
 	_sinΔθm = Sin ( _Δθm ) ;
 	_cosΔθm = Cos ( _Δθm ) ;
-	_Δλ = Radians ( longitude2 - longitude1 ) ;
+	_Δλ = Radians ( endLongitude - startLongitude ) ;
 	_h = _cosΔθm ^ 2 - _sinθm ^ 2 ;
 	_l = _sinΔθm ^ 2 + _h * Sin ( _Δλ / 2 ) ^ 2 ;
 	_cos_d = 1 - 2 * _l ;
