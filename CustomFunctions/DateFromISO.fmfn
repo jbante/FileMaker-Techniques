@@ -1,8 +1,8 @@
 /*******************************************************************************
  * DateFromISO ( iso8601Date )
  * Parses date data formatted according to ISO 8601, and casts it to a
- * FileMaker date. Dates with limited accuracy will return the first date in the
- * specified period.
+ * FileMaker date. For dates with limited precision, the first date in the
+ * specified period will be returned.
  *
  * @parameter iso8601Date: text encoding a date in ISO 8601 format
  *
