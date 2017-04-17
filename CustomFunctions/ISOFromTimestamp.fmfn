@@ -3,7 +3,7 @@
  *
  * @parameter theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
  *
- * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DD hh:mm:ss
+ * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DDThh:mm:ss
  * (24-hour time)
  *
  * @history 2011-05-17 - Jeremy Bante <http://scr.im/fugue> - Created
@@ -19,7 +19,7 @@ Let ( [
 	& Right ( "00" & Month ( theTimestamp ) ; 2 )
 	& "-"
 	& Right ( "00" & Day ( theTimestamp ) ; 2 )
-	& " "
+	& "T"
 	& Right ( "00" & Hour ( theTimestamp ) ; 2 )
 	& ":"
 	& Right ( "00" & Minute ( theTimestamp ) ; 2 )
