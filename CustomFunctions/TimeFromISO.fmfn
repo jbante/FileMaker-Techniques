@@ -1,0 +1,65 @@
+/*******************************************************************************
+ * TimeFromISO ( iso8601Time )
+ * Parses time data formatted according to ISO 8601, and casts it to a
+ * FileMaker time. For time with limited precision, the first time in the
+ * specified period will be returned.
+ *
+ * @parameter iso8601Time: text encoding a time in ISO 8601 format
+ *
+ * @return A time
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_delimiterPosition = Position ( iso8601Time ; "T" ; 1 ; 1 ) ;
+	_text =
+		If ( _delimiterPosition = 0 ;
+			iso8601Time ;
+			/* Else */ Replace ( iso8601Time ; 1 ; _delimiterPosition ; "" )
+		) ;
+	_timezonePosition =
+		Max (
+			Position ( _text ; "Z" ; 1 ; 1 ) ;
+			Position ( _text ; "+" ; 1 ; 1 ) ;
+			Position ( _text ; "-" ; 1 ; 1 ) ;
+			Position ( _text ; "−" ; 1 ; 1 )
+		) ;
+	_text =
+		If ( _timezonePosition = 0 ;
+			_text ;
+			/* Else */ Left ( _text ; _timezonePosition - 1 )
+		) ;
+	_colonFormat = Position ( _text ; ":" ; 1 ; 1 ) > 0 ;
+	_decimal =
+		Max ( Position ( _text ; "," ; 1 ; 1 ) ; Position ( _text ; "." ; 1 ; 1 ) ) ;
+	_integer =
+		If ( _decimal = 0 ;
+			_text ;
+			/* Else */ Left ( _text ; _decimal - 1 )
+		) ;
+
+	_hour = Left ( _integer ; 2 ) ;
+	_minute = Middle ( _integer ; If ( _colonFormat ; 4 ; 3 ) ; 2 ) ;
+	_second = Middle ( _integer ; If ( _colonFormat ; 7 ; 5 ) ; 2 )
+] ;
+	If ( _decimal ≠ 0 ;
+		Let ( [
+			_fraction = Replace ( _text ; 1 ; _decimal ; "" ) ;
+			_fraction = _fraction * 10 ^ ( 0 - Length ( _fraction ) )
+		] ;
+			Case (
+				IsEmpty ( _minute ) ;
+					Time ( _hour + _fraction ; 0 ; 0 ) ;
+				IsEmpty ( _second ) ;
+					Time ( _hour ; _minute + _fraction ; 0 ) ;
+				/* Else */
+					Time ( _hour ; _minute ; _second + _fraction )
+			)
+		) ;
+	/* Else */
+		Time ( _hour ; _minute ; _second )
+	)
+)

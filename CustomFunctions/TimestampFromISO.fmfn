@@ -1,40 +1,28 @@
 /*******************************************************************************
- * TimestampFromISO ( isoTimestamp )
- * Converts a timestamp from ISO 8601 format to a FileMaker timestamp.
- * The result will be for local time, rather than UTC.
+ * TimestampFromISO ( iso8601Timestamp )
+ * Parses timestamp data formatted according to ISO 8601, and casts it to a
+ * FileMaker timestamp. For timestamps with limited precision, the first time in
+ * the specified period will be returned.
  *
- * @parameter isoTimestamp: A text string representing a timestamp
- * in ISO 8601 format, which is: YYYY-MM-DD hh:mm:ss (24-hour time)
+ * @parameter iso8601Timestamp: text encoding a time in ISO 8601 format
  *
- * @return A FileMaker timestamp
+ * @return A timestamp
  *
- * @history 2012-07-27 - Jeremy Bante <http://scr.im/fugue> - Created
- * @history 2015-03-25 - Jeremy Bante <http://scr.im/fugue> - Accounting for
- * UTC offsets.
+ * @uses DateFromISO ( iso8601Date )
+ * @uses TimeFromISO ( iso8601Time )
  *
- * @see http://en.wikipedia.org/wiki/ISO_8601
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
-Let ( [
-	_year = Middle ( isoTimestamp ; 1 ; 4 ) ;
-	_month = Middle ( isoTimestamp ; 6 ; 2 ) ;
-	_day = Middle ( isoTimestamp ; 9 ; 2 ) ;
-	_hour = Middle ( isoTimestamp ; 12 ; 2 ) ;
-	_minute = Middle ( isoTimestamp ; 15 ; 2 ) ;
-	_timezoneOffsetStart =
-		Max (
-			Position ( isoTimestamp ; "-" ; 20 ; 1 ) ;
-			Position ( isoTimestamp ; "+" ; 20 ; 1 )
-		) ;
-	_secondEnd =
-		If ( _timezoneOffsetStart = 0 ;
-			Length ( isoTimestamp ) ;
-			/* Else */ _timezoneOffsetStart - 1
-		) ;
-	_second = Middle ( isoTimestamp ; 18 ; _secondEnd - 17 )
+ Let ( [
+	_date = DateFromISO ( iso8601Timestamp ) ;
+	_error = Left ( _date ; 1 ) = "?"
 ] ;
-	Timestamp (
-		Date ( _month ; _day ; _year ) ;
-		Time ( _hour ; _minute ; _second )
+	If ( _error ;
+		_date ;
+	/* Else */
+		Timestamp ( _date ; TimeFromISO ( iso8601Timestamp )
 	)
 )
