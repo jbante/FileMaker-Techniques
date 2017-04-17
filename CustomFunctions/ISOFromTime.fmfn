@@ -20,5 +20,7 @@ Let ( [
 	& Right ( "00" & Minute ( theTime ) ; 2 )
 	& ":"
 	& Right ( "00" & _integerSeconds ; 2 )
-	& If ( _fractionSeconds > 0 ; "," & Replace ( _fractionSeconds ; 1 ; 1 ; "" ) )
+	& If ( _fractionSeconds > 0 ;
+		"," & Replace ( _fractionSeconds ; 1 ; 1 ; "" )
+	)
 )
