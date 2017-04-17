@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * ISOFromTime ( theTime )
+ *
+ * @parameter theTime: The FileMaker time to convert to ISO 8601 format
+ *
+ * @return theTime rendered in ISO 8601 format: hh:mm:ss,sss (24-hour time)
+ *
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see http://en.wikipedia.org/wiki/ISO_8601
+ ******************************************************************************/
+
+Let ( [
+	_seconds = Seconds ( theTime ) ;
+	_integerSeconds = Div ( _seconds ; 1 ) ;
+	_fractionSeconds = Mod ( _seconds ; 1 )
+] ;
+	Right ( "00" & Hour ( theTime ) ; 2 )
+	& ":"
+	& Right ( "00" & Minute ( theTime ) ; 2 )
+	& ":"
+	& Right ( "00" & _integerSeconds ; 2 )
+	& If ( _fractionSeconds > 0 ; "," & Replace ( _fractionSeconds ; 1 ; 1 ; "" ) )
+)
