@@ -9,6 +9,11 @@
  * @return A time
  *
  * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-25 - Daniel Smith <dan@filemaker.consulting> - Add
+ * exceptions for JSONGetElement error and empty parameter
+ * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Removing exception
+ * for JSONGetElement result error. Adjusting response to empty date input to
+ * behave similarly for timestamp input.
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
@@ -45,21 +50,25 @@ Let ( [
 	_minute = Middle ( _integer ; If ( _colonFormat ; 4 ; 3 ) ; 2 ) ;
 	_second = Middle ( _integer ; If ( _colonFormat ; 7 ; 5 ) ; 2 )
 ] ;
-	If ( _decimal ≠ 0 ;
-		Let ( [
-			_fraction = Replace ( _text ; 1 ; _decimal ; "" ) ;
-			_fraction = _fraction * 10 ^ ( 0 - Length ( _fraction ) )
-		] ;
-			Case (
-				IsEmpty ( _minute ) ;
-					Time ( _hour + _fraction ; 0 ; 0 ) ;
-				IsEmpty ( _second ) ;
-					Time ( _hour ; _minute + _fraction ; 0 ) ;
-				/* Else */
-					Time ( _hour ; _minute ; _second + _fraction )
-			)
-		) ;
-	/* Else */
-		Time ( _hour ; _minute ; _second )
+	Case (
+		IsEmpty ( _text ) ; "" ;
+
+		_decimal ≠ 0 ;
+			Let ( [
+				_fraction = Replace ( _text ; 1 ; _decimal ; "" ) ;
+				_fraction = _fraction * 10 ^ ( 0 - Length ( _fraction ) )
+			] ;
+				Case (
+					IsEmpty ( _minute ) ;
+						Time ( _hour + _fraction ; 0 ; 0 ) ;
+					IsEmpty ( _second ) ;
+						Time ( _hour ; _minute + _fraction ; 0 ) ;
+					/* Else */
+						Time ( _hour ; _minute ; _second + _fraction )
+				)
+			) ;
+
+		/* Else */
+			Time ( _hour ; _minute ; _second )
 	)
 )

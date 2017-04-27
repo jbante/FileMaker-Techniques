@@ -1,8 +1,8 @@
 /*******************************************************************************
  * DateFromISO ( iso8601Date )
  * Parses date data formatted according to ISO 8601, and casts it to a
- * FileMaker date. For dates with limited precision, the first date in the
- * specified period will be returned.
+ * FileMaker date. Dates with limited accuracy will return the first date in the
+ * specified period.
  *
  * @parameter iso8601Date: text encoding a date in ISO 8601 format
  *
@@ -12,6 +12,11 @@
  * @history 2017-04-06 - Jeremy Bante <http://scr.im/fugue> - Expanding to
  * additional allowed formats
  * @history 2017-04-08 - Jeremy Bante <http://scr.im/fugue> - Refactoring
+ * @history 2017-04-25 - Daniel Smith <dan@filemaker.consulting> - Add
+ * exceptions for JSONGetElement error and empty parameter
+ * @history 2017-04-27 - Jeremy Bante <http://scr.im/fugue> - Removing exception
+ * for JSONGetElement result error. Adjusting response to empty date input to
+ * behave similarly for timestamp input.
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
@@ -35,6 +40,8 @@ Let ( [
 	_year = Left ( _text ; 4 )
 ] ;
 	Case (
+		IsEmpty ( _text ) ; "" ;
+
 		_invalid ;	"? Not a valid ISO 8601 date" ;
 
 		_weekFormat ;
