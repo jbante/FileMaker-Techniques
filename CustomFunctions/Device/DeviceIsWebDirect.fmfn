@@ -1,0 +1,10 @@
+﻿/*******************************************************************************
+ * DeviceIsWebDirect
+ *
+ * @return True (1) when the function is called in the context of a WebDirect
+ * session; False (0) otherwise.
+ *
+ * @history 2017-06-22 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Get ( SystemPlatform ) = 4
