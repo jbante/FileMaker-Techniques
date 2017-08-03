@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * DesktopExportPath
+ * Returns a desktop path appropriate for the current platform. Desktop clients
+ * will use the desktop path, iOS will use the documents path, and server will
+ * use the temporary path.
+ *
+ * @return a folder path
+ *
+ * @history 2017-08-03 - Jeremy Bante <http://scr.im/fugue> - Created
+ *
+ * @see https://community.filemaker.com/thread/174481
+ ******************************************************************************/
+
+Let ( [
+	_server = Left ( Get ( ApplicationVersion ) ; 6 ) = "Server" ;
+	_ios = Left ( Get ( ApplicationVersion ) ; 2 ) = "Go"
+] ;
+	Case (
+		_server ;	Get ( TemporaryPath ) ;
+		_ios ;	Get ( DocumentsPath ) ;
+		/* Else */	Get ( DesktopPath )
+	)
+)
+
