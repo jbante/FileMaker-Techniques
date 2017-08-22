@@ -1,0 +1,47 @@
+/*******************************************************************************
+ * JSONError ( errorCode ; message ; infoObject )
+ * Creates a JSON object documenting an error.
+ *
+ * @parameter errorCode: a number indicating the type of error, intended to be
+ * usable by FileMaker calculations and scripts for branching logic
+ * @parameter message: a message describing the error, intended to be human
+ * readable, especially user readable
+ * @parameter infoObject: (optional) a JSON object containing additional
+ * information about the error
+ *
+ * @return a JSON object:
+ * @return code: the error code
+ * @return message: the error message
+ * @return info: either the additional information in infoObject, or the literal
+ * contents of infoObject if infoObject is not valid JSON
+ *
+ * @history 2017-06-19 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Let ( [
+	_infoIsEmpty = IsEmpty ( infoObject ) ;
+	_infoIsObject =
+		not _infoIsEmpty
+		and Left ( JSONFormatElements ( infoObject ) ; 1 ) = "{"
+] ;
+	Case (
+		_infoIsEmpty ;
+			JSONSetElement ( "{}" ;
+				[ "code" ; errorCode ; JSONNumber ] ;
+				[ "message" ; message ; JSONString ]
+			) ;
+
+		_infoIsObject ;
+			JSONSetElement ( infoObject ;
+				[ "code" ; errorCode ; JSONNumber ] ;
+				[ "message" ; message ; JSONString ]
+			) ;
+
+		/* Else infoObject is array or not valid JSON */
+			JSONSetElement ( "{}" ;
+				[ "code" ; errorCode ; JSONNumber ] ;
+				[ "message" ; message ; JSONString ] ;
+				[ "info" ; infoObject ; "" ]
+			)
+	)
+)
