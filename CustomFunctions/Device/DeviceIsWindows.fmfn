@@ -7,4 +7,4 @@
  * @history 2011-05-23 - Jeremy Bante <http://scr.im/fugue> - Created
  ******************************************************************************/
 
-Get ( SystemPlatform ) = 2
+Abs ( Get ( SystemPlatform ) ) = 2
