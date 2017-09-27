@@ -1,0 +1,7 @@
+Let ( [
+	utcTimestamp = GetAsTimestamp ( Get ( CurrentTimeUTCMilliseconds ) / 1000 ) ;
+	_utc = Get ( CurrentTimeUTCMilliseconds ) / 1000 ;
+	_offset = Get ( CurrentTimestamp ) - Floor ( _utc )
+] ;
+	utcTimestamp + _offset
+)
