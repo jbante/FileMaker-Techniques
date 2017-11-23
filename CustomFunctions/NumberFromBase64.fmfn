@@ -1,0 +1,48 @@
+/**
+ * NumberFromBase64 ( base64Text )
+ * Converts base 64 data to its integer equivalent. Any characters not recognized
+ * as base 64 will be ignored.
+ *
+ * @parameter {string} base64Text - Base 64 data
+ *
+ * @return {number} integer equivalent of base64Text
+ *
+ * @public
+ * @author @jbante
+ * @version (2017-11-22)
+ */
+
+Let ( [
+	_code = Code ( Left ( base64Text ; 1 ) ) ;
+	_value =
+		Case (
+			_code ≥ 65 and _code ≤ 90 ;	// A-Z
+				_code - 65 ;
+			_code ≥ 97 and _code ≤ 122 ;	//a-z
+				_code - 71 ;
+			_code = 43 or _code = 45 ;	// +-
+				62 ;
+			_code = 44 or _code = 47 or _code = 95 ;	// ,/_
+				63 ;
+			_code = 61 or IsEmpty ( _code ) ;	// =
+				"end" ;
+			/* Else */
+				"skip"
+		) ;
+	$~nfb64.total =
+		If ( _value = "skip" or _value = "end" ;
+			$~nfb64.total ;
+			/* Else */ $~nfb64.total * 64 + _value
+		)
+] ;
+	If ( _value = "end" ;
+		Let ( [
+			_result = $~nfb64.total ;
+			$~nfb64.total = ""
+		] ;
+			_result
+		) ;
+	/* Else */
+		NumberFromBase64 ( Replace ( base64Text ; 1 ; 1 ; "" ) )
+	)
+)

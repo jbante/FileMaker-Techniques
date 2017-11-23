@@ -1,0 +1,45 @@
+/**
+ * CombinedNumber ( numberList )
+ * Combines a list of numbers into a single unique number. This may be useful
+ * for combining multiple keys into a single value to improve find & matching
+ * speed.
+ *
+ * @parameter {string} numberList - A return-delimited list of non-negative integers
+ *
+ * @return {number} a combined numeric equivalent.
+ *
+ * @public
+ * @author @jbante
+ * @version (2017-11-22)
+ */
+
+Let ( [
+	_firstValue = LeftValues ( numberList ; 1 ) ;
+	_remainingValues = Replace ( numberList ; 1 ; Length ( _firstValue ) ; "" ) ;
+	_number = GetAsNumber ( _firstValue ) ;
+	_power =
+		If ( _number < 1 ;
+			0 ;
+			/* Else */ Floor ( Log ( _number ) ) + 1
+		) ;
+	_prefix =	// indicates how many digits remaining in the segment
+		Min ( _power ; 9 ) ;
+	_segment = _prefix & Left ( _number ; Min ( _prefix ; 8 ) ) ;
+	_continueSameValue = _prefix = 9 ;
+	_thereAreMoreValues = not IsEmpty ( _remainingValues )
+] ;
+	_segment
+	& Case (
+		_thereAreMoreValues and _continueSameValue ;
+			CombinedNumber ( List (
+				Replace ( _number ; 1 ; 8 ; "" ) ;
+				_remainingValues
+			) ) ;
+
+		_continueSameValue ;
+			CombinedNumber ( Replace ( _number ; 1 ; 8 ; "" ) ) ;
+
+		_thereAreMoreValues ;
+			CombinedNumber ( _remainingValues )
+	)
+)
