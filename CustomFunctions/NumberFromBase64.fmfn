@@ -1,7 +1,7 @@
 /**
  * NumberFromBase64 ( base64Text )
- * Converts base 64 data to its integer equivalent. Any characters not recognized
- * as base 64 will be ignored.
+ * Converts base 64 data to its integer equivalent. Any characters not
+ * recognized as base 64 will be ignored.
  *
  * @parameter {string} base64Text - Base 64 data
  *
