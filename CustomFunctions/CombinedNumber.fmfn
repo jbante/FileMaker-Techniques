@@ -4,7 +4,8 @@
  * for combining multiple keys into a single value to improve find & matching
  * speed.
  *
- * @parameter {string} numberList - A return-delimited list of non-negative integers
+ * @parameter {string} numberList - A return-delimited list of non-negative
+ * integers
  *
  * @return {number} a combined numeric equivalent.
  *
@@ -15,31 +16,41 @@
 
 Let ( [
 	_firstValue = LeftValues ( numberList ; 1 ) ;
-	_remainingValues = Replace ( numberList ; 1 ; Length ( _firstValue ) ; "" ) ;
+	_remainingValues =
+		Replace ( numberList ; 1 ; Length ( _firstValue ) ; "" ) ;
 	_number = GetAsNumber ( _firstValue ) ;
+	$~cn.notFirstRecursion = $~cn.notFirstRecursion or False ;
 	_power =
-		If ( _number < 1 ;
-			0 ;
-			/* Else */ Floor ( Log ( _number ) ) + 1
+		Case (
+			_number < 1 and $~cn.notFirstRecursion ;	0 ;
+			_number < 1 ;	1 ;
+			/* Else */	Floor ( Log ( _number ) ) + 1
 		) ;
-	_prefix =	// indicates how many digits remaining in the segment
+	_prefix =	// how many digits remaining in the segment
 		Min ( _power ; 9 ) ;
-	_segment = _prefix & Left ( _number ; Min ( _prefix ; 8 ) ) ;
+	_segment = Left ( _number ; Min ( _prefix ; 8 ) ) ;
 	_continueSameValue = _prefix = 9 ;
-	_thereAreMoreValues = not IsEmpty ( _remainingValues )
+	_thereAreMoreValues = not IsEmpty ( _remainingValues ) ;
+	$~cn.notFirstRecursion = True
 ] ;
-	_segment
-	& Case (
-		_thereAreMoreValues and _continueSameValue ;
-			CombinedNumber ( List (
-				Replace ( _number ; 1 ; 8 ; "" ) ;
-				_remainingValues
-			) ) ;
+	GetAsNumber (
+		_prefix
+		& _segment
+		& Case (
+			_thereAreMoreValues and _continueSameValue ;
+				CombinedNumber ( List (
+					Replace ( _number ; 1 ; 8 ; "" ) ;
+					_remainingValues
+				) ) ;
 
-		_continueSameValue ;
-			CombinedNumber ( Replace ( _number ; 1 ; 8 ; "" ) ) ;
+			_continueSameValue ;
+				CombinedNumber ( Replace ( _number ; 1 ; 8 ; "" ) ) ;
 
-		_thereAreMoreValues ;
-			CombinedNumber ( _remainingValues )
+			_thereAreMoreValues ;
+				CombinedNumber ( _remainingValues ) ;
+
+			/* Else */
+				Let ( $~cn.notFirstRecursion = "" ; "" )
+		)
 	)
 )
