@@ -1,0 +1,73 @@
+/**
+ * EllipseCircumference ( axis1Length ; axis2Length )
+ * Calculates the circumference of an ellipse, given the lengths of its axes.
+ * The calculation is adapted from an implementation of an arithmetic-geometric
+ * mean algorithm by Charles Karney.
+ *
+ * @parameter {number} axis1Length
+ * @parameter {number} axis2Length
+ *
+ * @return {number}
+ *
+ * @author Jeremy Bante <@jbante>
+ * @version (2017-12-12)
+ *
+ * @see http://paulbourke.net/geometry/ellipsecirc/c.code
+ * @see http://paulbourke.net/geometry/ellipsecirc/
+ */
+
+Case (
+	/* Step 0, set-up */
+	not $~elci.step ;
+		Let ( [
+			$~elci.tolerance = 1e-15 ;
+			$~elci.s = 0 ;
+			$~elci.m = 1 ;
+			$~elci.x = Max ( axis1Length ; axis2Length ) ;
+			$~elci.y = Min ( axis1Length ; axis2Length ) ;
+			$~elci.i = 0 ;
+			_precisionIsEnough =
+				$~elci.x - $~elci.y > $~elci.tolerance * $~elci.y ;
+			$~elci.step = If ( _precisionIsEnough ; 1 ; /* Else */ 2 )
+		] ;
+			EllipseCircumference ( axis1Length ; axis2Length )
+		) ;
+
+	/* Step 1, iterate */
+	$~elci.step = 1 ;
+		Let ( [
+			_t = ( $~elci.x + $~elci.y ) / 2 ;
+			$~elci.y = Sqrt ( $~elci.x * $~elci.y ) ;
+			$~elci.x = _t ;
+			$~elci.m = $~elci.m * 2 ;
+			$~elci.s = $~elci.s + $~elci.m * ( $~elci.x - $~elci.y ) ^ 2 ;
+			$~elci.i = $~elci.i + 1 ;
+			_precisionIsEnough =
+				$~elci.x - $~elci.y > $~elci.tolerance * $~elci.y
+				or $~elci.i ≥ 1000 ;
+			$~elci.step = If ( _precisionIsEnough ; 1 ; /* Else */ 2 )
+		] ;
+			EllipseCircumference ( axis1Length ; axis2Length )
+		) ;
+
+	/* Step 2, clean-up and return result */
+	$~elci.step = 2 ;
+		Let ( [
+			_circumference =
+				Pi
+				* ( ( axis1Length + axis2Length ) ^ 2 - $~elci.s )
+				/ ( $~elci.x + $~elci.y ) ;
+
+			// purge variables
+			$~elci.i = "" ;
+			$~elci.m = "" ;
+			$~elci.result = "" ;
+			$~elci.s = "" ;
+			$~elci.step = "" ;
+			$~elci.tolerance = "" ;
+			$~elci.x = "" ;
+			$~elci.y = ""
+		] ;
+			_circumference
+		)
+)
