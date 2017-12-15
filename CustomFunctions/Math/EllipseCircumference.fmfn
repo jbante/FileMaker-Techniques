@@ -1,11 +1,11 @@
 /**
- * EllipseCircumference ( axis1Length ; axis2Length )
+ * EllipseCircumference ( radius1 ; radius2 )
  * Calculates the circumference of an ellipse, given the lengths of its axes.
  * The calculation is adapted from an implementation of an arithmetic-geometric
  * mean algorithm by Charles Karney.
  *
- * @parameter {number} axis1Length
- * @parameter {number} axis2Length
+ * @parameter {number} radius1
+ * @parameter {number} radius2
  *
  * @return {number}
  *
@@ -23,14 +23,14 @@ Case (
 			$~elci.tolerance = 1e-15 ;
 			$~elci.s = 0 ;
 			$~elci.m = 1 ;
-			$~elci.x = Max ( axis1Length ; axis2Length ) ;
-			$~elci.y = Min ( axis1Length ; axis2Length ) ;
+			$~elci.x = Max ( radius1 ; radius2 ) ;
+			$~elci.y = Min ( radius1 ; radius2 ) ;
 			$~elci.i = 0 ;
 			_precisionIsEnough =
 				$~elci.x - $~elci.y > $~elci.tolerance * $~elci.y ;
 			$~elci.step = If ( _precisionIsEnough ; 1 ; /* Else */ 2 )
 		] ;
-			EllipseCircumference ( axis1Length ; axis2Length )
+			EllipseCircumference ( radius1 ; radius2 )
 		) ;
 
 	/* Step 1, iterate */
@@ -47,7 +47,7 @@ Case (
 				or $~elci.i ≥ 1000 ;
 			$~elci.step = If ( _precisionIsEnough ; 1 ; /* Else */ 2 )
 		] ;
-			EllipseCircumference ( axis1Length ; axis2Length )
+			EllipseCircumference ( radius1 ; radius2 )
 		) ;
 
 	/* Step 2, clean-up and return result */
@@ -55,7 +55,7 @@ Case (
 		Let ( [
 			_circumference =
 				Pi
-				* ( ( axis1Length + axis2Length ) ^ 2 - $~elci.s )
+				* ( ( radius1 + radius2 ) ^ 2 - $~elci.s )
 				/ ( $~elci.x + $~elci.y ) ;
 
 			// purge variables
