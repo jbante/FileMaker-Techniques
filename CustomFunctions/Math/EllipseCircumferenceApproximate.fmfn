@@ -1,0 +1,16 @@
+/**
+ * EllipseCircumferenceApproximate ( radius1 ; radius2 )
+ *
+ * @parameter {number} radius1
+ * @parameter {number} radius2
+ *
+ * @return {number}
+ *
+ * @author Jeremy Bante <@jbante>
+ * @version (2017-12-15)
+ *
+ * @see http://mathforum.org/kb/servlet/JiveServlet/download/128-1921864-6683056-551607/circumference%20of%20an%20ellipse.pdf
+ */
+
+4 * ( radius1 + radius2 )
+* ( Pi / 4 ) ^ ( ( 4 * radius1 * radius2 / ( radius1 + radius2 ) ^ 2 ) )
