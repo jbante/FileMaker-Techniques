@@ -13,4 +13,4 @@
  */
 
 4 * ( radius1 + radius2 )
-* ( Pi / 4 ) ^ ( ( 4 * radius1 * radius2 / ( radius1 + radius2 ) ^ 2 ) )
+* ( Pi / 4 ) ^ ( 4 * radius1 * radius2 / ( radius1 + radius2 ) ^ 2 )
