@@ -1,0 +1,42 @@
+/**
+ * PoissonGSPRT ( eventCount ; baselineCount ; falsePositiveRate ; falseNegativeRate )
+ * Tests the null hypothesis that the observed eventCount comes from a Poisson
+ * distribution with mean less than the baseline against the alternative that
+ * the data come from a Poisson distribution with mean more than the baseline.
+ * This is a sequential test using the generalized sequential probability ratio
+ * test.
+ * @see http://stat.columbia.edu/~jcliu/paper/GSPRT_SQA3.pdf
+ * @see https://en.wikipedia.org/wiki/Poisson_distribution
+ *
+ * @parameter {number} eventCount - The count of events in an observation from a
+ * Poisson distribution
+ * @parameter {number} baselineCount - The baseline mean count of events
+ * expected in the observation interval
+ * @parameter {number} falsePositiveRate - probability of type 1 error
+ * @parameter {number} falseNegativeRate - probability of type 2 error
+ *
+ * @return {number} -1 if the null is accepted, 1 if the alternative is
+ * accepted, or 0 if no decision can be made
+ *
+ * @author Jeremy Bante <@jbante>
+ * @version (2018-01-30)
+ */
+
+Let ( [
+	_logFactorialEventCount = LnFactorial ( eventCount ) ;
+	_lowMean = Max ( Min ( eventCount ; baselineCount ) ; 1 ) ;
+	_lowLogLikelihood =
+		eventCount * Ln ( _lowMean ) - _lowMean - _logFactorialEventCount ;
+	_highMean = Max ( eventCount ; baselineCount ) ;
+	_highLogLikelihood =
+		eventCount * Ln ( _highMean ) - _highMean - _logFactorialEventCount ;
+	_logLikelihoodRatio = _highLogLikelihood - _lowLogLikelihood ;
+	_alternativeThreshold = -Ln ( falsePositiveRate ) ;
+	_nullThreshold = Ln ( falseNegativeRate )
+] ;
+	Case (
+		_logLikelihoodRatio > _alternativeThreshold ;	1 ;	// accept alternative
+		_logLikelihoodRatio < _nullThreshold ;	-1 ;	// accept null
+		/* Else */ 0	// no decision
+	)
+)
