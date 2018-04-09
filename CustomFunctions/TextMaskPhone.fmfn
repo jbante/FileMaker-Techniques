@@ -1,4 +1,4 @@
-/*******************************************************************************
+/**
  * TextMaskPhone ( phoneNumber )
  * Formats a string of text as a North America phone number.
  *
@@ -8,14 +8,15 @@
  *
  * @uses TextMask ( text ; prototype )
  *
- * @history 2012-12-05 - Jeremy Bante <http://scr.im/fugue> - Created
- * @history 2014-12-03 - Jeremy Bante <http://scr.im/fugue> - Updating
- * formatting and reorganizing logic
- ******************************************************************************/
+ * @author @jbante
+ */
 
 Let ( [
-	_alphanumeric = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+	_numeric = "0123456789" ;
+	_firstDigit = Left ( Filter ( phoneNumber ; _numeric ) ; 1 ) ;
+	_alphanumeric = _numeric & "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
 	_text = Filter ( Upper ( phoneNumber ) ; _alphanumeric ) ;
+	_startsWithDigit = Left ( _text ; 1 ) = _firstDigit ;
 	_mask =
 		Case (
 			Left ( _text ; 1 ) = "1" ;	"#-###-###-#### ext. *" ;
@@ -23,5 +24,5 @@ Let ( [
 			/* Else */	"###-####"
 		)
 ] ;
-	TextMask ( _text ; _mask )
+	If ( _startsWithDigit ; TextMask ( _text ; _mask ) )
 )
