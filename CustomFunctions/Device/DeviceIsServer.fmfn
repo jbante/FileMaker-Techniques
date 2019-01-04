@@ -7,6 +7,8 @@
  * @history 2011-03-11 - Jeremy Bante <http://scr.im/fugue> - Created
  * @history 2013-05-24 - Jeremy Bante <http://scr.im/fugue> - Improving
  * performance
+ * @history 2017-07-19 - Jeremy Bante <http://scr.im/fugue> - Correcting a bug of
+ * improper use of the Position function.
  ******************************************************************************/
 
-Position ( Get ( ApplicationVersion ) ; "Server" ; "" ; "" ) > 0
+Left ( Get ( ApplicationVersion ) ; 6 ) = "Server"

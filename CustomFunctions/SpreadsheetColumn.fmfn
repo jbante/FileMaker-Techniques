@@ -1,0 +1,31 @@
+/**
+ * SpreadsheetColumn ( columnNumber )
+ * Returns the spreadsheet column letters corresponding to the column number
+ *
+ * @parameter {number} columnNumber
+ *
+ * @return {string}
+ *
+ * @author @jbante
+ */
+
+Let ( [
+	_radix = "ABCDEFGHIJKLMNOPQRSTUVWXYZ" ;
+	_rounded = Ceiling ( columnNumber ) - 1 ;
+	_mod = Mod ( _rounded ; 26 ) + 1 ;
+	_remainder = Div ( _rounded ; 26 )
+] ;
+	Case (
+		columnNumber = 0 or IsEmpty ( columnNumber ) ;
+			"" ;
+
+		GetAsNumber ( columnNumber ) ≠ columnNumber ;
+			"? * function argument is not a number" ;
+
+		columnNumber < 0 ;
+			"? * function argument is less than 0" ;
+
+		/* Else */
+			SpreadsheetColumn ( _remainder ) & Middle ( _radix ; _mod ; 1 )
+	)
+)

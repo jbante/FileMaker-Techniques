@@ -1,0 +1,28 @@
+/**
+ * CombinedNumberValues ( theCombinedNumber )
+ * Parses a combined number into a return-delimited list of its original components
+ *
+ * @parameter {number} theCombinedNumber
+ *
+ * @return {string} The result description
+ *
+ * @author @jbante
+ * @history 2018-05-15 - @jbante - Created
+ */
+
+Let ( [
+	_number = Filter ( theCombinedNumber ; "1234567890" ) ;
+	_firstSegmentLength = Left ( _number ; 1 ) ;
+	_numberIsLongerThanOneSegment = _firstSegmentLength = 9 ;
+	_actualLength =
+		If ( _numberIsLongerThanOneSegment ; 8 ; /* Else */ _firstSegmentLength ) ;
+	_segment = Middle ( _number ; 2 ; _actualLength ) ;
+	_remainder = Replace ( _number ; 1 ; _actualLength + 1 ; "" )
+] ;
+	_segment
+	& Case (
+		IsEmpty ( _remainder ) ;	"" ;
+		_numberIsLongerThanOneSegment ;	CombinedNumberValues ( _remainder ) ;
+		/* Else */	¶ & CombinedNumberValues ( _remainder )
+	)
+)

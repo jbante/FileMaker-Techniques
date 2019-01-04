@@ -3,27 +3,19 @@
  *
  * @parameter theTimestamp: The FileMaker timestamp to coerce to ISO 8601 format
  *
- * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DD hh:mm:ss
+ * @return theTimestamp rendered in ISO 8601 format: YYYY-MM-DDThh:mm:ss,sss
  * (24-hour time)
  *
+ * @uses ISOFromDate ( theDate )
+ * @uses ISOFromTime ( theTime )
+ *
  * @history 2011-05-17 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Refactoring to use
+ * other functions for date & time components.
  *
  * @see http://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
 
-Let ( [
-	_seconds = Seconds ( theTimestamp )
-] ;
-	Right ( "0000" & Year ( theTimestamp ) ; 4 )
-	& "-"
-	& Right ( "00" & Month ( theTimestamp ) ; 2 )
-	& "-"
-	& Right ( "00" & Day ( theTimestamp ) ; 2 )
-	& " "
-	& Right ( "00" & Hour ( theTimestamp ) ; 2 )
-	& ":"
-	& Right ( "00" & Minute ( theTimestamp ) ; 2 )
-	& ":"
-	& If ( _seconds < 10 ; "0" )	// timestamp may contain fractional seconds
-	& _seconds
-)
+ISOFromDate ( theDate )
+& "T"
+& ISOFromTime ( theTime )

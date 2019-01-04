@@ -1,0 +1,41 @@
+/**
+ * BinomialGSPRT ( numerator ; denominator ; baseline ; falsePositiveRate ; falseNegativeRate )
+ * Tests the null hypothesis that the observed numerator & denominator come from
+ * a Binomial distribution with probability of success less than the baseline
+ * against the alternative that the data come from a Binomial distribution with
+ * mean more than the baseline. This is a sequential test using the generalized
+ * sequential probability ratio test.
+ * @see http://stat.columbia.edu/~jcliu/paper/GSPRT_SQA3.pdf
+ * @see https://en.wikipedia.org/wiki/Binomial_distribution
+ *
+ * @parameter {number} numerator - The number of successes in a binomial sample
+ * @parameter {number} denominator - The number of trials in a binomial sample
+ * @parameter {number} baseline - The baseline expected probability of success
+ * @parameter {number} falsePositiveRate - probability of type 1 error
+ * @parameter {number} falseNegativeRate - probability of type 2 error
+ *
+ * @return {number} -1 if the null is accepted, 1 if the alternative is
+ * accepted, or 0 if no decision can be made
+ *
+ * @author Jeremy Bante <@jbante>
+ * @version (2018-01-30)
+ */
+
+Let ( [
+	_observedRate = ( numerator + 1 ) / ( denominator + 2 ) ;
+	_lowModel = Min ( _observedRate ; baseline ) ;
+	_highModel = Max ( _observedRate ; baseline ) ;
+
+	_logLikelihoodRatio =
+		numerator * ( Ln ( _highModel ) - Ln ( _lowModel ) )
+		+ ( denominator - numerator ) * ( Ln ( 1 - _highModel ) - Ln ( 1 - _lowModel ) ) ;
+	_alternativeThreshold = -Ln ( falsePositiveRate ) ;
+	_nullThreshold = Ln ( falseNegativeRate )
+] ;
+	Case (
+		denominator = 0 ;	0 ;	// no decision
+		_logLikelihoodRatio > _alternativeThreshold ;	1 ;	// accept alternative
+		_logLikelihoodRatio < _nullThreshold ;	-1 ;	// accept null
+		/* Else */ 0
+	)
+)

@@ -1,0 +1,25 @@
+/**
+ * WebDirectURLForCurrentFile ( script ; parameter )
+ * Creates a URL for accessing the current FileMaker file via WebDirect
+ *
+ * @parameter [string] script - The name of a script to run (if any)
+ * @parameter [string] parameter - The parameter to the script (if any)
+ *
+ * @return {string} a URL
+ *
+ * @author @jbante
+ *
+ * @see https://fmhelp.filemaker.com/docs/16/en/fmwd/#accessing_linking
+ */
+
+Let ( [
+	_pathValues = Substitute ( Get ( FilePath ) ; "/" ; ¶ ) ;
+	_protocol = GetValue ( _pathValues ; 1 ) ;
+	_host = GetValue ( _pathValues ; 2 )
+] ;
+	If ( _protocol = "file:" ;
+		"?* This file is not hosted." ;
+	/* Else */
+		WebDirectURL ( _host ; Get ( FileName ) ; "" ; "" )
+	)
+)

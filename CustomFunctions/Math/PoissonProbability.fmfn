@@ -1,0 +1,19 @@
+/**
+ * PoissonProbability ( eventCount ; eventCountMean )
+ * Calculates the probability mass function of a Poisson distribution.
+ * @see https://en.wikipedia.org/wiki/Poisson_distribution
+ *
+ * @parameter {number} eventCount - usually written k
+ * @parameter {number} eventCountMean - usually written λ
+ *
+ * @return {number}
+ *
+ * @author Jeremy Bante <@jbante>
+ * @version (2018-01-30)
+ */
+
+Exp (
+	eventCount * Ln ( eventCountMean )
+	- eventCountMean
+	- LnFactorial ( eventCount )
+)

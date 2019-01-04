@@ -1,0 +1,42 @@
+/**
+ * UTCFromEmailHeaderTimestamp ( emailTimestampText )
+ * Converts a timestamp from the format used in email headers to a FileMaker timestamp,
+ * adjusted to UTC.
+ * @see https://tools.ietf.org/html/rfc2822#section-3.3
+ *
+ * @parameter {string} emailTimestampText
+ *
+ * @return {timestamp} A FileMaker timestamp in UTC
+ *
+ * @author Jeremy Bante @jbante
+ */
+
+Let ( [
+	_comma = Position ( emailTimestampText ; "," ; 1 ; 1 ) ;
+	_normalized =
+		If ( _comma = 0 ;
+			emailTimestampText ;
+		/* Else */
+			Right ( emailTimestampText ; Length ( emailTimestampText ) - _comma - 1 )
+		) ;
+	_values = Substitute ( _normalized ; " " ; ¶ ) ;
+
+	_day = GetValue ( _values ; 1 ) ;
+	_monthAbbreviation = GetValue ( _values ; 2 ) ;
+	_monthPosition =
+		Position ( "JanFebMarAprMayJunJulAugSepOctNovDec" ; _monthAbbreviation ; 1 ; 1 ) ;
+	_month = Ceiling ( _monthPosition / 3 ) ;
+	_year = GetValue ( _values ; 3 ) ;
+	_date = Date ( _month ; _day ; _year ) ;
+
+	_time = GetAsTime ( GetValue ( _values ; 4 ) ) ;
+	_localTimestamp = Timestamp ( _date ; _time ) ;
+
+	_offsetText = GetValue ( _values ; 5 ) ;
+	_sign = If ( Left ( _offsetText ; 1 ) = "-" ; -1 ; /* Else */ 1 ) ;
+	_hours = Middle ( _offsetText ; 2 ; 2 ) ;
+	_minutes = Middle ( _offsetText ; 4 ; 2 ) ;
+	_offset = _sign * ( _hours * 60 + _minutes ) * 60 // seconds
+] ;
+	_localTimestamp - _offset
+)

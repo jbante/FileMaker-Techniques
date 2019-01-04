@@ -1,0 +1,10 @@
+﻿/*******************************************************************************
+ * DeviceIsDesktop
+ *
+ * @return True (1) when the function is called in the context of a desktop
+ * (Mac or Windows) version of FileMaker; False (0) otherwise.
+ *
+ * @history 2017-06-22 - Jeremy Bante <http://scr.im/fugue> - Created
+ ******************************************************************************/
+
+Left ( Get ( ApplicationVersion ) ; 3 ) = "Pro"

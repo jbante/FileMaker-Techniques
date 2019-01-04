@@ -1,0 +1,20 @@
+/**
+ * LocalTimestamp ( utcTimestamp )
+ * Converts a timestamp in the UTC timezone to local time using the current local
+ * timezone offset from UTC. This does not account for changes in offset at a
+ * location over time, such as daylight savings time.
+ *
+ * @parameter {timestamp} utcTimestamp
+ *
+ * @return {timestamp} the timestamp in the local timezone matching the utcTimestamp
+ *
+ * @author Jeremy Bante <http://scr.im/fugue>
+ * @version (2017-09-27)
+ */
+
+Let ( [
+	_utc = Get ( CurrentTimeUTCMilliseconds ) / 1000 ;
+	_offset = Get ( CurrentTimestamp ) - Floor ( _utc )
+] ;
+	utcTimestamp + _offset
+)

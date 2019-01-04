@@ -11,29 +11,4 @@
  * modifierKeys parameter.
  ******************************************************************************/
 
-
-
-/**
- * =====================================
- * KeyOption ( modifierKeys )
- *
- * RETURNS:
- *		True if option is indicated by the modifierKeys value; False otherwise.
- *
- * PARAMETERS:
- *		modifierKeys: The modifierKey output to test for from the
- *		Get ( ActiveModifierKeys ) or Get ( TriggerModifierKeys ) functions.
- *
- * DEPENDENCIES: none
- *
- * EXAMPLE: KeyOption ( Get ( ActiveModifierKeys ) )
- *
- * HISTORY:
- *		MODIFIED on 2012-04-02 by Jeremy Bante <http://scr.im/fugue> to accept
- *		the modifierKeys parameter.
- *		CREATED on 2011-04-21 by Jeremy Bante <http://scr.im/fugue>.
- *		INSPIRED by a function created by Marx Martin of The Support Group.
- * =====================================
- */
-
 Mod ( Div ( modifierKeys ; 8 ) ; 2 )

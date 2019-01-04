@@ -1,0 +1,26 @@
+/**
+ * WebDirectURL ( host ; file ; script ; parameter )
+ * Creates a URL for accessing a FileMaker WebDirect app
+ *
+ * @parameter {string} host - The address of the server
+ * @parameter [string] file - The name of the app file to open (if any)
+ * @parameter [string] script - The name of a script to run (if any)
+ * @parameter [string] parameter - The parameter to the script (if any)
+ *
+ * @return {string} a URL
+ *
+ * @author @jbante
+ *
+ * @see https://fmhelp.filemaker.com/docs/16/en/fmwd/#accessing_linking
+ */
+
+"https://"
+& host
+& "/fmi/webd"
+& If ( not IsEmpty ( file ) ;
+	"/" & GetAsURLEncoded ( file )
+	& If ( not IsEmpty ( script ) ;
+		"?" & GetAsURLEncoded ( script )
+		& If ( not IsEmpty ( parameter ) ; GetAsURLEncoded ( parameter ) )
+	)
+)
