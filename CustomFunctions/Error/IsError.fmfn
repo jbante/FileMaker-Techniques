@@ -1,0 +1,16 @@
+/*******************************************************************************
+ * IsError ( json )
+ *
+ * @param {JSONObject} json
+ *
+ * @return {boolean} True if the JSON contains an error object with non-zero error code
+ *
+ * @history  2024-06-16 Created by jbante
+ ******************************************************************************/
+
+ Let ( [
+	_isValidObject = Left ( JSONFormatElements ( json ) ; 1 ) = "{" ;
+	_isError = JSONGetElement ( json ; "error.code" ) ≠ 0
+] ;
+	_isValidObject and _isError
+)

@@ -1,0 +1,61 @@
+/*******************************************************************************
+ * NewError ( errorCode ; message ; info )
+ * Creates a new JSON Error object
+ *
+ * @param {number} errorCode
+ * @param {text} [message] - defaults to description of built-in FileMaker error errorCodes
+ * @param {JSONObject} [info] - additional information about the error
+ *
+ * @return {JSONObject}
+ * @return {JSONObject} error
+ * @return {number} error.code
+ * @return {text} error.message
+ * @return {text} error.scriptName
+ * @return {number} error.utcMicrosecond
+ *
+ * @history 2024-06-16 Created by jbante
+ ******************************************************************************/
+
+If ( errorCode = 0 ;
+	JSONSetElement ( "{}" ; "error.code" ; 0 ; JSONNumber ) ;
+/* else */
+	Let ( [
+		_isValidObject = Left ( JSONFormatElements ( info ) ; 1 ) = "{" ;
+		_infoResult =
+			Case (
+				_isValidObject ;	info ;
+				IsEmpty ( info ) ;	"{}" ;
+				/* else */	JSONSetElement ( "{}" ; "error.info" ; info ; "" )
+			) ;
+		_detail = Get ( LastErrorDetail ) ;
+		_detailResult =
+			If ( IsEmpty ( _detail ) ;
+				_infoResult ;
+			/* else */
+				JSONSetElement ( _infoResult ; "error.detail" ; _detail ; JSONString )
+			) ;
+		_location = Get ( LastErrorLocation ) ;
+		_locationResult =
+			If ( IsEmpty ( _location ) ;
+				_detailResult ;
+			/* else */
+				JSONSetElement ( _detailResult ;
+					[ "error.scriptStep" ; GetValue ( _location ; 2 ) ; JSONString ] ;
+					[ "error.lineNumber" ; GetValue ( _location ; 3 ) ; JSONNumber ]
+				)
+			) ;
+		_message =
+			If ( IsEmpty ( message ) ;
+				ErrorDescription ( errorCode ) ;
+			/* else */
+				message
+			)
+	] ;
+		JSONSetElement ( _locationResult ;
+			[ "error.code" ; errorCode ; JSONNumber ] ;
+			[ "error.message" ; _message ; JSONString ] ;
+			[ "error.scriptName" ; Get ( ScriptName ) ; JSONString ] ;
+			[ "error.utcMicrosecond" ; Get ( CurrentTimeUTCMicroseconds ) ; JSONNumber ]
+		)
+	)
+)
