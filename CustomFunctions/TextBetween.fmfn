@@ -5,23 +5,23 @@
  * be returned. If endPattern is empty, all text after the specified
  * startPattern will be returned.
  *
- * @parameter text: The text to extract from
- * @parameter startPattern: The start pattern to search for. The start pattern
+ * @param {text} text - The text to extract from
+ * @param {text} startPattern - The start pattern to search for. The start
+ * pattern will not be included in the result.
+ * @param {text} endPattern - The end pattern to search for. The end pattern
  * will not be included in the result.
- * @parameter endPattern: The end pattern to search for. The end pattern will
- * not be included in the result.
- * @parameter startPosition: The number of characters from the start of text at
- * which to begin the search.
- * @parameter occurrence: A number representing which instance of the
+ * @param {number} startPosition - The number of characters from the start of
+ * text at which to begin the search.
+ * @param {number} occurrence - A number representing which instance of the
  * startPattern you want to find.
  *
- * @return Contents of text between the startPattern and endPattern
+ * @return {text} Contents of text between the startPattern and endPattern
  *
- * @history 2014-10-10 - Jeremy Bante <http://scr.im/fugue> - Created
- * @history 2015-03-25 - Jeremy Bante <http://scr.im/fugue> - Handling empty
- * startPattern and endPattern parameters.
- * @history 2016-08-03 - Jeremy Bante <http://scr.im/fugue> - Fixing a bug that
- * was truncating characters when parsing an empty end pattern.
+ * @history 2014-10-10 - Jeremy Bante - Created
+ * @history 2015-03-25 - Jeremy Bante - Handling empty startPattern and
+ * endPattern parameters.
+ * @history 2016-08-03 - Jeremy Bante - Fixing a bug that was truncating
+ * characters when parsing an empty end pattern.
  ******************************************************************************/
 
 Let ( [
