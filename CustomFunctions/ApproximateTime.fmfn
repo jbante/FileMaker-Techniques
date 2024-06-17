@@ -1,18 +1,12 @@
 /*******************************************************************************
  * ApproximateTime ( theTime )
- * Short description
  *
- * Long description
+ * @param {time} theTime: a time
  *
- * @assumptions
- * Called from "Layout Name" (TableName)
+ * @return {text} theTime expressed as an interval length in only its most
+ * significant order of magnitude (hours, minutes, or seconds)
  *
- * @parameter theTime: a time
- *
- * @return theTime expressed as an interval length in only its most significant
- * order of magnitude (hours, minutes, or seconds)
- *
- * @history 2011-06-05 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2011-06-05 Created by jbante
  ******************************************************************************/
 
 Let ( [
