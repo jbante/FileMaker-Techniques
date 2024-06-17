@@ -11,7 +11,7 @@
  * @uses DateFromISO ( iso8601Date )
  * @uses TimeFromISO ( iso8601Time )
  *
- * @history 2017-04-16 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2017-04-16 - Jeremy Bante - Created
  *
  * @see https://en.wikipedia.org/wiki/ISO_8601
  ******************************************************************************/
@@ -23,6 +23,6 @@
 	If ( _error ;
 		_date ;
 	/* Else */
-		Timestamp ( _date ; TimeFromISO ( iso8601Timestamp )
+		Timestamp ( _date ; TimeFromISO ( iso8601Timestamp ) )
 	)
 )
