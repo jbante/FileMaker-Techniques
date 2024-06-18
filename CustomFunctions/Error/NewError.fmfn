@@ -3,7 +3,7 @@
  * Creates a new JSON Error object
  *
  * @param {number} errorCode
- * @param {text} [message] - defaults to description of built-in FileMaker error errorCodes
+ * @param {text} [message] - defaults to description of built-in FileMaker error codes
  * @param {JSONObject} [info] - additional information about the error
  *
  * @return {JSONObject}
@@ -23,9 +23,12 @@ If ( errorCode = 0 ;
 		_isValidObject = Left ( JSONFormatElements ( info ) ; 1 ) = "{" ;
 		_infoResult =
 			Case (
-				_isValidObject ;	info ;
-				IsEmpty ( info ) ;	"{}" ;
-				/* else */	JSONSetElement ( "{}" ; "error.info" ; info ; "" )
+				_isValidObject ;
+					JSONSetElement ( "{}" ; "error" ; info ; JSONObject ) ;
+				IsEmpty ( info ) ;
+					"{}" ;
+				/* else */
+					JSONSetElement ( "{}" ; "error.info" ; info ; "" )
 			) ;
 		_detail = Get ( LastErrorDetail ) ;
 		_detailResult =
