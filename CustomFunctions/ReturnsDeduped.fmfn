@@ -1,0 +1,21 @@
+/*******************************************************************************
+ * ReturnsDeduped ( text )
+ *
+ * @param {text} text
+ *
+ * @return {text} text with any duplicated/doubled returns removed
+ *
+ * @history 2024-06-18 Created by jbante
+ ******************************************************************************/
+
+While ( [
+	_deduped = text ;
+	_pos = Position ( _deduped ; "¶¶" ; 1 ; 1 )
+] ;
+	_pos ≠ 0 ;
+[
+	_deduped = Substitute ( _deduped ; "¶¶" ; ¶ ) ;
+	_pos = Position ( _deduped ; "¶¶" ; 1 ; 1 )
+] ;
+	_deduped
+)
