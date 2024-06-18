@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * StrippedOfHTML ( html )
+ * Removes any HTML tags
+ *
+ * @param {text} html
+ *
+ * @return {text}
+ *
+ * @history 2024-06-18 Created by jbante
+ ******************************************************************************/
+
+While ( [
+	_stripped = html ;
+	_start = Position ( _stripped ; "<" ; 1 ; 1 ) ;
+	_end = Position ( _stripped ; ">" ; _start + 1 ; 1 )
+] ;
+	_start ≠ 0 and _end ≠ 0 ;
+[
+	_stripped = Replace ( _stripped ; _start ; _end - _start + 1 ; "" ) ;
+	_start = Position ( _stripped ; "<" ; 1 ; 1 ) ;
+	_end = Position ( _stripped ; ">" ; _start + 1 ; 1 )
+] ;
+	_stripped
+)
