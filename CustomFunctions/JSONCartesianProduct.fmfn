@@ -1,0 +1,66 @@
+/****************************************************************
+ * JSONCartesianProduct ( object )
+ * Converts a dictionary (object) of arrays into an array of dictionaries
+ * representing the cartesian product of the given parameters.
+ *
+ * @param {JSONObject} object - a dictionary of named arrays
+ *
+ * @return {JSONArray} - an array of dictionaries
+ *
+ * @history 2024-12-19 Created by jbante
+ ****************************************************************/
+
+ Let ( [
+	_keyList = JSONListKeys ( object ; "" ) ;
+	_keyCount = ValueCount ( _keyList )
+] ;
+	Case (
+		_keyCount = 0 ;
+			"[]" ;
+
+		_keyCount = 1 ;
+			While ( [
+				_key = GetValue ( _keyList ; 1 ) ;
+				_array = JSONGetElement ( object ; _key ) ;
+				_n = ValueCount ( JSONListKeys ( _array ; "" ) ) ;
+				_result = "[]" ;
+				_i = 0
+			] ;
+				/* while */ _i < _n ;
+			[	// for each _value in _array
+				_value = JSONGetElement ( _array ; _i ) ;
+				_result = JSONSetElement ( _result ; "[+]." & _key ; _value ; JSONRaw ) ;
+				_i = _i + 1
+			] ;
+				_result
+			) ;
+
+		// else, _keyCount > 1
+			While ( [
+				_key = GetValue ( _keyList ; 1 ) ;
+				_array = JSONGetElement ( object ; _key ) ;
+				_nArray = ValueCount ( JSONListKeys ( _array ; "" ) ) ;
+				_remainder = JSONDeleteElement ( object ; _key ) ;
+				_remainderArray = JSONCartesianProduct ( _remainder ) ;
+				_nRemainder = ValueCount ( JSONListKeys ( _remainderArray ; "" ) ) ;
+				_result = "[]" ;
+				_i = 0 ;
+				_j = 0
+			] ;
+				/* while */ _i < _nArray ;
+			[	// for each _i in _array and _j in _remainderArray...
+				_value = JSONGetElement ( _array ; _i ) ;
+				_remainderValue = JSONGetElement ( _remainderArray ; _j ) ;
+				_result =
+					JSONSetElement (
+						_result ;
+						[ "[+]" ; _remainderValue ; JSONObject ] ;
+						[ "[:]." & _key ; _value ; JSONRaw ]
+					) ;
+				_j = Mod ( _j + 1 ; _nRemainder ) ;
+				_i = _i + If ( _j = 0 ; 1 ; /* else */ 0 )
+			] ;
+			_result
+			)
+	)
+)
