@@ -1,0 +1,72 @@
+// GeoDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+// version 2019-01-04, Jeremy Bante, http://scr.im/jbante
+
+/*******************************************************************************
+ * LocationDistance ( latitude1 ; longitude1 ; latitude2 ; longitude2 )
+ * Calculates the distance between two points on the surface of the Earth. This
+ * function assumes that coordinates are in the WGS84 coordinate system.
+ *
+ * @parameter latitude1: Latitude of the first point
+ * @parameter longitude1: Longitude of the first point
+ * @parameter latitude2: Latitude of the second point
+ * @parameter longitude2: Longitude of the second point
+ *
+ * @return The distance between the two points, in meters.
+ *
+ * @history 2012-09-26 - Jeremy Bante <http://scr.im/fugue> - Created
+ * @history 2014-09-15 - Jeremy Bante <http://scr.im/fugue> - Using the
+ * Andoyer-Lambert-Thomas formula approximating distances on an ellipsoid
+ * instead of a sphere to improve accuracy.
+ * @history 2017-03-16 - Erik Shagdar - updated function to use the
+ * specified parameters.
+ * @history 2019-01-04 - Erik Shagdar - Return 0 if the same point is used.
+ *
+ * @see http://www.dtic.mil/dtic/tr/fulltext/u2/703541.pdf
+ * @see http://en.wikipedia.org/wiki/World_Geodetic_System
+ ******************************************************************************/
+
+If ( latitude1 = latitude2 and longitude1 = longitude2 ;
+	0 ;
+	Let ( [
+		// WGS84
+		_equatorialRadius = 6378137 ;   // meters
+		_flattening = .0033528106647475 ;   // 1 / 298.257223563
+
+		_θ1 =
+			Atan (
+				( 1 - _flattening ) * Tan ( Radians ( latitude1 ) )
+			) ;
+		_θ2 =
+			Atan ( ( 1 - _flattening ) * Tan ( Radians ( latitude2 ) ) ) ;
+		_θm = ( _θ1 + _θ2 ) / 2 ;
+		_sinθm = Sin ( _θm ) ;
+		_cosθm = Cos ( _θm ) ;
+		_Δθm = ( _θ2 - _θ1 ) / 2 ;
+		_sinΔθm = Sin ( _Δθm ) ;
+		_cosΔθm = Cos ( _Δθm ) ;
+		_Δλ = Radians ( longitude2 - longitude1 ) ;
+		_h = _cosΔθm ^ 2 - _sinθm ^ 2 ;
+		_l = _sinΔθm ^ 2 + _h * Sin ( _Δλ / 2 ) ^ 2 ;
+		_cos_d = 1 - 2 * _l ;
+		_d = Acos ( _cos_d ) ;
+		_sin_d = Sin ( _d ) ;
+		_uu = 2 * _sinθm ^ 2 * _cosΔθm ^ 2 / ( 1 - _l ) ;
+		_vv = 2 * _sinΔθm ^ 2 * _cosθm ^ 2 / _l ;
+		_x = _uu + _vv ;
+		_t = _d / _sin_d ;
+		_e = 2 * _cos_d ;
+		_y = _uu - _vv ;
+		_dd = 4 * _t ^ 2 ;
+		_b = 2 * _dd ;
+		_a = _dd * _e ;
+		_c = _t - .5 * ( _a - _e ) ;
+		_n1 = _x * ( _a + _c * _x ) ;
+		_n2 = _y * ( _b + _e * _y ) ;
+		_n3 = _dd * _x * _y ;
+		_δ1d = .25 * _flattening * ( _t * _x - _y ) ;
+		_δ2d = ( _n1 - _n2 + _n3 ) * _flattening ^ 2 / 64 ;
+		_distance = _equatorialRadius * _sin_d * ( _t - _δ1d + _δ2d )
+	] ;
+	_distance
+	)
+)
