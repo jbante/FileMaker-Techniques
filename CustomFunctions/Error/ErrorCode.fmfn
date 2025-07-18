@@ -1,0 +1,11 @@
+/*******************************************************************************
+ * ErrorCode ( jsonError )
+ *
+ * @param {JSONObject} jsonError
+ *
+ * @return {number} the error code in jsonError (if any)
+ *
+ * @history 2024-06-24 Created by jbante
+ ******************************************************************************/
+
+JSONGetElement ( jsonError ; "error.code" )

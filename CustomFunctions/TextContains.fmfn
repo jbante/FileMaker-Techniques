@@ -1,0 +1,13 @@
+/*******************************************************************************
+ * TextContains ( text ; searchText )
+ * Indicates whether or not text contains searchText
+ *
+ * @param {text} text
+ * @param {text} searchText
+ *
+ * @return {boolean}
+ *
+ * @history 2025-07-17 Created by jbante
+ ******************************************************************************/
+
+ Position ( text ; searchText ; 1 ; 1 ) > 0
