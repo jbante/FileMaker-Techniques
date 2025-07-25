@@ -1,0 +1,34 @@
+/*******************************************************************************
+ * JSONShuffledArray ( array )
+ * Shuffles the values in an array using the Fisher-Yates algorithm
+ * @see https://en.wikipedia.org/wiki/Fisher–Yates_shuffle
+ *
+ * @param {JSONArray} array
+ *
+ * @return {JSONArray}
+ *
+ * @history 2025-07-24 Created by jbante
+ ******************************************************************************/
+
+While ( [
+	_array = array ;
+	_j = ValueCount ( JSONListKeys ( _array ; "" ) ) ;
+	_result = ""
+] ;
+	_j > 0 ;
+[
+	_k = Floor ( Random * _j ) ;	// select random element
+	_i = _j - 1 ;
+	_array =
+		If ( _k = _i ;
+			_array ;
+		/* else, swap elements _i and _k */
+			JSONSetElement ( _array ;
+				[ _i ; JSONGetElement ( _array ; _k ) ; JSONRaw ] ;
+				[ _k ; JSONGetElement ( _array ; _i ) ; JSONRaw ]
+			)
+		) ;
+	_j = _j - 1
+] ;
+	_array
+)
