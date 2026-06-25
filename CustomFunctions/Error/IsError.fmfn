@@ -2,15 +2,17 @@
  * IsError ( json )
  *
  * @param {JSONObject} json
- *
+ * 
  * @return {boolean} True if the JSON contains an error object with non-zero error code
  *
- * @history  2024-06-16 Created by jbante
+ * @history 2026-06-25 jbante - treating absence of an error code as a non-error
+ * @history 2024-06-16 Created by jbante
  ******************************************************************************/
-
- Let ( [
+ 
+Let ( [
 	_isValidObject = Left ( JSONFormatElements ( json ) ; 1 ) = "{" ;
-	_isError = JSONGetElement ( json ; "error.code" ) ≠ 0
+	_code = JSONGetElement ( json ; "error.code" ) ;
+	_isError = _code ≠ 0 and not IsEmpty ( _code )
 ] ;
 	_isValidObject and _isError
 )
