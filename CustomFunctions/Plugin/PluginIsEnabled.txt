@@ -1,0 +1,18 @@
+/*******************************************************************************
+ * PluginIsEnabled ( name )
+ * Returns True (1) if the plugin is both installed and enabled; False (0) otherwise.
+ *
+ * @param {text} name - name of the plugin
+ * 
+ * @return {boolean}
+ *
+ * @history 2026-06-30 Created by jbante
+ ******************************************************************************/
+
+Let ( [
+	_detail = PluginDetail ( name ) ;
+	_isInstalled = not IsEmpty ( _detail ) ;
+	_isEnabled = JSONGetElement ( _detail ; "state" ) = "Enabled"
+] ;
+	_isInstalled and _isEnabled
+) 

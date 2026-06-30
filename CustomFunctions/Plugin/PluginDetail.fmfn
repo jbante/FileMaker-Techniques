@@ -1,0 +1,24 @@
+/*******************************************************************************
+ * PluginDetail ( name )
+ * Retrieves the details of an installed plugin from Get ( InstalledFMPluginsAsJSON ).
+ * @see https://help.claris.com/en/pro-help/content/get-installedfmpluginsasjson.html
+ *
+ * @param {text} name - name of the plugin
+ * 
+ * @return {JSONObject} description
+ *
+ * @history 2026-06-30 Created by jbante
+ ******************************************************************************/
+
+While ( [
+	_plugins = JSONGetElement ( Get ( InstalledFMPluginsAsJSON ) ; "plugins" ) ;
+	_i = 0 ;
+	_pluginName = JSONGetElement ( _plugins ; "[" & _i & "].name" )
+] ;
+	_pluginName ≠ name and not IsEmpty ( _pluginName ) ;
+[
+	_i = _i + 1 ;
+	_pluginName = JSONGetElement ( _plugins ; "[" & _i & "].name" )
+] ;
+	JSONGetElement ( _plugins ; _i )
+)
