@@ -1,0 +1,34 @@
+/*******************************************************************************
+ * VersionIsLessThan ( leftVersion ; rightVersion )
+ * Returns True (1) if leftVersion is a smaller (earlier) version number than
+ * rightVersion; False (0) otherwise
+ *
+ * @param {text} leftVersion - a period-delimited version number
+ * @param {text} rightVersion - a period-delimited version number
+ * 
+ * @return {boolean}
+ *
+ * @history 2026-07-06 Created by jbante
+ ******************************************************************************/
+
+While ( [
+	_leftList = Substitute ( leftVersion ; "." ; ¶ ) ;
+	_rightList = Substitute ( rightVersion ; "." ; ¶ ) ;
+	_i = 1 ;
+	_leftValue = GetAsNumber ( GetValue ( _leftList ; _i ) ) ;
+	_rightValue = GetAsNumber ( GetValue ( _rightList ; _i ) )
+] ;
+	// iterate until values don't match
+	_leftValue = _rightValue and not IsEmpty ( _leftValue ) ;
+[
+	_i = _i + 1 ;
+	_leftValue = GetAsNumber ( GetValue ( _leftList ; _i ) ) ;
+	_rightValue = GetAsNumber ( GetValue ( _rightList ; _i ) )
+] ;
+	(
+		not IsEmpty ( _leftValue )
+		and not IsEmpty ( _rightValue )
+		and _leftValue < _rightValue
+	)
+	or IsEmpty ( _leftValue )
+)
