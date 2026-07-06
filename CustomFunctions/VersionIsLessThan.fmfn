@@ -30,5 +30,8 @@ While ( [
 		and not IsEmpty ( _rightValue )
 		and _leftValue < _rightValue
 	)
-	or IsEmpty ( _leftValue )
+	or (
+		IsEmpty ( _leftValue )
+		and not IsEmpty ( _rightValue )
+	)
 )
