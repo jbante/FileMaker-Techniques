@@ -1,0 +1,28 @@
+/*******************************************************************************
+ * ApStyleDate ( theDate )
+ * Formats a date according to Associated Press style guidelines
+ *
+ * @param {date} theDate
+ * 
+ * @return {text}
+ *
+ * @history 2026-07-27 Created by jbante
+ ******************************************************************************/
+
+Choose ( Month ( theDate ) - 1 ;
+	"Jan. " ;
+	"Feb. " ;
+	"March " ;
+	"April " ;
+	"May " ;
+	"June " ;
+	"July " ;
+	"Aug. " ;
+	"Sept. " ;
+	"Oct. " ;
+	"Nov. " ;
+	"Dec. "
+)
+& Day ( theDate )
+& ", "
+& Year ( theDate )
