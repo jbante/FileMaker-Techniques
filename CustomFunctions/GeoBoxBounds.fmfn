@@ -1,0 +1,104 @@
+// GeoBoxBounds ( latitude ; longitude ; radiusInMeters )
+// version 2012-09-27, Jeremy Bante, http://scr.im/jbante 
+
+/**
+ * =====================================
+ * GeoBoxBounds ( latitude ; longitude ; radiusInMeters )
+ *
+ * PURPOSE:
+ *		Calculates the approximate coordinate bounds for an approximately square region
+ *		around a point on the surface of the Earth. This can be useful for finding data
+ *		within a certain distance of a reference point.
+ *
+ * RETURNS:
+ *		A return-delimited list of 4 numbers:
+ *		1. The south latitude boundary for the calculated region
+ *		2. The north latitude boundary for the calculated region
+ *		3. The west longitude boundary for the calculated region
+ *		4. The east longitude boundary for the calculated region
+ *
+ * PARAMETERS:
+ *		latitude: Degrees between -90 and 90 for center of geobox
+ *		longitude: Degrees between -180 and 180 for center of geobox
+ *		radiusInMeters: The distance in meters from the center of the region to the
+ *		closest points on the edges of the square bounding region.
+ *
+ * DEPENDENCIES: none
+ *
+ * EXAMPLE: Find records within a search radius
+ *		Set Variable [$geoBox; Value:GeoBoxBounds ( $latitude ; $longitude ; $radius)]
+ *		Enter Find Mode []
+ *		Set Field [Table::latitude; Value:GetValue ( $geoBox ; 1 ) & "..." & GetValue ( $geoBox ; 2 )]
+ *		Set Field [Table::longitude; Value:GetValue ( $geoBox ; 3 ) & "..." & GetValue ( $geoBox ; 4 )]
+ *		Perform Find []
+ *
+ * NOTES:
+ *		Use FileMaker's GetValue function to retrieve each value from the result.
+ *
+ *		When the geobox includes a pole, the function will return the appropriate values
+ *		to perform a find for coordinates enclosed by the lower latitude. For example:
+ *		[90, 88, -180, 180] for a region around the north pole.
+ *
+ *		When the geobox crosses the antimeridian (180º/-180º longitude), the function will
+ *		return a west boundary coordinate greater than the east boundary coordinate. In
+ *		this situation, a coordinate search within the geobox should be broken into
+ *		separate searches: one search from the west bound to 180º, and another from -180º
+ *		to the east bound.
+ *
+ *		The bounding region's approximation to a square shape is less accurate as
+ *		radiusInMeters grows large and as the region approaches either pole. However, the
+ *		region will always contain the circular region of the same radius.
+ *
+ *		Square bounding regions are more computationally convenient for finding data.
+ *		Developers needing an exact circular region can use a square region to constrain
+ *		the available data to a smaller found set, then use the GeoDistance function to
+ *		omit points between the circular and square neighborhoods of the reference point.
+ *
+ * HISTORY:
+ *		MODIFIED on 2012-09-27 by Jeremy Bante <http://scr.im/jbante> to account for
+ *		geoboxes that may span a pole or meridian.
+ *		CREATED on 2012-09-26 by Jeremy Bante <http://scr.im/jbante>.
+ *
+ * REFERENCES:
+ *		Radius of Earth:	http://www.wolframalpha.com/input/?i=radius+of+earth
+ * =====================================
+ */
+
+Let ( [
+	~earthRadius = 6367500;	// meters
+
+	// calculate latitude bounds
+	~latitudeOffset = Degrees ( radiusInMeters / ~earthRadius );
+	~north = latitude + ~latitudeOffset;
+	~south = latitude - ~latitudeOffset;
+	~wrapNorth = ~north > 90;
+	~wrapSouth = ~south < -90;
+	~northBound =
+		Case (
+			~wrapNorth ; 90;
+			~wrapSouth ; Max ( ~north ; -180 - ~south );
+			~north
+		);
+	~southBound =
+		Case (
+			~wrapSouth ; -90;
+			~wrapNorth ; Min ( ~south ; 180 - ~north );
+			~south
+		);
+
+	// calculate longitude bounds
+	~longitudeOffset = ~latitudeOffset * Cos ( Radians ( latitude ) );
+	~eastBound =
+		If ( ~wrapNorth or ~wrapSouth ; 180 ; /* Else */ longitude + ~longitudeOffset );
+	~eastBound = If ( ~eastBound > 180 ; ~eastBound - 360 ; /* Else */ ~eastBound );
+	~westBound =
+		If ( ~wrapNorth or ~wrapSouth ; -180 ; /* Else */ longitude - ~longitudeOffset );
+	~westBound = If ( ~westBound < -180 ; ~westBound + 360 ; /* Else */ ~westBound )
+];
+	List (
+		~southBound;
+		~northBound;
+		~westBound;
+		~eastBound
+	)
+)
